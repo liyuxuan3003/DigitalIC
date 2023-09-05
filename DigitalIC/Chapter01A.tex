@@ -1,0 +1,47 @@
+\section{历史回顾}
+
+\subsection{机械计算}
+数字数据处理的概念对我们的社会产生了巨大的影响。人们长期以来已经习惯数字计算机的概念。但是，运用编码数据格式来实现计算引擎并不是当今才有的概念。其实，早在19世纪早期，巴贝奇（Babbage）先后于1822年和1834年构想并开始设计机械计算装置，它们分别是\uwave{差分机}（Fifference Engines）和\uwave{解析机}（Analytical Engine）。尽管这些引擎采用的十进制系统而不是现代电子设备中普遍采用的二进制系统，但它们的基本概念是非常相似的。差分机是通过差分原理进行大规模数值计算，解析机则更进一步的，曾被认为是一种通用更大计算机器，其特点惊人地接近现代计算机，除了能随意的顺序执行所有的基本运算意外，它还以两个周期的序列“存放”和“执行”进行操作，它甚至还用流水线加速执行加法操作！遗憾的是，作为机械，这一设计的复杂些和成本使得这一设想并不可行，例如差分机的设计就要求25000个机械部件，成本是1834年的17470英镑！（那个时代1英镑代表7.32克黄金）\footnote{差分机在1834年前后被构建出来了，但成本非常高昂，解析机最终也没有完全实现。}。
+
+\subsection{继电器}
+数字系统对于机械而言实在太复杂了，利用电来解决是性价比更高的方案。早期的数字电子系统基于\uwave{继电器}（Relay），它们能实现简单的逻辑网络，这样的系统现在仍然在火车的安全系统中使用。从某种意义上，这是一种半电子（电路控制）半机械（机械通断）的数字系统。
+
+\subsection{真空管}
+在1906年，\uwave{真空管}（Vacuum Tube）被发明，自1930开始真空管被用于电子学，数字电子计算的时代自此才全面开始。虽然真空管原先几乎无一例外地用于模拟电路，但人们很快认识到它也可以用于数字电路。不久，第一台完整的计算机就实现了。在设计了如ENIAC（Electronic Numerical Integrator and Computer，1945，第一代电子数字计算机，用于计算大炮发射表）以及UNIVAC I（Universal Automatic Computer，1951，第一个成功的商用计算机）等机器之后，以真空管为基础的计算机时代就达到了顶点，集成度低、可靠性差、功耗大、体积大等问题使得基于真空管的设计技术已达到了它的极限，无论如何不可能再实现更大的计算引擎。
+
+\subsection{晶体管}
+在1947年，\uwave{晶体管}（Transistor）在贝尔实验室被发明，一切都被改变了。
+
+\begin{itemize}
+    \item 1949年，第一个\uwave{双极型晶体管}（Bipolar Junction Transistor, BJT）被Schockley发明。
+    \item 1956年，第一个双极性数字逻辑门出现，由Harris发明的分立元件构成。
+    \item 1958年，德州仪器的Jack Kilby提出了\uwave{集成电路}（Integrated Circuit，IC）的构想，在这里，所有的元件，无论是无源的还是有源的，都集成在一个半导体衬底上。Jack Kilby因为这一突破性的构想在2000年获得诺贝尔物理学奖。由此产生了最早一组集成电路逻辑门产品，称为仙童公司微逻辑系列（Fairchild Micrologic Family）。
+    \item 1962年，第一个真正成功的IC逻辑系列TTL（Trransistor-Transistor Logic）被发明。
+\end{itemize}
+实际上，TTL的制造使第一批半导体公司，如仙童（Fairchild）、国家半导体（National）、德州仪器（Texas Instruments）成为领头公司。这一逻辑系列如此成功，以至于直到1980年代它都一致占据着数字半导体市场的最大份额。然而，双极性晶体管最终还是失去了在数字设计领域的霸主地位，双极性晶体管和真空管一样，也面临了功耗问题。尽管曾进行了许多尝试来开发低功耗的双极性系列，但MOS数字集成电路最终还是取而代之占据了支配地位。
+
+MOSFET（Metal Oxide Semiconductor Field Effect Transistor，金属氧化物半导体场效应晶体管）原先被称为IGFET（Isolated Gate Field Effect Transistor，绝缘栅场效应晶体管），其基本原理早在1925年就被提出，但由于对材料和门的稳定性的认识不足，使这个器件的实际应用推迟了很长时间。这些问题一经解决，MOS数字集成电路在1970年早期就开始应用了。有趣的是，最初提出的MOS逻辑门就是CMOS类型，但是，实际生产中
+\begin{itemize}
+    \item 第一个实用的MOS集成电路是仅用PMOS逻辑实现的。
+    \item 第一批微处理器则仅用NMOS逻辑来实现，它们分别是Intel公司在1972年和1974年推出的4004型和8008型。NMOS逻辑相较于PMOS逻辑，具有更高的速度。
+\end{itemize}
+然而，自1980年起NMOS逻辑开始遭遇与真空管和双极型晶体管同样的瘟疫，\textbf{功耗}。这一认识连同在制造工艺上的进展最终使天平向CMOS工艺倾斜。不过，很有意思的是，功耗很快也变成CMOS设计中的主要问题，不过，暂时尚没有一种新的工艺可以马上取代CMOS的地位。时至今日，我们主流的数字集成电路，仍然是基于CMOS逻辑和CMOS工艺。
+
+\begin{Figure}[器件的发展]
+    \begin{FigureSub}[真空管]
+        \includegraphics{build/Chapter01A_01.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.5cm}
+    \begin{FigureSub}[BJT]
+        \includegraphics{build/Chapter01A_02.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.5cm}
+    \begin{FigureSub}[MOSFET]
+        \includegraphics{build/Chapter01A_03.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+百年间，人类对功耗和集成度的追求，引领我们从灯泡走到了如今的超大规模数字集成电路！
+
+
+

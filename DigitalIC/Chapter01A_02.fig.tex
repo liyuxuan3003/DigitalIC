@@ -1,0 +1,15 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\path(0,0) node[npn,name=t] {};
+
+\draw (t.C) -- ++(0,1) node[right] {C};
+\draw (t.E) -- ++(0,-1) node[right] {E};
+\draw (t.B) -- ++(-0.75,0) node[above] {B};
+
+\draw[gray,ultra thin] (-2,-2.2) rectangle (0.8,2.2);
+
+\end{tikzpicture}
+\end{document}

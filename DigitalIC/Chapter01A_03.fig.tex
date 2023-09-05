@@ -1,0 +1,15 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\path(0,0) node[nmos,name=t] {};
+
+\draw (t.D) -- ++(0,1) node[right] {D};
+\draw (t.S) -- ++(0,-1) node[right] {S};
+\draw (t.G) -- ++(-0.75,0) node[above] {G};
+
+\draw[gray,ultra thin] (-2,-2.2) rectangle (0.8,2.2);
+
+\end{tikzpicture}
+\end{document}
