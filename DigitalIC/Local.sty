@@ -243,6 +243,16 @@
     \path ($(BRLIG1)!0.5!(BRSiO2d)$) node[right] {\ce{SiO2}};
 }
 
+
+\NewDocumentCommand{\mnmDrawSiOTD}{}
+{
+    \draw[fill=mnmSiO2]
+    (PWLLIG1) rectangle (PWRSiO2u);
+    
+    \draw[fill=mnmSiO2]
+    (NWLLIG1) rectangle (NWRSiO2u);
+}
+
 \NewDocumentCommand{\mnmDrawSiN}{}
 {
     \draw[fill=mnmSi3N4] (BLSi3N4) rectangle (BRLIG1);
