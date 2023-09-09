@@ -1,3 +1,767 @@
 \ProvidesPackage{Local}
 
 \newcommand{\te}[1]{\text{#1}}
+
+%--------------------------------------%
+
+\definecolor{mnmP}{HTML}{FF0000}
+\definecolor{mnmN}{HTML}{0000FF}
+\colorlet{mnmP0}{mnmP!90!white}
+\colorlet{mnmN0}{mnmN!90!white}
+\colorlet{mnmP1}{mnmP!75!white}
+\colorlet{mnmN1}{mnmN!75!white}
+\colorlet{mnmP2}{mnmP!50!white}
+\colorlet{mnmN2}{mnmN!50!white}
+\colorlet{mnmP3}{mnmP!25!white}
+\colorlet{mnmN3}{mnmN!25!white}
+\colorlet{mnmSiO2}{green!30!white}
+\colorlet{mnmSi3N4}{green!50!yellow!30!white}
+\colorlet{mnmSiON}{green!50!red!30!white}
+\colorlet{mnmLIGsoft}{yellow!30!white}
+\colorlet{mnmLIGhard}{yellow!80!black}
+\colorlet{mnmIon}{purple!50!blue}
+\colorlet{mnmPolySi}{black!75!white}
+\colorlet{mnmPolySiP}{black!75!white!92!red}
+\colorlet{mnmPolySiN}{black!75!white!90!blue}
+\colorlet{mnmBcgColor}{black!5!white}
+\colorlet{mnmAl}{black}
+
+\tikzset{Shade/.style={ultra thick}}
+\tikzset{ShadeA/.style={ultra thick,black!15!white}}
+
+\def\xBL{-6.00}
+\def\xBR{+6.00}
+\def\xPWL{-5.00}
+\def\xPWR{-1.00}
+\def\xPGL{-4.00}
+\def\xPGR{-2.00}
+\def\xNWL{+1.00}
+\def\xNWR{+5.00}
+\def\xNGL{+2.00}
+\def\xNGR{+4.00}
+
+\def\xPHaL{-4.75}
+\def\xPHaR{-4.25}
+
+\def\xPHbL{-1.75}
+\def\xPHbR{-1.25}
+
+\def\xNHaL{+4.25}
+\def\xNHaR{+4.75}
+
+\def\xNHbL{+1.25}
+\def\xNHbR{+1.75}
+
+\NewDocumentCommand{\mnmDefinePoint}{}
+{
+    \path 
+    (0,0.00) coordinate (pB)
+    ($(pB)+(0,1.25)$) coordinate (pE)
+    ($(pE)+(0,1.25)$) coordinate (SiO2)
+    ($(SiO2)-(0,0.75)$) coordinate (SiO2d)
+    ($(SiO2)+(0,0.45)$) coordinate (Si3N4)
+    ($(Si3N4)+(0,0.45)$) coordinate (LIG1)
+    ($(LIG1)+(0,0.45)$) coordinate (LIG1u)
+    ($(LIG1)+(0,1.65)$) coordinate (SiO2u)
+    ($(LIG1)+(0,0.60)$) coordinate (LIG2)
+    ($(LIG1)+(0,1.05)$) coordinate (LIG2u)
+    ($(LIG1u)+(0,0.00)$) coordinate (LIG3)
+    ($(LIG1u)+(0,0.45)$) coordinate (LIG3u)
+    ($(LIG1u)+(0,0.90)$) coordinate (Si3N4u)
+    ($(LIG3u)+(0,0.45*3)$) coordinate (Alu)
+    ($(LIG3u)+(0,0.00)$) coordinate (LIG4)
+    ($(LIG3u)+(0,0.45)$) coordinate (LIG4u)
+    ($(SiO2d)+(0,0.1)$) coordinate (We)
+    ($(SiO2d)+(0,0.25)$) coordinate (Pe)
+    (0,5.7) coordinate (Shade)
+    ($(Shade)+(0,0.5)$) coordinate (ShadeU)
+    ($(Shade)+(0,0.1)$) coordinate (ShadeU')
+    ($(Shade)-(0,0.7)$) coordinate (ShadeD)
+    ($(Shade)-(0,0.1)$) coordinate (ShadeD');
+    
+    \path
+    (\xBL,0) coordinate (BL)
+    (\xBR,0) coordinate (BR)
+    (\xPWL,0) coordinate (PWL)
+    (\xPWR,0) coordinate (PWR)
+    (\xNWL,0) coordinate (NWL)
+    (\xNWR,0) coordinate (NWR)
+    (\xPGL,0) coordinate (PGL)
+    (\xPGR,0) coordinate (PGR)
+    (\xNGL,0) coordinate (NGL)
+    (\xNGR,0) coordinate (NGR)
+    (\xPHaL,0) coordinate (PHaL)
+    (\xPHaR,0) coordinate (PHaR)
+    (\xPHbL,0) coordinate (PHbL)
+    (\xPHbR,0) coordinate (PHbR)
+    (\xNHaL,0) coordinate (NHaL)
+    (\xNHaR,0) coordinate (NHaR)
+    (\xNHbL,0) coordinate (NHbL)
+    (\xNHbR,0) coordinate (NHbR);
+    
+    \foreach \y in {pB,pE,SiO2,Si3N4,SiO2d,SiO2u,LIG1,LIG1u,Shade,ShadeU,ShadeD,ShadeU',ShadeD',LIG2,LIG2u,We,Pe,LIG3,LIG3u,Si3N4u,Alu,LIG4,LIG4u}
+    {
+        \foreach \x in {BL,BR,PWL,PWR,NWL,NWR,PGL,PGR,NGL,NGR,NHaL,NHaR,NHbL,NHbR,PHaL,PHaR,PHbL,PHbR}
+        {
+            \draw (\x|-\y) coordinate (\x\y);
+        }
+    }
+}
+
+\NewDocumentCommand{\mnmLightLine}{smm}
+{
+    \foreach \x in {\fpeval{#2},\fpeval{#2+0.2},...,\fpeval{#3+0.02}}
+    {
+        \path (\x,0) coordinate (XTemp);
+        \IfBooleanTF{#1}
+        {
+            \draw[-latex,thin] (XTemp|-ShadeU) -- (XTemp |- ShadeU');
+        }
+        {
+            \draw[-latex,thin] (XTemp|-ShadeD') -- (XTemp |- ShadeD);
+        }
+    }
+}
+
+\NewDocumentCommand{\mnmDrawIon}{}
+{
+    \foreach \x in {\fpeval{\xBL},\fpeval{\xBL+0.5},...,\fpeval{\xBR+0.01}}
+    {
+        \path (\x,0) coordinate (XTemp);
+        \draw[thick,-latex,mnmIon] (XTemp |- ShadeU) -- (XTemp |- ShadeD);
+    }
+}
+
+\NewDocumentCommand{\mnmDrawBorder}{mm}
+{
+    \path (-8,-0.2) coordinate (BodL);
+    \path (+8,+7.2) coordinate (BodR);
+
+    \fill[fill=mnmBcgColor] (BodL) rectangle (BodR);
+
+    \fill[black!80!white] 
+    ($(BodL|-BodR)+(0,-0.8)$) coordinate (BodTextL)
+    rectangle 
+    (BodR); 
+
+    \draw[very thick] (BodL) rectangle (BodR);
+
+    \draw[very thick,dashed]
+    (BodTextL) -- (BodTextL-|BodR);
+
+    \path
+    ($(BodTextL)!0.5!(BodTextL|-BodR)$)
+    node[right,white] {\textbf{#1}\quad #2};
+}
+
+\NewDocumentCommand{\mnmDrawBase}{}
+{
+    \draw[fill=mnmP1] (BLpB) rectangle node[white] {$p^{+}$衬底} (BRpE);
+}
+
+\NewDocumentCommand{\mnmDrawExtend}{}
+{
+    \draw[fill=mnmP3] (BLpE) rectangle node[black] {$p\hphantom{^{+}}$外延} (BRSiO2);
+}
+
+\NewDocumentCommand{\mnmDrawExtendA}{}
+{
+    \draw[fill=mnmP3] 
+    (BLpE) -- 
+    (BLSiO2d) -- 
+    (PWLSiO2d) --
+    (PWLSiO2) -- 
+    (PWRSiO2) -- 
+    (PWRSiO2d) --
+    (NWLSiO2d) --
+    (NWLSiO2) --
+    (NWRSiO2) --
+    (NWRSiO2d) --
+    (BRSiO2d) --
+    (BRpE) --
+    cycle;
+}
+
+\NewDocumentCommand{\mnmDrawSiOT}{}
+{
+    \draw[fill=mnmSiO2] (BLSiO2) rectangle (BRSi3N4);
+    \path ($(BRSiO2)!0.5!(BRSi3N4)$) node[right] {\ce{SiO2}};
+}
+
+\NewDocumentCommand{\mnmDrawSiOTA}{s}
+{
+    \draw[fill=mnmSiO2] (NWLSiO2) rectangle (NWRSi3N4);
+    \draw[fill=mnmSiO2] (PWLSiO2) rectangle (PWRSi3N4);
+    \IfBooleanF{#1}{\path ($(NWRSiO2)!0.5!(NWRSi3N4)$) node[right] {\ce{SiO2}};}
+}
+
+\NewDocumentCommand{\mnmDrawSiOTB}{}
+{
+    \draw[fill=mnmSiO2]
+    (BLSiO2d)--
+    (BLLIG1)--
+    (PWLLIG1)--
+    (PWLSi3N4)--
+    (PWRSi3N4)--
+    (PWRLIG1)--
+    (NWLLIG1)--
+    (NWLSi3N4)--
+    (NWRSi3N4)--
+    (NWRLIG1)--
+    (BRLIG1)--
+    (BRSiO2d)--
+    (NWRSiO2d)--
+    (NWRSiO2)--
+    (NWLSiO2)--
+    (NWLSiO2d)--
+    (PWRSiO2d)--
+    (PWRSiO2)--
+    (PWLSiO2)--
+    (PWLSiO2d)--
+    cycle;
+
+    \path ($(BRLIG1)!0.5!(BRSiO2d)$) node[right] {\ce{SiO2}};
+}
+
+\NewDocumentCommand{\mnmDrawSiOTC}{}
+{
+    \draw[fill=mnmSiO2]
+    (BLSiO2d) rectangle (PWLLIG1);
+    
+    \draw[fill=mnmSiO2]
+    (BRSiO2d) rectangle (NWRLIG1);
+
+    \draw[fill=mnmSiO2]
+    (PWRSiO2d) rectangle (NWLLIG1);
+
+    \draw[fill=mnmSiO2]
+    (PGLSiO2) rectangle (PGRSi3N4);
+
+    \draw[fill=mnmSiO2]
+    (NGLSiO2) rectangle (NGRSi3N4);
+
+    \path ($(BRLIG1)!0.5!(BRSiO2d)$) node[right] {\ce{SiO2}};
+}
+
+\NewDocumentCommand{\mnmDrawSiN}{}
+{
+    \draw[fill=mnmSi3N4] (BLSi3N4) rectangle (BRLIG1);
+    \path ($(BRSi3N4)!0.5!(BRLIG1)$) node[right] {\ce{Si3N4}};
+}
+
+\NewDocumentCommand{\mnmDrawSiNA}{st&}
+{
+    \draw[fill=mnmSi3N4] (NWLSi3N4) rectangle (NWRLIG1);
+    \draw[fill=mnmSi3N4] (PWLSi3N4) rectangle (PWRLIG1);
+    \IfBooleanF{#1}{\path ($(NWRSi3N4)!0.5!(NWRLIG1)$) node[right] {\ce{Si3N4}};}
+    \IfBooleanT{#2}
+    {
+        \path ($(PWLLIG1)!0.5!(PWRLIG1)$) node[above] {\ce{Si3N4}};
+        \path ($(NWLLIG1)!0.5!(NWRLIG1)$) node[above] {\ce{Si3N4}};
+    }
+}
+
+\NewDocumentCommand{\mnmDrawSiNB}{}
+{
+    \draw[fill=mnmSi3N4] 
+    (BLLIG1) -- 
+    (BLLIG2) --
+    (BRLIG2) --
+    node[right] {\ce{Si3N4}}
+    (BRLIG1) --
+    (NWRLIG1) -- 
+    (NWRSi3N4) --
+    (NWLSi3N4) --
+    (NWLLIG1) --
+    (PWRLIG1) --
+    (PWRSi3N4) --
+    (PWLSi3N4) --
+    (PWLLIG1) --
+    cycle;
+}
+
+\NewDocumentCommand{\mnmDrawSiNC}{}
+{
+    \draw[fill=mnmSi3N4] 
+    (BLLIG1) -- 
+    (BLLIG2u) --
+    (PWLLIG2u) --
+    (PWLLIG2) --
+    (PWRLIG2) --
+    (PWRLIG2u) --
+    (NWLLIG2u) --
+    (NWLLIG2) --
+    (NWRLIG2) --
+    (NWRLIG2u) --
+    (BRLIG2u) --
+    node[right] {\ce{Si3N4}}
+    (BRLIG1) --
+    (NWRLIG1) -- 
+    (NWRSi3N4) --
+    (NWLSi3N4) --
+    (NWLLIG1) --
+    (PWRLIG1) --
+    (PWRSi3N4) --
+    (PWLSi3N4) --
+    (PWLLIG1) --
+    cycle;
+}
+
+\NewDocumentCommand{\mnmDrawSiND}{}
+{
+    \draw[fill=mnmSi3N4] 
+    (BLLIG1) -- 
+    (BLLIG2) --
+    (PWLLIG2) --
+    (PWLLIG1) --
+    cycle;
+
+    \draw[fill=mnmSi3N4] 
+    (PWRLIG1) --
+    (PWRLIG2) --
+    (BRLIG2) --
+    node[right] {\ce{Si3N4}}
+    (BRLIG1) --
+    (NWRLIG1) -- 
+    (NWRSi3N4) --
+    (NWLSi3N4) --
+    (NWLLIG1) --
+    (PWRLIG1) --
+    (PWRSi3N4) --
+    cycle;
+}
+
+\NewDocumentCommand{\mnmDrawSiNE}{}
+{
+    \draw[fill=mnmSi3N4] 
+    (BRLIG1) -- 
+    node[right] {\ce{Si3N4}}
+    (BRLIG2) --
+    (NWRLIG2) --
+    (NWRLIG1) --
+    cycle;
+
+    \draw[fill=mnmSi3N4] 
+    (NWLLIG1) --
+    (NWLLIG2) --
+    (BLLIG2) --
+    (BLLIG1) --
+    (PWLLIG1) -- 
+    (PWLSi3N4) --
+    (PWRSi3N4) --
+    (PWRLIG1) --
+    (NWLLIG1) --
+    (NWLSi3N4) --
+    cycle;
+}
+
+\NewDocumentCommand{\mnmDrawLIGa}{}
+{
+    \draw[fill=mnmLIGhard] (BLLIG1) rectangle node[above=0.2cm] {光刻胶} (BRLIG1u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGaA}{}
+{
+    \draw[fill=mnmLIGhard] (NWLLIG1) rectangle node[above=0.2cm] {光刻胶} (NWRLIG1u);
+    \draw[fill=mnmLIGhard] (PWLLIG1) rectangle node[above=0.2cm] {光刻胶} (PWRLIG1u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGaB}{}
+{
+    \draw[fill=mnmLIGsoft] (BLLIG1) rectangle node[above=0.2cm] {可溶} (PWLLIG1u);
+    \draw[fill=mnmLIGsoft] (BRLIG1) rectangle node[above=0.2cm] {可溶} (NWRLIG1u);
+    \draw[fill=mnmLIGsoft] (NWLLIG1) rectangle node[above=0.2cm] {可溶} (PWRLIG1u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGaC}{}
+{
+    \draw[fill=mnmLIGhard] (PGLLIG1) rectangle node[above=0.2cm] {光刻胶} (PGRLIG1u);
+    \draw[fill=mnmLIGhard] (NGLLIG1) rectangle node[above=0.2cm] {光刻胶} (NGRLIG1u);
+    \draw[fill=mnmLIGhard] (BLLIG1) rectangle node[above=0.2cm] {光刻胶} (PWLLIG1u);
+    \draw[fill=mnmLIGhard] (BRLIG1) rectangle node[above=0.2cm] {光刻胶} (NWRLIG1u);
+    \draw[fill=mnmLIGhard] (PWRLIG1) rectangle node[above=0.2cm] {光刻胶} (NWLLIG1u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGaD}{}
+{
+    \draw[fill=mnmLIGsoft] (PWLLIG1) rectangle (PGLLIG1u);
+    \draw[fill=mnmLIGsoft] (PGRLIG1) rectangle (PWRLIG1u);
+    \draw[fill=mnmLIGsoft] (NGLLIG1) rectangle (NWLLIG1u);
+    \draw[fill=mnmLIGsoft] (NWRLIG1) rectangle (NGRLIG1u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGb}{}
+{
+    \draw[fill=mnmLIGhard] (BLLIG2) rectangle node[above=0.2cm] {光刻胶} (BRLIG2u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGbA}{}
+{
+    \draw[fill=mnmLIGhard] (BLLIG2) rectangle node[above=0.2cm] {光刻胶} (PWLLIG2u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGbB}{}
+{
+    \draw[fill=mnmLIGhard] (BLLIG2) rectangle node[above=0.2cm] {光刻胶} (NWLLIG2u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGbC}{}
+{
+    \draw[fill=mnmLIGhard] (BRLIG2) rectangle node[above=0.2cm] {光刻胶} (PWRLIG2u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGbD}{}
+{
+    \draw[fill=mnmLIGhard] (BRLIG2) rectangle node[above=0.2cm] {光刻胶} (NWRLIG2u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGbE}{}
+{
+    \draw[fill=mnmLIGsoft] (PWLLIG2) rectangle node[above=0.2cm] {可溶} (PWRLIG2u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGbF}{}
+{
+    \draw[fill=mnmLIGsoft] (NWLLIG2) rectangle node[above=0.2cm] {可溶} (NWRLIG2u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGc}{}
+{
+    \draw[fill=mnmLIGhard] (BLLIG3) rectangle node[above=0.2cm] {光刻胶} (BRLIG3u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGcA}{}
+{
+    \draw[fill=mnmLIGhard] (BLLIG3) rectangle node[above=0.2cm] {光刻胶} (PWLLIG3u);
+    \draw[fill=mnmLIGhard] (BRLIG3) rectangle node[above=0.2cm] {光刻胶} (PWRLIG3u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGcB}{}
+{
+    \draw[fill=mnmLIGsoft] (PWLLIG3) rectangle node[above=0.2cm] {可溶} (PWRLIG3u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGcC}{}
+{
+    \draw[fill=mnmLIGhard] (BLLIG3) rectangle node[above=0.2cm] {光刻胶} (NWLLIG3u);
+    \draw[fill=mnmLIGhard] (BRLIG3) rectangle node[above=0.2cm] {光刻胶} (NWRLIG3u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGcD}{}
+{
+    \draw[fill=mnmLIGsoft] (NWLLIG3) rectangle node[above=0.2cm] {光刻胶} (NWRLIG3u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGcE}{}
+{
+    \foreach \x/\y in {BL/PHaL,PHaR/PHbL,PHbR/NHbL,NHbR/NHaL,NHaR/BR}
+    {
+        \draw[fill=mnmLIGhard] (\x LIG3) rectangle (\y LIG3u);
+    }
+    \path (BLLIG3) rectangle node[above=0.2cm] {光刻胶} (BRLIG3u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGd}{}
+{
+    \draw[fill=mnmLIGhard] (BLLIG4) rectangle node[above=0.2cm] {光刻胶} (BRLIG4u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGdA}{}
+{
+    \draw[fill=mnmLIGhard] (PGRLIG4) rectangle node[above=0.2cm] {光刻胶} (NGLLIG4u);
+
+    \draw[fill=mnmLIGhard] (BLLIG4) rectangle (PGLLIG4u);
+    \draw[fill=mnmLIGhard] (BRLIG4) rectangle (NGRLIG4u);
+}
+
+\NewDocumentCommand{\mnmDrawLIGdB}{}
+{
+    \draw[fill=mnmLIGsoft] (PGLLIG4) rectangle (PGRLIG4u);
+    \draw[fill=mnmLIGsoft] (NGLLIG4) rectangle (NGRLIG4u);
+}
+
+\NewDocumentCommand{\mnmDrawShadeLIGa}{}
+{
+    \mnmLightLine*{\xBL}{\xBR}
+    \draw[ShadeA] (BLShade)--(BRShade);
+    \draw[Shade] (PWLShade)--(PWRShade);
+    \draw[Shade] (NWLShade)--(NWRShade);
+    \path (BLShade) node[left] {掩膜版};
+    \mnmLightLine{\xBL}{\xPWL}
+    \mnmLightLine{\xPWR}{\xNWL}
+    \mnmLightLine{\xNWR}{\xBR}
+}
+
+\NewDocumentCommand{\mnmDrawShadeLIGbE}{}
+{
+    \mnmLightLine*{\xBL}{\xBR}
+    \draw[ShadeA] (BLShade)--(BRShade);
+    \draw[Shade] (BLShade)--(PWLShade);
+    \draw[Shade] (PWRShade)--(BRShade);
+    \path (BLShade) node[left] {掩膜版};
+    \mnmLightLine{\xPWL}{\xPWR}
+}
+
+\NewDocumentCommand{\mnmDrawShadeLIGbF}{}
+{
+    \mnmLightLine*{\xBL}{\xBR}
+    \draw[ShadeA] (BLShade)--(BRShade);
+    \draw[Shade] (BLShade)--(NWLShade);
+    \draw[Shade] (NWRShade)--(BRShade);
+    \path (BLShade) node[left] {掩膜版};
+    \mnmLightLine{\xNWL}{\xNWR}
+}
+
+\NewDocumentCommand{\mnmDrawShadeLIGc}{}
+{
+    \mnmLightLine*{\xBL}{\xBR}
+    \draw[ShadeA] (BLShade)--(BRShade);
+    \draw[Shade] (BLShade)--(PWLShade);
+    \draw[Shade] (PGLShade)--(PGRShade);
+    \draw[Shade] (PWRShade)--(NWLShade);
+    \draw[Shade] (NGLShade)--(NGRShade);
+    \draw[Shade] (NWRShade)--(BRShade);
+    \path (BLShade) node[left] {掩膜版};
+    \mnmLightLine{\xPWL}{\xPGL}
+    \mnmLightLine{\xPGR}{\xPWR}
+    \mnmLightLine{\xNWL}{\xNGL}
+    \mnmLightLine{\xNGR}{\xNWR}
+}
+
+\NewDocumentCommand{\mnmDrawShadeLIGdA}{}
+{
+    \mnmLightLine*{\xBL}{\xBR}
+    \draw[ShadeA] (BLShade)--(BRShade);
+    \draw[Shade] (BLShade)--(PWLShade);
+    \draw[Shade] (PWRShade)--(BRShade);
+    \path (BLShade) node[left] {掩膜版};
+    \mnmLightLine{\xPWL}{\xPWR}
+}
+
+\NewDocumentCommand{\mnmDrawShadeLIGdB}{}
+{
+    \mnmLightLine*{\xBL}{\xBR}
+    \draw[ShadeA] (BLShade)--(BRShade);
+    \draw[Shade] (BLShade)--(NWLShade);
+    \draw[Shade] (NWRShade)--(BRShade);
+    \path (BLShade) node[left] {掩膜版};
+    \mnmLightLine{\xNWL}{\xNWR}
+}
+
+\NewDocumentCommand{\mnmDrawShadeLIGe}{}
+{
+    \mnmLightLine*{\xBL}{\xBR}
+    \draw[ShadeA] (BLShade)--(BRShade);
+    \draw[Shade] (BLShade)--(PHaLShade);
+    \draw[Shade] (PHaRShade)--(PHbLShade);
+    \draw[Shade] (PHbRShade)--(NHbLShade);
+    \draw[Shade] (NHbRShade)--(NHaLShade);
+    \draw[Shade] (NHaRShade)--(BRShade);
+    \path (BLShade) node[left] {掩膜版};
+    \mnmLightLine{\xPHaL}{\xPHaR}
+    \mnmLightLine{\xPHbL}{\xPHbR}
+    \mnmLightLine{\xNHaL}{\xNHaR}
+    \mnmLightLine{\xNHbL}{\xNHbR}
+}
+
+\NewDocumentCommand{\mnmDrawShadeLIGf}{}
+{
+    \mnmLightLine*{\xBL}{\xBR}
+    \draw[ShadeA] (BLShade)--(BRShade);
+    \draw[Shade] (BLShade)--(PGLShade);
+    \draw[Shade] (PGRShade)--(NGLShade);
+    \draw[Shade] (NGRShade)--(BRShade);
+    \path (BLShade) node[left] {掩膜版};
+    \mnmLightLine{\xPGL}{\xPGR}
+    \mnmLightLine{\xNGL}{\xNGR}
+}
+
+\NewDocumentCommand{\mnmDrawWellP}{s}
+{
+    \draw[fill=mnmP2] (PWLWe) rectangle node[white] {\IfBooleanF{#1}{$p$阱}} (PWRSiO2);
+}
+
+\NewDocumentCommand{\mnmDrawWellN}{s}
+{
+    \draw[fill=mnmN2] (NWLWe) rectangle node[white] {\IfBooleanF{#1}{$n$阱}}  (NWRSiO2);
+}
+
+\NewDocumentCommand{\mnmDrawPolySiA}{s}
+{
+    \draw[fill=mnmPolySi]
+    (PWLSi3N4) rectangle node[above=0.2cm] {\IfBooleanF{#1}{多晶硅}} (PWRLIG1);
+    \draw[fill=mnmPolySi]
+    (NWLSi3N4) rectangle node[above=0.2cm] {\IfBooleanF{#1}{多晶硅}} (NWRLIG1);
+}
+
+\NewDocumentCommand{\mnmDrawPolySiB}{}
+{
+    \draw[fill=mnmPolySi]
+    (BLLIG1) rectangle (PWLLIG1u);
+    \draw[fill=mnmPolySi]
+    (BRLIG1) rectangle (NWRLIG1u);
+    \draw[fill=mnmPolySi]
+    (PWRLIG1) rectangle (NWLLIG1u);
+}
+
+\NewDocumentCommand{\mnmDrawPolySiC}{s}
+{
+    \draw[fill=mnmPolySi]
+    (PGLSi3N4) rectangle node[above=0.2cm] {\IfBooleanF{#1}{多晶硅}} (PGRLIG1);
+    \draw[fill=mnmPolySi]
+    (NGLSi3N4) rectangle node[above=0.2cm] {\IfBooleanF{#1}{多晶硅}} (NGRLIG1);
+}
+
+\NewDocumentCommand{\mnmDrawPolySiD}{}
+{
+    \draw[fill=mnmPolySiN]
+    (PGLSi3N4) rectangle (PGRLIG1);
+    \draw[fill=mnmPolySi]
+    (NGLSi3N4) rectangle (NGRLIG1);
+}
+
+\NewDocumentCommand{\mnmDrawPolySiE}{}
+{
+    \draw[fill=mnmPolySiN]
+    (PGLSi3N4) rectangle (PGRLIG1);
+    \draw[fill=mnmPolySiP]
+    (NGLSi3N4) rectangle (NGRLIG1);
+}
+
+\NewDocumentCommand{\mnmDrawSiNseA}{s}
+{
+    \draw[fill=\IfBooleanTF{#1}{mnmSiON}{mnmSi3N4}]
+    (BLLIG1) -- 
+    (BLLIG1u) --
+    (BRLIG1u) --
+    node[right] {\IfBooleanTF{#1}{\ce{SiON}}{\ce{Si3N4}}}
+    (BRLIG1) --
+    (NWRLIG1) --
+    (NWRSiO2) --
+    (NGRSiO2) --
+    (NGRLIG1) --
+    (NGLLIG1) --
+    (NGLSiO2) --
+    (NWLSiO2) --
+    (NWLLIG1) --
+    (PWRLIG1) --
+    (PWRSiO2) --
+    (PGRSiO2) --
+    (PGRLIG1) --
+    (PGLLIG1) -- 
+    (PGLSiO2) --
+    (PWLSiO2) --
+    (PWLLIG1) --
+    cycle;
+}
+
+\NewDocumentCommand{\mnmDrawSiNseB}{s}
+{
+    \draw[fill=\IfBooleanTF{#1}{mnmSiON}{mnmSi3N4}]
+    (BLLIG1) -- 
+    (BLSi3N4u) --
+    (PWLSi3N4u) --
+    (PWLLIG3) --
+    (PGLLIG3) --
+    (PGLSi3N4u) --
+    (PGRSi3N4u) --
+    (PGRLIG3) --
+    (PWRLIG3) --
+    (PWRSi3N4u) --
+    (NWLSi3N4u) --
+    (NWLLIG3) --
+    (NGLLIG3) --
+    (NGLSi3N4u) --
+    (NGRSi3N4u) --
+    (NGRLIG3) --
+    (NWRLIG3) --
+    (NWRSi3N4u) --
+    (BRSi3N4u) --
+    node[right] {\IfBooleanTF{#1}{\ce{SiON}}{\ce{Si3N4}}}
+    (BRLIG1) --
+    (NWRLIG1) --
+    (NWRSiO2) --
+    (NGRSiO2) --
+    (NGRLIG1) --
+    (NGLLIG1) --
+    (NGLSiO2) --
+    (NWLSiO2) --
+    (NWLLIG1) --
+    (PWRLIG1) --
+    (PWRSiO2) --
+    (PGRSiO2) --
+    (PGRLIG1) --
+    (PGLLIG1) -- 
+    (PGLSiO2) --
+    (PWLSiO2) --
+    (PWLLIG1) --
+    cycle;
+}
+
+\NewDocumentCommand{\mnmDrawNDS}{}
+{
+    \draw[fill=mnmN0]
+    (PWLPe) rectangle node[white] {\small $n^{+}$} (PGLSiO2);
+    \draw[fill=mnmN0]
+    (PWRPe) rectangle node[white] {\small $n^{+}$} (PGRSiO2);
+}
+
+\NewDocumentCommand{\mnmDrawPDS}{}
+{
+    \draw[fill=mnmP0]
+    (NWLPe) rectangle node[white] {\small $p^{+}$} (NGLSiO2);
+    \draw[fill=mnmP0]
+    (NWRPe) rectangle node[white] {\small $p^{+}$} (NGRSiO2);
+}
+
+\NewDocumentCommand{\mnmDrawHoleA}{}
+{
+    \draw[fill=mnmLIGsoft]
+    (NHaLLIG3) rectangle (NHaRLIG3u);
+    \draw[fill=mnmLIGsoft]
+    (NHbLLIG3) rectangle (NHbRLIG3u);
+    \draw[fill=mnmLIGsoft]
+    (PHaLLIG3) rectangle (PHaRLIG3u);
+    \draw[fill=mnmLIGsoft]
+    (PHbLLIG3) rectangle (PHbRLIG3u);
+}
+
+\NewDocumentCommand{\mnmDrawHoleB}{}
+{
+    \foreach \x/\y in {PHaL/PHaR,PHbL/PHbR,NHbL/NHbR,NHaL/NHaR}
+    {
+        \draw[fill=mnmBcgColor]
+        (\x SiO2) rectangle (\y LIG3);
+        \draw[mnmBcgColor,thick]
+        ($(\x LIG3)+(0.0075,0)$) -- ($(\y LIG3)+(-0.0075,0)$);
+    }
+}
+
+\NewDocumentCommand{\mnmDrawAlA}{}
+{
+    \foreach \x/\y in {PHaL/PHaR,PHbL/PHbR,NHbL/NHbR,NHaL/NHaR}
+    {
+        \draw[fill=mnmAl] (\x SiO2) rectangle (\y LIG3);
+    }
+    \draw[fill=mnmAl] (BLLIG3) rectangle (BRLIG3u);
+    \path ($(BLLIG3)!0.5!(BLLIG3u)$) node[left] {\ce{Al}};
+}
+
+\NewDocumentCommand{\mnmDrawAlB}{}
+{
+    \foreach \x/\y in {BL/PHaL,PHaR/PHbL,PHbR/NHbL,NHbR/NHaL,NHaR/BR}
+    {
+        \draw[fill=mnmAl] (\x LIG3u) rectangle (\y Alu);
+    }
+}
+
+\NewDocumentCommand{\mnmDrawAlC}{}
+{
+    \foreach \x/\y in {PGL/PGR,NGL/NGR}
+    {
+        \fill[fill=mnmBcgColor] ($(\x LIG3)+(0.0075,0.0075)$) rectangle ($(\y LIG3u)+(-0.0075,0.1)$);
+    }
+}
+
+
+%--------------------------------------%

@@ -1,0 +1,103 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}[scale=1.5]
+
+\path (0,0) coordinate (O)
+    (-4,2) coordinate (A)
+    (-6.5,4.5) coordinate (B)
+    (-8.5,6.5) coordinate (C)
+    (-10.5,8.5) coordinate (D)
+    (-12.5,10.5) coordinate (E);
+
+\foreach \x/\t in {A/器件,B/电路,C/门,D/模块,E/系统}
+{
+    \draw[very thick] (O) rectangle (\x); 
+    \path ($(O)!0.5!(\x)$) coordinate (\x');
+    \path (O|-\x) node[below left] {\Large \t};
+}
+
+\path
+    ($(A')+(-1,0)$)   coordinate (S1)
+    ($(A')+(-0.4,0)$) coordinate (S2)
+    ($(A')+(-0.6,0)$) coordinate (G1)
+    ($(A')+(+0.6,0)$) coordinate (G2)
+    ($(A')+(+0.4,0)$) coordinate (D2)
+    ($(A')+(+1,0)$)   coordinate (D1)
+    ($(S1)!0.4!(S2)$) coordinate (Sc)
+    ($(D1)!0.4!(D2)$) coordinate (Dc)
+    ($(G1)!0.5!(G2)$) coordinate (Gc);
+
+\path
+    ($(A')+(0,0.5)$)  coordinate (YL)
+    ($(A')+(0,0.3)$)  coordinate (YG)
+    ($(A')+(0,0.0)$)  coordinate (YS)
+    ($(A')+(0,-0.3)$) coordinate (YN)
+    ($(A')+(0,-0.7)$) coordinate (YB);
+
+
+\foreach \x in{S1,S2,G1,G2,D1,D2,Sc,Dc,Gc}
+{
+    \foreach \y in {YL,YG,YS,YN,YB}
+    {
+        \path (\x|-\y) coordinate (\x\y);
+    }
+}
+
+\draw[fill=red!50!white] (S1YS) rectangle node[white] {$p$} (D1YB);
+\draw[fill=blue] (S1YS) rectangle node[white] {$n^{+}$} (S2YN);
+\draw[fill=blue] (D1YS) rectangle node[white] {$n^{+}$} (D2YN);
+\draw[fill=black!10!white] (G1YS) rectangle node[black] {\ce{SiO2}} (G2YG);
+
+\draw (ScYS) -- (ScYL) node[ocirc] {} node[above] {S};
+\draw (DcYS) -- (DcYL) node[ocirc] {} node[above] {D};
+\draw (GcYG) -- (GcYL) node[ocirc] {} node[above] {G};
+
+\draw (B) ++ (1.73,-2) coordinate (B'');
+
+\path ($(B'')+(0,+1.1)$) node[pmos,name=pmos] {};
+\path ($(B'')+(0,-1.1)$) node[nmos,name=nmos] {};
+\draw (pmos.D) -- (nmos.D);
+\draw ($(pmos.D)!0.5!(nmos.D)$) coordinate (npcent)
+    to[short,*-*] ++ (0.4,0)
+    coordinate (Ci1)
+    to[short,-*] ++(0.6,0)  node[right=0.1cm] {$V_{out}$};
+
+\draw (Ci1) to[C] ++(0,-0.5) node[ground] {};
+
+\draw (nmos.S) node[ground] {};
+\draw (pmos.S) node[vcc] {};
+
+\draw (nmos.G) -- (pmos.G);
+\draw ($(nmos.G)!0.5!(pmos.G)$) to[short,*-*] ++(-0.5,0) node[left=0.1cm] {$V_{in}$};
+
+\path 
+(nmos.G) node[left] {\tiny G}
+(nmos.S) node[above right] {\tiny S}
+(nmos.D) node[below right] {\tiny D}
+(pmos.G) node[left] {\tiny G}
+(pmos.S) node[below right] {\tiny S}
+(pmos.D) node[above right] {\tiny D};
+
+\path
+(nmos.G) node[right=0.45cm] {\tiny NMOS}
+(pmos.G) node[right=0.45cm] {\tiny PMOS};
+
+\path (C) ++(0.25,0) node[below right=1cm] [and port,name=A1] {};
+
+\draw (A1.in 1) -- ++(-0.25,0) node[left] {$A$};
+\draw (A1.in 2) -- ++(-0.25,0) node[left] {$B$};
+\draw (A1.out) -- ++(0.25,0) node[right] {$Z=AB$};
+
+\path (D) ++(0.25,0.3) node[below right=1cm] [one bit adder,name=ADD] {\large $+$};
+
+\draw (ADD.lpin 1) -- ++(-0.25,0) node[left] {$A$};
+\draw (ADD.lpin 2) -- ++(-0.25,0) node[left] {$B$};
+\draw (ADD.rpin 1) -- ++(+0.5,0) node[right] {$S$};
+\draw (ADD.bpin 1) -- ++(0,-0.25) node[below] {$C_o$};
+
+\ctikzset{multipoles/qfpchip/pin spacing=0.06,hide numbers}
+\path (E) node[below right=0.6cm,qfpchip,num pins=88] {CPU};
+
+\end{tikzpicture}
+\end{document}
