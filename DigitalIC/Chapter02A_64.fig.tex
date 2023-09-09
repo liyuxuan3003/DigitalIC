@@ -1,0 +1,49 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\draw[ultra thin](-8,-0.5) rectangle (8,5);
+
+\clip(-6.1,-0.5) rectangle (6.1,5);
+
+\mnmDefinePoint
+\mnmDrawBase
+\mnmDrawExtendA
+\mnmDrawSiOTC
+\mnmDrawWellP
+\mnmDrawWellN
+\mnmDrawPolySiE
+\mnmDrawSiNseA*
+\mnmDrawNDS
+\mnmDrawPDS
+\mnmDrawHoleB
+\mnmDrawAlA
+\mnmDrawAlC
+
+\path (-3,2.7) node[black] {\ce{SiO2}};
+\path (+3,2.7) node[black] {\ce{SiO2}};
+
+\path (-3,2.7+0.48) node[white] {{\small $n^{+}$多晶硅}};
+\path (+3,2.7+0.48) node[white] {{\small $p^{+}$多晶硅}};
+
+\path (-5.5,4.08) node[white] {\ce{Al}};
+\path (0,4.08) node[white] {\ce{Al}};
+\path (+5.5,4.08) node[white] {\ce{Al}};
+
+\path (0,3.6) node[black] {\ce{SiON}};
+
+\draw (-4.5,4.5) node[black] {S};
+\draw (-3.0,4.1) node[black] {G};
+\draw (-1.5,4.5) node[black] {D};
+
+\draw (+4.5,4.5) node[black] {S};
+\draw (+3.0,4.1) node[black] {G};
+\draw (+1.5,4.5) node[black] {D};
+
+\draw (-3.0,1.6) node[black] {NMOS};
+\draw (+3.0,1.6) node[black] {PMOS};
+\draw (0,1.5) node[black] {$p$外延};
+
+\end{tikzpicture}
+\end{document}

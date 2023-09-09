@@ -1,0 +1,151 @@
+\section{CMOS集成电路的工艺流程}
+
+\xref{tab:CMOS工艺简化流程}中给出了一个简略的CMOS工艺流程示意（其中光刻均使用正胶）
+\begin{enumerate}
+    \item 衬底和外延层
+    \item 淀积栅氧层
+    \item 淀积浅槽绝缘层
+    \item 注入$p$阱
+    \item 注入$n$阱
+    \item 淀积多晶硅层
+    \item 注入源区、漏区、多晶硅
+    \item 淀积互连层绝缘材料
+    \item 淀积互连层金属
+\end{enumerate}
+
+% \xref{tab:CMOS工艺简化流程}的示意流程中，光刻过程所使用的光刻胶，均为正胶，即曝光后可以溶解。
+
+这里要说明的两点是，互连层使用的绝缘材料\xce{SiON}是氮氧化硅，这是一种\xce{SiO2}和\xce{Si3N4}按照一定比例混合形成的物质，是生产中实际使用的互连层绝缘材料，不过，从理解上也可以将其视为\xce{SiO2}。互连层的主要意义是，按电路要求通过金属连接基底半导体的各个器件，作用类似于PCB中的布线，因此，就像PCB有多层电路板，互连层也可以有若干层（此处示例仅有一层），层间以绝缘材料隔开，层和层间的连接则通过在绝缘材料中打通孔或接触孔实现\footnote{通孔是指连接两个金属层的孔，接触孔是指连接金属层和半导体层的孔。}。
+
+\newpage
+
+\begin{TableLong}[CMOS工艺简化流程]{|c|c|}
+< >( )
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_01.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_07.fig.pdf}}\\
+(1--01)&(2--05)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_02.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_08.fig.pdf}}\\
+(1--02)&(2--06)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_03.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_09.fig.pdf}}\\
+(2--01)&(2--07)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_04.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_10.fig.pdf}}\\
+(2--02)&(3--01)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_05.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_11.fig.pdf}}\\
+(2--03)&(3--02)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_06.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_12.fig.pdf}}\\
+(2--04)&(3--03)\\
+%----------------------------------------%
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_13.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_19.fig.pdf}}\\
+(4--01)&(4--07)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_14.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_20.fig.pdf}}\\
+(4--02)&(4--08)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_15.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_21.fig.pdf}}\\
+(4--03)&(4--09)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_16.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(4--04)&\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_17.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(4--05)&\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_18.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(4--06)&\\
+%----------------------------------------%
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_22.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_28.fig.pdf}}\\
+(5--01)&(5--07)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_23.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_29.fig.pdf}}\\
+(5--02)&(5--08)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_24.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_30.fig.pdf}}\\
+(5--03)&(5--09)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_25.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(5--04)&\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_26.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(5--05)&\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_27.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(5--06)&\\
+%----------------------------------------%
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_31.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_37.fig.pdf}}\\
+(6--01)&(6--07)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_32.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_38.fig.pdf}}\\
+(6--02)&(7--01)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_33.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_39.fig.pdf}}\\
+(6--03)&(7--02)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_34.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(6--04)&\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_35.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(6--05)&\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_36.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(6--06)&\\
+%----------------------------------------%
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_40.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_45.fig.pdf}}\\
+(7--04)&(7--09)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_41.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_46.fig.pdf}}\\
+(7--05)&(7--10)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_42.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_47.fig.pdf}}\\
+(7--06)&(7--11)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_43.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_48.fig.pdf}}\\
+(7--07)&(7--12)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_44.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_49.fig.pdf}}\\
+(7--08)&(7--13)\\
+\xcell<c>[2ex][0ex]{--}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_50.fig.pdf}}\\
+ &(7--14)\\
+%----------------------------------------%
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_63.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_56.fig.pdf}}\\
+(8--01)&(8--07)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_51.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_57.fig.pdf}}\\
+(8--02)&(9--01)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_52.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_58.fig.pdf}}\\
+(8--03)&(9--02)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_53.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_59.fig.pdf}}\\
+(8--04)&(9--03)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_54.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_60.fig.pdf}}\\
+(8--05)&(9--04)\\
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_55.fig.pdf}}&
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_61.fig.pdf}}\\
+(8--06)&(9--05)\\
+%----------------------------------------%
+\xcell<c>[2ex][0ex]{\includegraphics[width=6.2cm]{build/Chapter02A_62.fig.pdf}}&
+\xcell<c>[2ex][0ex]{--}\\
+(9--06)&\\
+\end{TableLong}
+
+通过\xref{tab:CMOS工艺简化流程}，我们可以总结出\xref{sec:CMOS集成电路的工艺简介}中五种工艺的作用
+\begin{itemize}
+    \item 淀积可以产生均匀材料层
+    \item 光刻可以赋予刻蚀和掺杂以选择性
+    \item 刻蚀可以选择性的移除材料
+    \item 掺杂可以选择性的改变材料
+    \item 平坦化可以平整淀积层表面
+\end{itemize}
+通过\xref{tab:CMOS工艺简化流程}我们也可以看到，集成电路的制造工艺流程是非常复杂且繁琐的！

@@ -1,0 +1,29 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\draw[ultra thin](-8,0.5) rectangle (8,5);
+
+\foreach \x/\y/\t/\n in%
+{%
+    -7/4/N型硅/mnmN0,
+    -5/4/P型硅/mnmP0,%
+    -3/4/\ce{SiO2}/mnmSiO2,%
+    -1/4/\ce{Si3N4}/mnmSi3N4,%
+    +1/4/\ce{SiON}/mnmSiON,%
+    +3/4/多晶硅/mnmPolySi,%
+    +5/4/N型多晶硅/mnmPolySiN,%
+    +7/4/P型多晶硅/mnmPolySiP,%
+    -7/2/\ce{Al}/mnmAl,%
+    +1/2/光刻胶--曝光前/mnmLIGhard,%
+    +5/2/光刻胶--曝光后/mnmLIGsoft%
+}%
+{%
+    \draw[fill=\n]
+    ($(\x,\y)+(-0.5,-0.5)$) coordinate (A) rectangle ($(\x,\y)+(0.5,0.5)$) coordinate (B);
+    \path ($(A)!0.5!(A-|B)$) node[below] {\small \t};   
+}%
+%
+\end{tikzpicture}
+\end{document}
