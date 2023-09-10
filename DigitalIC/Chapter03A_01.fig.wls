@@ -13,7 +13,6 @@ Export[nbPDFName,""]
 
 mTable={1/3,1/2}
 mStrTable={{"\:7ebf\:6027\:7ed3","1/3"},{"\:7a81\:53d8\:7ed3","1/2"}}
-String
 fig=
 {
 	Plot[(Exp[VD/(0.026)]-1),{VD,-1,1},
