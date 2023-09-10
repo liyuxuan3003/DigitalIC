@@ -1,0 +1,27 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-3.0]
+\xValDefine{xR}[+3.0]
+\xValProportion{xDopeL}{xL}{xR}[1/7]
+\xValProportion{xDopeR}{xL}{xR}[3/7]
+\xValProportion{xDope}{xDopeL}{xDopeR}
+\xValSymmetrize{xDopeMirror}{xDope}{xL}{xR}
+
+\xValDefine{yB}[0.0]
+\xValDefine{yA}[2.0]
+\xValOffset{yPin}{yA}[1.0]
+\xValProportion{yDope}{yA}{yB}[0.4]
+
+\xGeneratePoints{xL,xR,xDopeL,xDopeR,xDope,xDopeMirror}{yB,yA,yPin,yDope}
+
+\draw[fill=mnmN2] (xL/yB) rectangle node[below,white] {$n$}  (xR/yA);
+\draw[fill=mnmP0] (xDopeL/yDope) rectangle node[white] {$p^{+}$} (xDopeR/yA);
+
+\draw (xDope/yA) -- (xDope/yPin) node[ocirc] {} node[above] {$+$};
+\draw (xDopeMirror/yA) -- (xDopeMirror/yPin) node[ocirc] {} node[above] {$-$};
+
+\end{tikzpicture}
+\end{document}

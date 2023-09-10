@@ -1,0 +1,145 @@
+\section{PN结二极管}
+PN结二极管虽然很少直接出现在当今数字门的电路图中，但它们仍然是无所不在的。每个MOS管内都寄生有一定数量的反向偏置二极管，它们直接影响着器件行为，特别是这些寄生二极管形成的与电压有关的电容在MOS数字逻辑门的开关特性中起着重要的作用。PN结二极管也用来保护IC的输入器件以抗静电荷。基于以上原因，在此，我们有必要回顾以下二极管的特性。我们不求全面，只集中于对MOS电路设计有影响的方面，即反偏PN结二极管。
+
+PN结二极管是最简单的半导体器件，\xref{fig:集成电路工艺中PN结二极管的截面图}是典型PN结的截面图\footnote{\xref{fig:p+n结}和\xref{fig:pn+结}分别展示了P$^{+}$N结和PN$^{+}$结，其中$+$代表该区域掺杂浓度远高于另一区域。}。PN结的结构我们在模拟电路、半导体物理、半导体器件物理中都已经非常熟悉了，由$p$型区域和$n$型区域构成。
+
+\begin{Figure}[集成电路工艺中PN结二极管的截面图]
+    \begin{FigureSub}[P$^{+}$N结;p+n结]
+        \includegraphics{build/Chapter03A_02.fig.pdf}
+    \end{FigureSub}
+    \hspace{1cm}
+    \begin{FigureSub}[PN$^{+}$结;pn+结]
+        \includegraphics{build/Chapter03A_03.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsection{PN结二极管的静态特性}
+静态特性主要是关于PN结二极管的内建电势和理想电流--电压方程，以及其手工分析模型。
+
+\subsubsection{PN结二极管的内建电势}
+\begin{BoxFormula}[PN结二极管的内建电势]
+    PN结二极管的\uwave{内建电势}（Built-In Potential）为
+    \begin{Equation}
+        \phi_0=\phi_T\ln(\frac{N_AN_D}{n_i^2})
+    \end{Equation}
+    其中$\phi_T$称为\uwave{热电势}（Thermal Potential）为
+    \begin{Equation}
+        \phi_T=\frac{\kB T}{q}
+    \end{Equation}
+\end{BoxFormula}
+
+其中，在室温$300\si{K}$下，$\phi_T=26\si{mV}$，$n_i=1.5\times 10^{10}\si{cm^{-3}}$（对于硅）。
+
+\subsubsection{PN结二极管的器件方程}
+\begin{BoxFormula}[PN结二极管的器件方程]
+    PN结二极管的理想电流--电压关系为
+    \begin{Equation}
+        I_D=I_S(\e^{V_D/\phi_T}-1)
+    \end{Equation}
+    其中$I_D,V_D$分别是PN结上的电流与电压，而$I_S$为反向饱和电流。
+\end{BoxFormula}
+
+通常来说，对于一个典型的硅PN结，其反向饱和电流$I_S$在$10^{-17}\si{A.um^{-2}}$，取决于PN结的截面积。但是，受到反向产生电流的影响，实际的反向饱和电流要比$I_S$大约三个数量级。\goodbreak
+
+在\xref{fig:PN结二极管的电流--电压关系}中，我们绘制了PN结二极管的电流和电压间的这种指数关系。
+
+\begin{Figure}[PN结二极管的电流--电压关系]
+    \includegraphics{build/Chapter03A_01a.fig.pdf}
+    \hspace{0.5cm}
+\end{Figure}
+
+\subsubsection{PN结二极管的手工分析模型}
+
+PN结二极管运用\xref{fml:PN结二极管的器件方程--电压关系}给出的指数关系分析，固然能产生精确的结果，但缺点在于其是高度非线性的，这就阻碍了对一个包含二极管的电路的直流工作状态进行快速分析。
+
+PN结二极管的一个常用的简化模型可以从对\xref{fig:PN结二极管的电流--电压关系}的观察中得到。
+
+\begin{BoxFormula}[PN结二极管的手工分析模型]
+    PN结二极管的手工分析模型中，二极管被简化为仅有“导通”或“截止”两种状态。
+    \begin{itemize}
+        \item 若为截止状态，二极管被视为开路。
+        \item 若为导通状态，二极管被假定具有固定恒压降$V_{Don}=0.7\si{V}$，即等效为一个电压源。
+    \end{itemize}
+
+    PN结的状态则按以下原则判定，先按其截止开路分析电路，若两端电压$V_D\leq V_{Don}$则截止，若两端电压$V_D> V_{Don}$则导通，随后基于导通的$V_{Don}$恒压降模型重新分析电路。
+\end{BoxFormula}
+
+\begin{Figure}[PN结二极管的手工分析模型]
+    \includegraphics[width=\linewidth]{build/Chapter03A_04.fig.pdf}
+\end{Figure}
+
+简而言之，在简化模型下，PN结二极管被视为一个需要一定电压开启的单向阀。
+
+需要补充说明的是，当电路中有不止一个PN结二极管存在时，有时会出现这样的情况，假设所有二极管截止开路，分析后发现有多个二极管符合$V_{D}>V_{Don}$应当导通，此时，不能直接认为这些二极管都导通，否则可能会出现矛盾。正确的做法是，在$V_{D}>V_{Don}$的二极管中选择两端电压$V_D$最大那一个认为其导通，其余二极管的状态则保持待定，重新迭代该过程。
+
+\subsection{PN结二极管的动态特性}
+动态特性主要是关于PN结二极管的耗尽区电荷、宽度、电场，以及势垒电容。
+
+\begin{BoxFormula}[PN结二极管的耗尽区电荷]
+    PN结二极管的耗尽区电荷为
+    \begin{Equation}
+        Q_j=A_D\sqrt{\qty(2\varepsilon_{si}q\frac{N_AN_D}{N_A+N_D})(\phi_0-V_D)}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[PN结二极管的耗尽区宽度]
+    PN结二极管的耗尽区宽度为
+    \begin{Equation}
+        W_j=\sqrt{\qty(\frac{2\varepsilon_{si}}{q}\frac{N_A+N_D}{N_AN_D})(\phi_0-V_D)}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{BoxFormula}[PN结二极管的耗尽区最大电场]
+    PN结二极管的耗尽区最大电场为
+    \begin{Equation}
+        E_j=\sqrt{\qty(\frac{2q}{\varepsilon_{si}}\frac{N_AN_D}{N_A+N_D})(\phi_0-V_D)}
+    \end{Equation}
+\end{BoxFormula}
+
+其中，硅的介电常数$\varepsilon_{si}=11.7\varepsilon_0$，耗尽区宽度$W_j$在$n$区和$p$区的宽度$W_n,W_p$与两侧的掺杂浓度$N_D,N_A$有关，具体而言，宽度之比是掺杂浓度之反比，即有$W_n/W_p=(N_D/N_A)^{-1}$。
+
+势垒电容$C_j$即耗尽区电荷$Q_j$随电压$V_D$变化的微分电容，即
+\begin{Equation}
+    C_j=\dv{Q_j}{V_D}=A_D\sqrt{\qty(2\varepsilon_{si}q\frac{N_AN_D}{N_A+N_D})(\phi_0-V_D)^{-1}}
+\end{Equation}
+势垒电容$C_j$在$V_D=0$时为
+\begin{Equation}
+    C_{j0}=A_D\sqrt{\qty(2\varepsilon_{si}q\frac{N_AN_D}{N_A+N_D})(\phi_0)^{-1}}
+\end{Equation}
+由以上两式，计算$C_j$与$C_{j0}$的比
+\begin{Equation}
+    \qquad\qquad
+    \frac{C_j}{C_{j0}}=\sqrt{\frac{(\phi_0-V_D)^{-1}}{(\phi_0)^{-1}}}=\sqrt{\frac{\phi_0}{\phi_0-V_D}}=\sqrt{\frac{1}{1-V_D/\phi_0}}=\frac{1}{\sqrt{1-V_D/\phi_0}}
+    \qquad\qquad
+\end{Equation}
+由此可以比较直观的提取出$C_j$随$V_D$的变化关系
+\begin{Equation}
+    C_j=\frac{C_{j0}}{\sqrt{1-V_D/\phi_0}}
+\end{Equation}
+然而，这个结论仅适用于突变结，但是实践中往往更常见的是缓变结。为了解决这个问题，我们引入一个参数$m$，对于突变结$m=1/2$，对于线性缓变结$m=1/3$，关于$m$的由来很容易理解，在半导体物理中，我们曾推导过，突变结的电势随距离呈二次变化，线性缓变结的电势随距离呈三次变化，而$m$即为该“电势分布幂次”或者“电荷密度分布幂次$+2$”的倒数。
+
+\begin{BoxFormula}[PN结二极管的势垒电容]
+    PN结二极管的势垒电容
+    \begin{Equation}
+        C_j=\frac{C_{j0}}{(1-V_D/\phi_0)^m}
+    \end{Equation}
+    其中$m$称为梯度系数，对于突变结$m=1/2$，对于线性缓变结$m=1/3$。
+\end{BoxFormula}
+
+在\xref{fig:PN结二极管的势垒电容}中，我们绘制了PN结二极管的势垒电容随电压的变化关系。
+\begin{Figure}[PN结二极管的势垒电容]
+    \includegraphics{build/Chapter03A_01b.fig.pdf}
+    \hspace{0.5cm}
+\end{Figure}
+
+容易看出，突变结相较线性缓变结，随着反向偏置电压增大，势垒电容减小更快。
+
+\subsection{PN结二极管的二次效应}
+PN结二极管在以上性质外，还有些更为复杂的二次效应
+\begin{itemize}
+    \item 当正向偏压较大时，需要考虑中性区电阻上的电压降，这会使$I_D$低于预期。
+    \item 当反向偏压较大时，需要考虑雪崩击穿和齐纳击穿。\goodbreak
+    \item 温度升高时，热电势$\phi_T$将增加，这会使电流减小。
+    \item 温度升高时，饱和电流$I_s$将增加，这会使得电流增大。
+\end{itemize}
+温度的双重效应分别作用于$\phi_T$和$I_S$并产生相反的结果，结果是，\empx{电流将随温度升高增加}。

@@ -2,6 +2,50 @@
 
 \newcommand{\te}[1]{\text{#1}}
 
+\def\xEval#1{\expandafter\csname#1\endcsname}
+
+\NewDocumentCommand{\xGeneratePoints}{mm}%
+{%
+    \foreach \x in {#1}%
+    {%
+        \foreach \y in {#2}%
+        {%
+            \path (\xEval{\x},\xEval{\y}) coordinate(\x/\y);%
+        }%
+    }%
+}%
+
+\NewDocumentCommand{\xValDefine}{mO{0}}%
+{%
+    \expandafter\def\csname#1\endcsname{#2}
+}%
+
+\NewDocumentCommand{\xValOffset}{mmO{0}}%
+{%
+    \xValDefine{#1}[\fpeval{(\xEval{#2})+(#3)}]%
+}%
+
+\NewDocumentCommand{\xValProportion}{mmmO{0.5}}%
+{%
+    \xValDefine{#1}[\fpeval{(1-#4)*(\xEval{#2})+(#4)*(\xEval{#3})}]%
+}%
+
+\NewDocumentCommand{\xValMiddle}{mmm}%
+{%
+    \xValProportion{#1}{#2}{#3}[0.5]%
+}%
+
+\NewDocumentCommand{\xValMirror}{mmm}%
+{%
+    \xValProportion{#1}{#2}{#3}[2]%
+}%
+
+\NewDocumentCommand{\xValSymmetrize}{mmmm}%
+{%
+    \xValDefine{#1}[\fpeval{\xEval{#3}+\xEval{#4}-\xEval{#2}}]%
+}%
+
+
 %--------------------------------------%
 
 \definecolor{mnmP}{HTML}{FF0000}

@@ -1,0 +1,42 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xValDefine{xL}[-8.0]
+\xValDefine{xR}[+8.0]
+\xValProportion{xDiode}{xL}{xR}[0.15]
+\xValProportion{xOpen}{xL}{xR}[0.55]
+\xValProportion{xClos}{xL}{xR}[0.82]
+
+\xValDefine{yB}[-3.0]
+\xValDefine{yA}[+3.0]
+\xValProportion{y+}{yA}{yB}[0.12]
+\xValProportion{y-}{yA}{yB}[0.75]
+\xValProportion{yText}{yA}{yB}[0.90]
+\xValProportion{yShort+}{y+}{y-}[0.30]
+\xValProportion{yShort-}{y+}{y-}[0.70]
+
+\xGeneratePoints{xL,xR,xDiode,xOpen,xClos}{yB,yA,yText,y-,y+,yShort+,yShort-}
+
+\draw[ultra thin] (xL/yB) rectangle (xR/yA);
+
+\draw 
+(xDiode/y+) to[D,o-o,v=$V_D$,i={$I_D=I_S(\e^{V_D/\phi_T}-1)$}] (xDiode/y-);
+
+\draw 
+(xOpen/y+) to[short,o-] 
+(xOpen/yShort+) to[open,v=$V_D$,o-o] (xOpen/yShort-) to[short,-o,i={$I_D=0$}] (xOpen/y-);
+
+\draw
+(xClos/y+) to[vsource,invert,o-o,v={$V_D=V_{Don}$},i={$I_D$}] (xClos/y-);
+
+\foreach \x/\t in {xDiode/PN结二极管,xOpen/截止模型,xClos/导通模型}
+{
+    \path (\x/y+) node[above] {$+$};
+    \path (\x/y-) node[below] {$-$};
+    \path (\x/yText) node {\t};
+}
+
+\end{tikzpicture}
+\end{document}
