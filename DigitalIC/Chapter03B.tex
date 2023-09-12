@@ -1,0 +1,71 @@
+\section{MOS晶体管}
+MOS晶体管无疑是现代数字电路设计中最基本的元件。从数字设计的角度来看，它的主要优点是作为一个开关具有良好的性能和很小的寄生效应。同时，从制造的观点来看，MOS管又有高集成密度和制造工艺相对简单的 优点，这使我们能以较经济的方式生产大而复杂的电路。
+
+MOSFET是一个四端器件，源极（Source）、漏极（Drain）、栅极（Gate）、体（Body）。从最浅显的角度讲，可以将MOSFET看成一个开关。当电压施加到栅上且大于一个给定的阈值电压时，在漏和源之间就形成了一个导电沟道，简而言之，\empx{栅电压可以控制源漏间导通与否}。
+
+\begin{Figure}[集成电路工艺中MOSFET的截面图]
+    \begin{FigureSub}[NMOS]
+        \includegraphics{build/Chapter03B_02.fig.pdf}
+    \end{FigureSub}
+    \hspace{1cm}
+    \begin{FigureSub}[PMOS]
+        \includegraphics{build/Chapter03B_03.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+MOSFET可以分为两种类型，如\xref{fig:集成电路工艺中MOSFET的截面图}所示
+\begin{itemize}
+    \item NMOS即代表源区和漏区为$n^{+}$型，具有$n$型沟道，电子导电，在$p$\hspace{0.43em}衬底上。
+    \item PMOS\hspace{0.4em}即代表源区和漏区为$p^{+}$\hspace{0.43em}型，具有$p$\hspace{0.43em}型沟道，空穴导电，在$n$衬底上。
+\end{itemize}
+
+\begin{Figure}[MOS晶体管的符号]
+    \begin{FigureSub}[四端NMOS]
+        \hspace{0.5cm}
+        \includegraphics{build/Chapter03B_08.fig.pdf}
+        \hspace{0.5cm}
+    \end{FigureSub}
+    \begin{FigureSub}[四端PMOS]
+        \hspace{0.5cm}
+        \includegraphics{build/Chapter03B_09.fig.pdf}
+        \hspace{0.5cm}
+    \end{FigureSub}
+    \begin{FigureSub}[三端NMOS]
+        \hspace{0.5cm}
+        \includegraphics{build/Chapter03B_10.fig.pdf}
+        \hspace{0.5cm}
+    \end{FigureSub}
+    \begin{FigureSub}[三端PMOS]
+        \hspace{0.5cm}
+        \includegraphics{build/Chapter03B_11.fig.pdf}
+        \hspace{0.5cm}
+    \end{FigureSub}
+\end{Figure}
+
+各种MOS管的符号如\xref{fig:MOS晶体管的符号}所示，正如前面提到的，MOSFET是一个有源、栅、漏、体四个端口的器件，如\xref{fig:四端NMOS}和\xref{fig:四端PMOS}所示。其中，体端口就是MOS晶体管的衬底，它的作用是次要的，只是起到调节器件特性和参数的作用。并且，由于体端口一般都连接到一个直流电源端，对于NMOS为GND，对于PMOS为VDD。因此，在电路图中，体端口常常不去显示，如\xref{fig:三端NMOS}和\xref{fig:三端PMOS}所示。若体端口未显示，则假设它连接到了一个合适的电源端上。
+
+\subsection{MOS晶体管的静态特性}
+在以下讨论中，我们将集中于NMOS器件，但事实上这些理论对于PMOS也是成立的。
+
+\begin{Figure}[MOS管的工作状态]
+    \begin{FigureSub}[初始状态]
+        \includegraphics{build/Chapter03B_04.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.9cm}
+    \begin{FigureSub}[栅耗尽层]
+        \includegraphics{build/Chapter03B_05.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.8cm}
+    \begin{FigureSub}[沟道形成]
+        \includegraphics{build/Chapter03B_06.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.9cm}
+    \begin{FigureSub}[沟道夹断]
+        \includegraphics{build/Chapter03B_07.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsubsection{MOS晶体管的阈值电压}
+
+如\xref{fig:初始状态}所示，首先考虑$V_{GS}=0$的情形，漏和源之间由背靠背的PN结所连接，因此可以被考虑为断开。并且此时，漏和源之间无论加什么电压都无法导通，因为总有一个结将反偏。
+
+如\xref{fig:栅耗尽层}所示，现在考虑$V_{GS}>0$的情形，将一个正电压加到栅极上，此时，栅和衬底就形成了一个电容的两个极板，栅氧则充当了电介质。栅压的作用就使正负电荷分别聚集到电容的两个极板，栅极一侧聚集负电荷，衬底一侧聚集正电荷。该过程是通过栅压排斥$p$衬底中的空穴形成的，因此，在栅极下方就形成了一块缺乏载流子的耗尽区，这与PN结二极管的耗尽区非常相似。两者的差异在于，PN结二极管的耗尽区最初是因为$p$区和$n$区间的浓度梯度自然形成并由内建电势$\phi_0$维持的，但我们要知道，\empx{耗尽区本质就是电压的产物，无论是浓度梯度导致的内建电压，还是外加电压，其结果是等效的}。PN结上的外加电压将电势改变为$\phi_0-V_D$并使耗尽区宽度发生变化，而这里，栅极下的耗尽层则完全由外加栅压$\phi$在$p$型半导体上独立形成的，由此可见，\empx{耗尽区也可以存在于单一掺杂的半导体中}。所以，如果我们要研究栅极耗尽层的特性，只要将PN结耗尽区的相关公式中的$\phi_0-V_D$替换为$\phi$即可\footnote{关于$\phi_0-V_D$和$\phi$，有一个细节问题，PN结的外加电压$V_D$为负，为何栅极耗尽层中外加栅压$\phi$为正？这是因为，排列排列顺序是，$p$型衬底、栅极耗尽层，栅压。栅压事实上加在了PN结中的$n$型区域一侧，所以，正栅压对于耗尽区反而是负值。}。

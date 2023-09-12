@@ -1,0 +1,21 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xC}[0.0]
+
+\xValDefine{yC}[0.0]
+
+\xGeneratePoints{xC}{yC}
+
+\path (xC/yC) node[pfetd,name=mos] {};
+
+\path (mos.G) node[left] {G};
+\path (mos.S) node[right] {S};
+\path (mos.D) node[right] {D};
+\path (mos.B) node[right] {B};
+\path ($(mos.G)+(0.3,0)$) node[circ] {};
+
+\end{tikzpicture}
+\end{document}
