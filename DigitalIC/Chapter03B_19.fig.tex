@@ -1,0 +1,42 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-3]
+\xValDefine{xR}[+3]
+\xValOffset{xBordorL}{xL}[-0.7]
+\xValOffset{xBordorR}{xR}[+0.7]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xSc}{xL}{xR}[0.2]
+\xValMirror{xDc}{xSc}{xC}
+
+\xValDefine{yB}[-2]
+\xValDefine{yA}[+2]
+\xValOffset{yBordorB}{yB}[-0.7]
+\xValOffset{yBordorA}{yA}[+0.7]
+\xValMiddle{yC}{yA}{yB}
+\xValProportion{yBc}{yA}{yB}[0.9]
+\xValProportion{yAc}{yA}{yB}[0.1]
+\xValProportion{yMOS}{yA}{yB}[0.5]
+
+\xGeneratePoints{xL,xR,xC,xSc,xDc,xBordorL,xBordorR}{yB,yA,yC,yBc,yAc,yMOS,yBordorB,yBordorA}
+
+\path (xC/yMOS) node[nfetd,rotate=-90,name=mos] {};
+
+\path (mos.north east) node[above=0.6cm] {\small NMOS};
+
+\draw (mos.G) to[short,-o] (mos.G|-yA) node[above] {G};
+\draw (mos.S) |- (xL|-mos.S) node[ocirc] {} node[left] {S}; 
+\draw (mos.D) |- (xR|-mos.D) node[ocirc] {} node[right] {D}; 
+
+\draw (xC/yAc) -- (xSc/yAc) to[C,l_=$C_{GS}$,-*] (xSc |- mos.S);
+\draw (xC/yAc) -- (xDc/yAc) to[C,l^=$C_{GD}$,-*] (xDc |- mos.D);
+\draw (xC/yBc) -- (xSc/yBc) to[C,l^=$C_{SB}$] (xSc |- mos.S);
+\draw (xC/yBc) -- (xDc/yBc) to[C,l_=$C_{DB}$] (xDc |- mos.D);
+\draw (xC/yAc) to[short,*-] (mos.B)  to[C=$C_{GB}$,-*] (xC/yBc) to[short,-o] (xC/yB) node[below] {B};
+
+\draw[ultra thin] (xBordorL/yBordorB) rectangle (xBordorR/yBordorA);
+
+\end{tikzpicture}
+\end{document}

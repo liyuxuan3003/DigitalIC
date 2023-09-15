@@ -1,0 +1,48 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xValDefine{xL}[-8.0]
+\xValDefine{xR}[+8.0]
+\xValProportion{xMOS}{xL}{xR}[0.17]
+\xValOffset{xG}{xMOS}[-1.2]
+\xValOffset{xB}{xMOS}[+0.8]
+\xValProportion{xModel}{xL}{xR}[0.48]
+\xValOffset{xModelG}{xModel}[-1]
+\xValOffset{xModelB}{xModel}[+1]
+\xValMiddle{xVmin}{xModel}{xR}[0.5]
+
+\xValDefine{yB}[-3.0]
+\xValDefine{yA}[+3.0]
+\xValProportion{yD}{yA}{yB}[0.12]
+\xValProportion{yS}{yA}{yB}[0.75]
+\xValMiddle{yG}{yD}{yS}
+\xValProportion{yVmin}{yA}{yB}[0.8]
+\xValProportion{yText}{yA}{yB}[0.90]
+
+\xGeneratePoints{xL,xR,xG,xB,xMOS,xModel,xModelG,xModelB,xVmin}{yB,yA,yD,yS,yG,yVmin,yText}
+
+\path (xMOS/yG) node[nfetd,name=mos] {};
+
+\draw (mos.D) to[short,-o,i<=$I_D$] (mos.D|-yD) node[above] {D};
+\draw (mos.S) to[short,-o] (mos.S|-yS) node[below] {S};
+\draw (mos.G) to[short,-o] (xG|-mos.G) node[left]  {G};
+\draw (mos.B) to[short,-o] (xB|-mos.B) node[right] {B};
+
+\draw (xModel/yD) node[above] {D} to[isource={$I_D=k_n\qty(V_{GT}V_{\min}-V_{\min}^2/2)(1+\lambda V_{DS}), V_{GT}>0$},o-o] (xModel/yS) node[below] {S};
+
+\path ($(xModel/yD)!0.3!(xModel/yG)$) node[right] {$I_D=0, V_{GT}<0$};
+
+\draw (xModelG/yG) node[ocirc] {} node[left]  {G}; 
+\draw (xModelB/yG) node[ocirc] {} node[right] {B}; 
+
+\path (xVmin/yVmin) node {\small $V_{\min}=\min(V_{DS},V_{GT},V_{DSAT})$};
+
+\path (xMOS/yText) node {NMOS晶体管};
+\path (xModel/yText) node {电流源模型};
+
+\draw[ultra thin] (xL/yB) rectangle (xR/yA);
+
+\end{tikzpicture}
+\end{document}

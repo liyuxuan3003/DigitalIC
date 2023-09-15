@@ -1,0 +1,145 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-8]
+\xValDefine{xR}[+8]
+\xValMiddle{xC}{xL}{xR}
+
+\xValProportion{xChannleL}{xL}{xR}[0.38]
+\xValSymmetrize{xChannleR}{xChannleL}{xL}{xR}
+
+\xValOffset{xSR}{xChannleL}
+\xValOffset{xDL}{xChannleR}
+\xValProportion{xSL}{xL}{xR}[0.20]
+\xValSymmetrize{xDR}{xSL}{xL}{xR}
+\xValProportion{xGL}{xSL}{xSR}[2/3]
+\xValSymmetrize{xGR}{xGL}{xL}{xR}
+\xValMiddle{xGSc}{xGL}{xSR}
+\xValMiddle{xGDc}{xGR}{xDL}
+
+\xValOffset{xtox}{xGR}[0.5]
+\xValOffset{xxn}{xSR}[0.5]
+
+\xValMiddle{xtoxc}{xtox}{xGR}
+\xValMiddle{xxnc}{xxn}{xSR}
+
+\xValMiddle{xS}{xSL}{xSR}
+\xValMiddle{xG}{xGL}{xGR}
+\xValMiddle{xD}{xDL}{xDR}
+
+\xValProportion{xBS}{xL}{xR}[0.12]
+\xValProportion{xBSp}{xL}{xR}[0.06]
+\xValSymmetrize{xBD}{xBS}{xL}{xR}
+\xValSymmetrize{xBDp}{xBSp}{xL}{xR}
+
+\xValOffset{xBordorL}{xL}[-0.5]
+\xValSymmetrize{xBordorR}{xBordorL}{xL}{xR}
+
+\xValDefine{yB}[0.0]
+\xValDefine{yA}[4.0]
+
+\xValOffset{ySiO2B}{yA}[2.0]
+\xValOffset{ySiO2A}{ySiO2B}[1.0]
+\xValOffset{ySiO2dis}{ySiO2A}[0.5]
+\xValMiddle{ySiO2disc}{ySiO2dis}{ySiO2A}
+
+\xValProportion{ySDA}{yA}{yB}[0.25]
+\xValProportion{ySDB}{yA}{yB}[0.50]
+\xValMiddle{ySD}{ySDA}{yA}
+\xValOffset{ySDdis}{ySDB}[-0.75]
+\xValMiddle{ySDdisc}{ySDdis}{ySDB}
+
+\xValProportion{ypText}{yB}{ySDB}[0.3]
+
+\xValOffset{yBordorB}{yB}[-0.7]
+\xValOffset{yBordorA}{ySiO2A}[1]
+
+\xGeneratePoints{xL,xR,xC,xChannleL,xChannleR,xSL,xSR,xS,xGL,xGR,xG,xDL,xDR,xD,xBS,xBSp,xBD,xBDp,xGSc,xGDc,xBordorL,xBordorR,xtox,xxn,xtoxc,xxnc}{yB,yA,ySiO2B,ySiO2A,ySDA,ySDB,ypText,ySD,ySDdis,ySDdisc,ySiO2dis,ySiO2disc,yBordorA,yBordorB}
+
+\draw[fill=mnmN0] (xSL/ySDA) rectangle node[white] {$n^{+}$} (xSR/yA);
+\draw[fill=mnmN0] (xDL/ySDA) rectangle node[white] {$n^{+}$} (xDR/yA);
+\draw[fill=mnmSiO2] (xGL/ySiO2B) rectangle node[black] {\ce{SiO2}} (xGR/ySiO2A);
+
+\draw[dashed] (xSR/ySiO2A) -- (xSR/ySiO2B);
+\draw[dashed] (xDL/ySiO2A) -- (xDL/ySiO2B);
+
+\path (xG/ySiO2A) node[above] {G};
+\path (xS/yA) node[above] {S};
+\path (xD/yA) node[above] {D};
+
+\draw[fill=mnmP2]
+(xL/yA) --
+(xL/yB) --
+node[below] {B}
+(xR/yB) --
+(xR/yA) -- %%
+(xBD/yA) --
+(xBD/ySDB) --
+(xChannleR/ySDB) --
+(xChannleR/yA) --
+(xChannleL/yA) --
+(xChannleL/ySDB) --
+(xBS/ySDB) --
+(xBS/yA) --
+cycle;
+
+\path (xC/ypText) node[white] {$p$};
+
+\draw[fill=mnmP1] (xBSp/ySDB) rectangle node[white] {$p^{+}$} (xBS/yA);
+\draw[fill=mnmP1] (xBDp/ySDB) rectangle node[white] {$p^{+}$} (xBD/yA);
+
+\draw (xGSc/ySiO2B) to[C=$C_{GSO}$] (xGSc/yA);
+\draw (xGDc/ySiO2B) to[C=$C_{GDO}$] (xGDc/yA);
+\draw (xC/ySiO2B) to[C=$C_{GC}$] (xC/yA);
+
+\draw (xS/ySDA) to[C=$C_{Sbot}$] (xS/ySDB);
+\draw (xD/ySDA) to[C=$C_{Dbot}$] (xD/ySDB);
+
+\draw (xSL/ySD) to[C=$C_{Ssw}$] (xBS/ySD);
+\draw (xDR/ySD) to[C,l_=$C_{Dsw}$] (xBD/ySD);
+
+\path (xBS/ySDB) node[above right] {\footnotesize 结电容};
+\path (xBD/ySDB) node[above left] {\footnotesize 结电容};
+
+\path (xC/ySiO2B) node[below right] {\footnotesize 栅电容};
+
+\foreach \x in {xSL,xSR,xDL,xDR}
+{
+    \draw[ultra thin,white] (\x/ySDB) --(\x/ySDdis);
+}
+
+\draw[latex-latex,white] (xSL/ySDdisc) -- node[below] {$L_S$} (xSR/ySDdisc);
+\draw[latex-latex,white] (xDL/ySDdisc) -- node[below] {$L_D$} (xDR/ySDdisc);
+\draw[latex-latex,white] (xSR/ySDdisc) -- node[below] {$L$} (xDL/ySDdisc);
+
+\foreach \x in {xGL,xGR,xSR,xDL}
+{
+    \draw[ultra thin] (\x/ySiO2A) --(\x/ySiO2dis);
+}
+
+\draw[latex-latex] (xGL/ySiO2disc) -- node[above] {$x_d$} (xSR/ySiO2disc);
+\draw[latex-latex] (xGR/ySiO2disc) -- node[above] {$x_d$} (xDL/ySiO2disc);
+
+\foreach \y in {ySDA}
+{
+    \draw[ultra thin,white] (xSR/\y) -- (xxn/\y);
+}
+
+\foreach \y in {ySiO2A,ySiO2B}
+{
+    \draw[ultra thin,black] (xGR/\y) -- (xtox/\y);
+}
+
+\draw[latex-latex,white] (xxnc/ySDA) -- node[right] {$x_j$} (xxnc/yA);
+\draw[latex-latex,black] (xtoxc/ySiO2A) -- node[right] {$t_{ox}$} (xtoxc/ySiO2B);
+
+\path (xBS/yA) node[above] {$C_{S\textit{diff}}=C_{Ssw}+C_{Sbot}$};
+\path (xBD/yA) node[above] {$C_{D\textit{diff}}=C_{Ssw}+C_{Sbot}$};
+
+
+\draw[ultra thin] (xBordorL/yBordorB) rectangle (xBordorR/yBordorA);
+
+\end{tikzpicture}
+\end{document}

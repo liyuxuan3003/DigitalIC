@@ -1,0 +1,146 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-8]
+\xValDefine{xR}[+8]
+\xValMiddle{xC}{xL}{xR}
+
+\xValProportion{xChannleL}{xL}{xR}[0.38]
+\xValSymmetrize{xChannleR}{xChannleL}{xL}{xR}
+
+\xValOffset{xSR}{xChannleL}
+\xValOffset{xDL}{xChannleR}
+\xValProportion{xSL}{xL}{xR}[0.20]
+\xValSymmetrize{xDR}{xSL}{xL}{xR}
+\xValProportion{xGL}{xSL}{xSR}[2/3]
+\xValSymmetrize{xGR}{xGL}{xL}{xR}
+\xValProportion{xGSc}{xGL}{xSR}[0.3]
+\xValProportion{xGDc}{xGR}{xDL}[0.3]
+
+\xValMiddle{xS}{xSL}{xSR}
+\xValMiddle{xG}{xGL}{xGR}
+\xValMiddle{xD}{xDL}{xDR}
+
+\xValProportion{xBS}{xL}{xR}[0.12]
+\xValProportion{xBSp}{xL}{xR}[0.06]
+\xValSymmetrize{xBD}{xBS}{xL}{xR}
+\xValSymmetrize{xBDp}{xBSp}{xL}{xR}
+
+\xValOffset{xBordorL}{xL}[-0.5]
+\xValSymmetrize{xBordorR}{xBordorL}{xL}{xR}
+
+\xValDefine{yB}[0.0]
+\xValDefine{yA}[10.0]
+\xValMiddle{yC}{yA}{yB}
+
+\xValProportion{yPA}{yA}{yB}[0.1]
+\xValMirror{yPB}{yPA}{yC}
+
+\xValProportion{yPsA}{yA}{yB}[0.2]
+\xValProportion{yPrA}{yPA}{yPsA}[0.5]
+\xValMirror{yPsB}{yPsA}{yC}
+\xValMirror{yPrB}{yPrA}{yC}
+
+\xValProportion{ySDA}{yA}{yB}[0.35]
+\xValMirror{ySDB}{ySDA}{yC}
+
+\xValMiddle{ySDAc}{ySDA}{yC}
+
+\xValOffset{yBordorB}{yB}[-0.5]
+\xValOffset{yBordorA}{yA}[+0.75]
+
+\xGeneratePoints{xL,xR,xC,xChannleL,xChannleR,xSL,xSR,xS,xGL,xGR,xG,xDL,xDR,xD,xBS,xBSp,xBD,xBDp,xGSc,xGDc,xBordorL,xBordorR}{yB,yA,yC,yPA,yPB,yPsA,yPsB,yPrA,yPrB,ySDA,ySDB,ySDAc,yBordorB,yBordorA}
+
+\draw[fill=mnmSiO2] (xGL/yB) rectangle node[above=1.8cm] {\ce{SiO2}} (xGR/yA);
+\draw[fill=mnmN0] (xSL/ySDB) rectangle node[white] {$n^{+}$} (xGL/ySDA); 
+\draw[fill=mnmN0] (xDR/ySDB) rectangle node[white] {$n^{+}$} (xGR/ySDA); 
+
+\path (xG/yA) node[above] {G} node[below=0.25cm] {\ce{SiO2}};
+\path (xS/ySDA) node[above right] {S};
+\path (xD/ySDA) node[above left]  {D};
+
+\draw[fill=mnmN0!10!mnmSiO2,dashed] (xGL/ySDA) -- (xSR/ySDA) |- (xGL/ySDB);
+\draw[fill=mnmN0!10!mnmSiO2,dashed] (xGR/ySDA) -- (xDL/ySDA) |- (xGR/ySDB);
+
+\draw[fill=mnmP2] 
+(xGL/yPA) -- 
+(xL/yPA) -- 
+node[right=0.25cm,white] {$p\vphantom{p^{+}}$}
+(xL/yPB) --
+(xGL/yPB) -- %%
+(xGL/yPsB) --
+(xBS/yPsB) --
+(xBS/yPsA) --
+(xGL/yPsA) --
+(xGL/yPA);
+
+\draw[fill=mnmP2] 
+(xGR/yPA) -- 
+(xR/yPA) -- 
+node[left=0.25cm,white] {$p\vphantom{p^{+}}$}
+(xR/yPB) --
+(xGR/yPB) -- %%
+(xGR/yPsB) --
+(xBD/yPsB) --
+(xBD/yPsA) --
+(xGR/yPsA) --
+(xGR/yPA);
+
+\draw[fill=mnmP1] 
+(xGL/yPrA) -- 
+(xBSp/yPrA) -- 
+node[right=0.15cm,white] {$p^{+}$}
+(xBSp/yPrB) --
+(xGL/yPrB) -- %%
+(xGL/yPsB) --
+(xBS/yPsB) --
+(xBS/yPsA) --
+(xGL/yPsA) --
+(xGL/yPrA);
+
+\draw[fill=mnmP1] 
+(xGR/yPrA) -- 
+(xBDp/yPrA) -- 
+node[left=0.10cm,white] {$p^{+}$}
+(xBDp/yPrB) --
+(xGR/yPrB) -- %%
+(xGR/yPsB) --
+(xBD/yPsB) --
+(xBD/yPsA) --
+(xGR/yPsA) --
+(xGR/yPrA);
+
+\draw[fill=mnmP1!10!mnmSiO2,dashed] (xGL/yPsA) rectangle (xSR/yPrA);
+\draw[fill=mnmP1!10!mnmSiO2,dashed] (xGL/yPsB) rectangle (xSR/yPrB);
+\draw[fill=mnmP1!10!mnmSiO2,dashed] (xGR/yPsA) rectangle (xDL/yPrA);
+\draw[fill=mnmP1!10!mnmSiO2,dashed] (xGR/yPsB) rectangle (xDL/yPrB);
+
+\draw[fill=mnmP2!10!mnmSiO2,dashed]
+(xGL/yPrA) -|
+(xSR/yPrB) -|
+(xGL/yPB) -|
+(xGR/yPrB) -|
+(xDL/yPrA) -|
+(xGR/yPA) -|
+(xGL/yPrA) --
+cycle;
+
+\draw (xS/ySDA) to[C,l^=$C_{Ssw}$] (xS/yPsA);
+\draw (xS/ySDB) to[C,l_=$C_{Ssw}$] (xS/yPsB);
+\draw (xSL/yC) to[C,l_=$C_{Ssw}$] (xBS/yC);
+
+\draw (xD/ySDA) to[C,l_=$C_{Dsw}$] (xD/yPsA);
+\draw (xD/ySDB) to[C,l^=$C_{Dsw}$] (xD/yPsB);
+\draw (xDR/yC) to[C,l^=$C_{Dsw}$] (xBD/yC);
+
+\draw[latex-latex,white] (xSL/ySDAc) -- node[above] {$L_S$} (xSR/ySDAc);
+\draw[latex-latex,white] (xDL/ySDAc) -- node[above] {$L_D$} (xDR/ySDAc);
+\draw[latex-latex,white] (xSR/ySDAc) -- node[above] {$L$} (xDL/ySDAc);
+\draw[latex-latex,white] (xGSc/ySDA) -- node[right] {$W$} (xGSc/ySDB);
+
+\draw[ultra thin] (xBordorL/yBordorB) rectangle (xBordorR/yBordorA);
+
+\end{tikzpicture}
+\end{document}

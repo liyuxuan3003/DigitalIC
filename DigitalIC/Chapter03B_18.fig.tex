@@ -1,0 +1,29 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-3]
+\xValDefine{xR}[+3]
+\xValOffset{xBordorL}{xL}[-0.7]
+\xValOffset{xBordorR}{xR}[+0.7]
+\xValMiddle{xC}{xL}{xR}
+
+\xValDefine{yB}[-1]
+\xValDefine{yA}[+1]
+\xValOffset{yBordorB}{yB}[-0.7]
+\xValOffset{yBordorA}{yA}[+0.7]
+\xValMiddle{yC}{yB}{yA}
+
+\xGeneratePoints{xL,xR,xC,xBordorL,xBordorR}{yB,yA,yC,yBordorB,yBordorA}
+
+\draw
+(xL/yC) node[left] {S} to[switch,o-] (xC/yC) to[R=$R_{on}$,-o] (xR/yC) node[right] {D};
+
+\path (xC/yB) node[ocirc] {} node[below] {B};
+\path (xC/yA) node[ocirc] {} node[above] {G};
+
+\draw[ultra thin] (xBordorL/yBordorB) rectangle (xBordorR/yBordorA);
+
+\end{tikzpicture}
+\end{document}

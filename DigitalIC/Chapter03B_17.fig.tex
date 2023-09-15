@@ -1,0 +1,74 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-3.0]
+\xValDefine{xR}[+3.0]
+
+\xValProportion{xGL}{xL}{xR}[0.25]
+\xValProportion{xGR}{xL}{xR}[0.75]
+
+\xValProportion{xSR}{xL}{xR}[1/3]
+\xValProportion{xDL}{xL}{xR}[2/3]
+
+\xValOffset{xSL}{xL}
+\xValOffset{xDR}{xR}
+
+\xValMiddle{xS}{xSL}{xSR}
+\xValMiddle{xG}{xGL}{xGR}
+\xValMiddle{xD}{xDL}{xDR}
+
+\xValOffset{xSdpr}{xSR}[+0.2]
+\xValOffset{xDdpr}{xDL}[-0.2]
+
+\xValDefine{yB}[0.0]
+\xValDefine{yA}[2.0]
+\xValOffset{ySiO2B}{yA}[1]
+\xValOffset{ySiO2}{ySiO2B}[0.5]
+\xValOffset{yPin}{ySiO2B}[1.0]
+\xValProportion{yDope}{yA}{yB}[0.4]
+
+\xValOffset{ydpr}{yDope}[-0.2]
+\xValOffset{yChannleA}{yA}[-0.4]
+\xValOffset{yChannleB}{yChannleA}[-0.2]
+\xValOffset{yChannleB'}{yA}[-0.25]
+
+\xGeneratePoints{xL,xR,xGL,xGR,xSL,xSR,xDL,xDR,xS,xD,xG,xSdpr,xDdpr}{yB,yA,yPin,ySiO2,ySiO2B,yDope,ydpr,yChannleA,yChannleB,yChannleB'}
+
+\draw[fill=mnmP2] (xL/yB) rectangle node[below,white] {$p$}  (xR/yA);
+
+\draw[fill=mnmN0] (xSL/yDope) rectangle node[white] {$n^{+}$} (xSR/yA);
+\draw[fill=mnmN0] (xDL/yDope) rectangle node[white] {$n^{+}$} (xDR/yA);
+
+\draw[fill=mnmSiO2] (xGL/ySiO2B) rectangle node[black] {\ce{SiO2}} (xGR/ySiO2);
+
+\draw (xS/yA) -- (xS/yPin) node[ocirc] {} node[above] {S};
+\draw (xD/yA) -- (xD/yPin) node[ocirc] {} node[above] {D};
+\draw (xG/ySiO2) -- (xG/yPin) node[ocirc] {} node[above] {G};
+
+\draw (xG/ySiO2B) to[C=$C_{GC}$] (xG/yA);
+
+\path (xG/yChannleB) node[below,white] {\footnotesize $0.00$};
+\path (xSR/yA) node[below left,white] {\footnotesize $0.67$};
+\path (xDL/yA) node[below right,white] {\footnotesize $0.00$};
+
+\draw[fill=mnmDepletion] 
+(xSL/ydpr) -- 
+(xSdpr/ydpr) -- 
+(xSdpr/yChannleB) --
+(xDdpr/yChannleB') --
+(xDdpr/ydpr) --
+(xDR/ydpr) -- %
+(xDR/yDope) --
+(xDL/yDope) --
+(xDL/yA) -- 
+(xSR/yChannleA) --
+(xSR/yDope) --
+(xSL/yDope) --
+cycle;
+
+\draw[fill=mnmN1] (xSR/yChannleA) -- (xDL/yA) -- (xSR/yA) -- cycle;
+
+\end{tikzpicture}
+\end{document}

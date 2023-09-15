@@ -69,3 +69,670 @@ MOSFET可以分为两种类型，如\xref{fig:集成电路工艺中MOSFET的截�
 如\xref{fig:初始状态}所示，首先考虑$V_{GS}=0$的情形，漏和源之间由背靠背的PN结所连接，因此可以被考虑为断开。并且此时，漏和源之间无论加什么电压都无法导通，因为总有一个结将反偏。
 
 如\xref{fig:栅耗尽层}所示，现在考虑$V_{GS}>0$的情形，将一个正电压加到栅极上，此时，栅和衬底就形成了一个电容的两个极板，栅氧则充当了电介质。栅压的作用就使正负电荷分别聚集到电容的两个极板，栅极一侧聚集负电荷，衬底一侧聚集正电荷。该过程是通过栅压排斥$p$衬底中的空穴形成的，因此，在栅极下方就形成了一块缺乏载流子的耗尽区，这与PN结二极管的耗尽区非常相似。两者的差异在于，PN结二极管的耗尽区最初是因为$p$区和$n$区间的浓度梯度自然形成并由内建电势$\phi_0$维持的，但我们要知道，\empx{耗尽区本质就是电压的产物，无论是浓度梯度导致的内建电压，还是外加电压，其结果是等效的}。PN结上的外加电压将电势改变为$\phi_0-V_D$并使耗尽区宽度发生变化，而这里，栅极下的耗尽层则完全由外加栅压$\phi$在$p$型半导体上独立形成的，由此可见，\empx{耗尽区也可以存在于单一掺杂的半导体中}。所以，如果我们要研究栅极耗尽层的特性，只要将PN结耗尽区的相关公式中的$\phi_0-V_D$替换为$\phi$即可\footnote{关于$\phi_0-V_D$和$\phi$，有一个细节问题，PN结的外加电压$V_D$为负，为何栅极耗尽层中外加栅压$\phi$为正？这是因为，排列排列顺序是，$p$型衬底、栅极耗尽层，栅压。栅压事实上加在了PN结中的$n$型区域一侧，所以，正栅压对于耗尽区反而是负值。}。
+
+% 根据\fancyref{fml:PN结二极管的耗尽区宽度}
+% \begin{Equation}
+%     W_d=\sqrt{\qty(\frac{2\varepsilon_{si}}{q}\frac{N_A+N_D}{N_AN_D})(\phi_0-V_D)}
+% \end{Equation}
+% 将$\phi_0-V_D$替换为$\phi$，此处耗尽区均在$p$区，可视为$pn^{+}$结，作$N_D\gg N_A$近似
+% \begin{Equation}
+%     W_d=\sqrt{\frac{2\varepsilon_{si}\phi}{qN_A}}
+% \end{Equation}
+根据\fancyref{fml:PN结二极管的耗尽区电荷}，这里改为考虑单位面积电荷，略去$A_D$
+\begin{Equation}
+    Q_d=\sqrt{\qty(2\varepsilon_{si}q\frac{N_AN_D}{N_A+N_D})(\phi_0-V_D)}
+\end{Equation}
+将$\phi_0-V_D$替换为$\phi$，此处耗尽层均在$p$区，可视为$pn^{+}$结，作$N_D\gg N_A$近似（尽管实际根本没有$n$区或$N_D$，只是数学上的考虑），同时，由于$p$区的耗尽层带负电，故添加负号
+\begin{Equation}
+    Q_d=-\sqrt{2qN_A\varepsilon_{si}\phi}
+\end{Equation}
+
+随着栅电压的提高，硅表面上某点的电势将达到一个临界值，于是靠近栅极半导体表面被反型成$n$型材料，这一点标志着一种称为强反型现象的开始，它发生在电压为两倍费米势时。根据半导体物理的知识，$p$型材料的费米势$\phi_F$应有以下形式，$p$型材料的典型$\phi_F=-0.3\si{V}$
+\begin{Equation}
+    \phi_F=-\phi_T\ln(\frac{N_A}{n_i})
+\end{Equation}
+
+强反型在栅电压$\phi=2\phi_F$时开始，栅氧层下面的薄反型层中产生了更多电子，这些电子是从两侧重掺杂的$n^{+}$区被拉到反型层中的，这就在源漏之间的形成了一个连续的$n$型沟道。
+
+强反型开始后，保存在耗尽区的电荷$Q_{d}$就不再变化了，记为$Q_{B0}$
+\begin{Equation}
+    Q_{B0}=-\sqrt{2qN_A\varepsilon_{si}|2\phi_F|}
+\end{Equation}
+当源和体之间加上一个衬底偏置电压$V_{SB}$时（对NMOS为正，对PMOS为负），情况会发生一些变化，它将使得强反型所需的电势增加并变为$|2\phi_F-V_{SB}|$，此时$Q_{B0}$变为
+\begin{Equation}
+    Q_{B0}=-\sqrt{2qN_A\varepsilon_{si}|2\phi_F-V_{SB}|}
+\end{Equation}
+如果对这里的符号感到困惑，请考虑
+\begin{itemize}
+    \item 对于NMOS，费米势$\phi_F$为负，衬底偏置$V_{SB}$为正。
+    \item 对于PMOS，费米势$\phi_F$为正，衬底偏置$V_{SB}$为负。
+\end{itemize}
+
+强反型发生时，沟道形成，此时$V_{GS}$的值称为阈值电压$V_T$。阈值电压$V_T$与几个因素有关，其中大部分是材料常数，例如，栅和衬底材料的功函数差、栅氧层表面与沟道被俘获的杂质电荷、氧化层厚度、费米势、调节阈值注入的离子剂量等。从上面的讨论也可以看到，衬底偏置电压$V_{SB}$对阈值也有影响。因此，与其依赖一个复杂且多半也不精确的阈值解析表达式，还不如依赖经验参数$V_{T0}$，它是$V_{SB}=0$时的$V_T$，而$V_{SB}\neq 0$时的$V_T$则可由以下公式确定。
+\begin{BoxFormula}[MOSFET的阈值电压]
+    MOSFET的阈值电压遵从以下公式
+    \begin{Equation}
+        V_T=V_{T0}+\gamma\qty(\sqrt{|(-2)\phi_F+V_{SB}|}-\sqrt{|2\phi_F|})
+    \end{Equation}
+    其中$\gamma$称为\uwave{体效应系数}（Body Effect Coefficient），表明$V_{SB}$对$V_T$的影响大小。
+\end{BoxFormula}
+
+阈值电压$V_T$的正负情况如下
+\begin{itemize}
+    \item 对于NMOS，阈值电压$V_T$通常为正（增强型NMOS）。
+    \item 对于PMOS，阈值电压$V_T$通常为负（增强型PMOS）。
+\end{itemize}
+阈值电压$V_T$随$V_{SB}$的变化，如\xref{fig:体偏置对阈值电压的影响}所示，取$\gamma=0.4\si{V^{0.5}}$、$\phi_F=-0.3\si{V}$，$V_{T0}=0.45\si{V}$
+\begin{Figure}[体偏置对阈值电压的影响]
+    \includegraphics{build/Chapter03B_01a.fig.pdf}
+\end{Figure}
+由此可见，对于NMOS而言，体偏置电压$V_{SB}$越大，阈值电压$V_T$越大。
+
+\subsubsection{MOS晶体管的理想器件特性}\setpeq{MOS晶体管的器件特性}
+如\xref{fig:沟道形成}，现假设$V_{GS}>V_T$，沟道形成，同时在漏区和源区之间加上一个电压$V_{DS}$，该电压将使电流$I_D$从漏区流向源区。现在要做的，就是分析$I_D$关于$V_{GS}, V_{DS}$的表达式。不过在此之前先解答一个问题，就是为什么电流是从“源”流向“漏”，既然叫“源”不应该是电流产生的地方吗？实际上，源的意义是对于MOSFET的导电载流子的运动而言的
+\begin{itemize}
+    \item 对于NMOS，其为电子导电器件，电子从源至漏，电流$I_D$从漏至源。
+    \item 对于PMOS，其为空穴导电器件，空穴从源至漏，电流$I_D$从漏至源。
+\end{itemize}\goodbreak
+
+\paragraph{线性区}
+设沿沟道的$x$处，电压为$V(x)$，电压$V(x)$随$x$增大由$0$增大至$V_{DS}$。这样一来，在$x$处栅至沟道的电压就减小至$V_{GS}-V(x)$。假设$V_{GS}-V(x)$在整个沟道中都高于阈值电压$V_T$，即在$V(x)$最大处有$V_{GS}-V_{DS}>V_T$，那么在点$x$处感应出的单位面积沟道电荷可按下式计算
+\begin{Equation}&[1]
+    Q_i(x)=-C_{ox}\qty[V_{GS}-V(x)-V_T]\qquad V_{DS}<V_{GS}-V_T
+\end{Equation}
+简洁起见，我们接下来简记$V_{GT}=V_{GS}-V_T$，则有
+\begin{Equation}&[2]
+    Q_{i}(x)=-C_{ox}\qty[V_{GT}-V(x)]\qquad V_{DS}<V_{GT}
+\end{Equation}
+这里$C_{ox}$为栅氧的单位面积电容
+\begin{Equation}&[3]
+    C_{ox}=\frac{\varepsilon_{ox}}{t_{ox}}
+\end{Equation}
+其中，$\varepsilon_{ox}$为氧化层的介电常数，$t_{ox}$为氧化层厚度。
+
+电流是载流子漂移速度$v_n$和所存在电荷的积，而$W$是垂直电流方向的沟道宽度，于是有
+\begin{Equation}&[4]
+    I_D=-v_n(x)Q_i(x)W
+\end{Equation}
+电子的速度$v_n(x)$正比于电场$\chi(x)$，比例系数称为电子迁移率$\mu_n$
+\begin{Equation}&[5]
+    v_n(x)=-\mu_n\xi(x)
+\end{Equation}
+电场是电势的负梯度
+\begin{Equation}&[6]
+    v_n(x)=\mu_n\dv{V}{x}
+\end{Equation}
+将\xrefpeq{6}代入\xrefpeq{4}，得到
+\begin{Equation}&[7]
+    I_D=-\mu_n W Q_i(x)\dv{V}{x}
+\end{Equation}
+将\xrefpeq{2}代入\xrefpeq{7}，得到
+\begin{Equation}&[8]
+    I_D=\mu_nC_{ox} W\qty[V_{GT}-V(x)]\dv{V}{x}
+\end{Equation}
+将$\dx$移至左侧
+\begin{Equation}&[9]
+    I_D\dx=\mu_nC_{ox}W\qty[V_{GT}-V(x)]\dd{V}
+\end{Equation}
+两侧积分，左侧为$0$积至$L$，右侧为$V(0)=0$积至$V(L)=V_{DS}$，其中$L$为沟道长度
+\begin{Equation}&[10]
+    \Int[0][L]I_D\dx=
+    \Int[0][V_{DS}]\mu_nC_{ox}W\qty[V_{GT}-V(x)]\dd{V}
+\end{Equation}
+得到
+\begin{Equation}&[11]
+    I_DL=\mu_nC_{ox}W\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+\end{Equation}
+即
+\begin{Equation}&[12]
+    I_D=\mu_nC_{ox}\frac{W}{L}\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+\end{Equation}
+这里引入代换变量$k_n$
+\begin{Equation}&[13]
+    I_D=k_n\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]\qquad V_{DS}<V_{GT}
+\end{Equation}
+这里引入的$k_n$以及与之相关的$k_n'$的定义如下
+\begin{BoxDefinition}[MOSFET的增益因子与工艺跨导]
+    定义$k_n$和$k_n'$为\uwave{增益因子}（Gain Factor）和\uwave{工艺跨导}（Transconductance）
+    \begin{Equation}
+        k_n=\mu_nC_{ox}\frac{W}{L}\qquad
+        k_n'=\mu_nC_{ox}
+    \end{Equation}
+    这里可以看出，增益因子$k_n$是考虑了宽长比$W/L$的工艺跨导$k_n'$
+    \begin{Equation}
+        k_n=k_n'\frac{W}{L}
+    \end{Equation}
+    这里$k_n,k_n'$是对于NMOS管的记号，对于PMOS管需相应改记为$k_p,k_p'$。
+\end{BoxDefinition}
+
+\paragraph{饱和区}\setpeq{MOS晶体管的器件特性}
+前面均假定$V_{DS}<V_{GT}$，但如果漏源电压进一步增加使得$V_{DS}>V_{GT}$，那么，原先$V_{GS}-V(x)$沿整个沟道都高于阈值电压$V_T$的假设就不再成立了，在那些$V_{GS}-V(x)<V_T$的点上，感应的电荷为零，导电沟道消失，或者说，导电沟道已被\uwave{夹断}（Pinch Off）了，如\xref{fig:沟道夹断}所示。
+
+\xrefpeq{13}在夹断后就不再成立，这是因为，夹断开始后沟道上的电压差，即，夹断点到源的电压差固定在了$V_{GT}$上，而不再随$V_{DS}$变化。\xrefpeq{13}中的$V_{DS}$应当被替换为$V_{GT}$
+\begin{Equation}
+    I_D=k_n\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]\quad\xlarrR\quad
+    I_D=k_n\qty[V_{GT}V_{GT}-\frac{V_{GT}^2}{2}]
+\end{Equation}
+即
+\begin{Equation}&[14]
+    I_D=k_n\qty[\frac{V_{GT}^2}{2}]\qquad V_{DS}>V_{GT}
+\end{Equation}
+
+\xrefpeq{13}和\xrefpeq{14}联合在一起，就得到了MOS晶体管的器件特性方程
+\begin{BoxFormula}[MOSFET的器件特性]*
+    当$V_{GT}<0$时，NMOS处于\uwave{截止区}（Cut-Off Region）
+    \begin{Equation}
+        I_D=0
+    \end{Equation}
+    当$V_{GT}>0$且$V_{DS}<V_{GT}$时，NMOS处于\uwave{线性区}（Linear Region）
+    \begin{Equation}
+        I_D=k_n\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+    \end{Equation}
+    当$V_{GT}>0$且$V_{DS}>V_{GT}$时，NMOS处于\uwave{饱和区}（Saturation region）
+    \begin{Equation}
+        I_D=k_n\qty[\frac{V_{GT}^2}{2}]
+    \end{Equation}
+\end{BoxFormula}
+
+值得说明的是线性区的名称来源，我们可能会发现，线性区中$I_D$与$V_{DS}$的关系并不是线性的，而是有平方项$V_{DS}^2/2$的存在，但当$V_{DS}$较小时$V_{DS}^2/2$可忽略，故仍然可以视为线性。
+
+\xref{fig:MOSFET的器件特性}绘制了MOSFET的的器件特性曲线$I_D=I_D(V_{DS},V_{GS})$
+\begin{itemize}
+    \item 输出特性是关于$V_{DS}$的，如\xref{fig:输出特性}，是指当$V_{GS}$一定时$I_D(V_{DS})$的特性曲线。
+    \item 转移特性是关于$V_{GS}$的，如\xref{fig:转移特性}，是指当$V_{DS}$一定时$I_D(V_{GS})$的特性曲线，这里仅绘制了一条转移特性曲线，其$V_{DS}$足够大，对于范围内的$V_{GS}$均处于饱和区。
+\end{itemize}
+
+\begin{Figure}[MOSFET的器件特性]
+    \begin{FigureSub}[输出特性]
+        \includegraphics[width=7.3cm]{build/Chapter03B_01f.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[转移特性]
+        \includegraphics[width=7.3cm]{build/Chapter03B_01i.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.2cm}
+    \begin{FigureSub}[三维图]
+        \includegraphics{build/Chapter03B_01k.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+通过\xref{fig:转移特性}可以看出，当MOSFET在饱和区时，漏电流$I_D$与控制电压$V_{GT}$间呈平方关系。
+
+\subsubsection{MOS晶体管的速度饱和效应}
+沟道较短的晶体管，也称为短沟器件的行为与上面介绍的长沟器件有所不同，它们不再发生\uwave{夹断饱和}（Pinch-Off Saturation），取而代之的是\uwave{速度饱和}（Velocity Saturation）。那么，什么是速度饱和效应呢？前面的推导中我们曾使用了$v_n=-\mu_n\xi$，即，载流子速度$v_n$应当正比于电场$\xi$，然而，当电场强度很高的情况下，载流子速度不再符合这一线性模型。实际上，当沿沟道的电场$\xi$达到某一临界值$\xi_c$时，载流子的速度将由于散射效应而趋于饱和，即速度饱和。
+
+\begin{BoxFormula}[速度饱和效应]
+    当不考虑速度饱和时，载流子速度正比于电场
+    \begin{Equation}
+        v_n=-\mu_n\xi
+    \end{Equation}
+    当考虑速度饱和时，载流子将随电场增加趋于饱和\footnote[2]{应指出，对于NMOS，这里的$\xi$由于电场方向为负值，而$\xi_c$为正值。随着电场增强$\xi$由零不断减小至$-\xi_c$进入饱和。}
+    \begin{Equation}
+        v_n=
+        \begin{cases}
+            -\mu_n\xi/(1-\xi/\xi_c),&|\xi|<\xi_c\\
+            +\mu_n\xi_c/2=v_{sat},&|\xi|\geq\xi_c
+        \end{cases}
+    \end{Equation}
+\end{BoxFormula}
+
+\fancyref{fml:速度饱和效应}给出的速度饱和下的$v_n$的解析式是近似的，如\xref{fig:速度饱和效应}所示，依据其绘制出的$v_n(\xi)$的曲线甚至在$|\xi|=\xi_c$出现了导数不连续点，不过，这已经足够我们用了。
+\begin{Figure}[速度饱和效应]
+    \includegraphics{build/Chapter03B_01b.fig.pdf}
+\end{Figure}
+
+电子和空穴的饱和速度$v_{sat}$大致相同，均为$10^5\si{m.s^{-1}}$左右。根据前面的结论，我们已经知道，饱和速度满足$v_{sat}=\mu_n\xi_c/2$，对于电子，可以依据电子迁移率$\mu_n$的值计算出电子的临界电场$\xi_c$大约在$5\si{V.um^{-1}}$左右，这就意味着，对于一个沟长为$0.25\si{um}$的NMOS器件，只需要不到$2\si{V}$的漏源电压就足矣达到速度饱和。由此可见，速度饱和在短沟器件中很容易发生。
+
+电子迁移率$\mu_n$大于空穴迁移率$\mu_p$，这也就意味着，空穴的临界电场$\xi_c$要高于电子的临界电场$\xi_c$，因此，相对来说，PMOS晶体管中的的速度饱和效应相对NMOS晶体管不太显著。
+
+
+速度饱和效应改变了$v_n(x)$的表达式，因此，我们要重新推导MOSFET的器件方程。\setpeq{速度饱和}
+
+\paragraph{线性区}
+
+我们从\xrefpeq[MOS晶体管的器件特性]{4}重新开始
+\begin{Equation}&[1]
+    I_D=-v_n(x)Q_i(x)W
+\end{Equation}
+这一次，依据\fancyref{fml:速度饱和效应}，$v_n(x)$应当被改写为
+\begin{Equation}&[2]
+    v_n(x)=-\frac{\mu_n\xi(x)}{1-\xi(x)/\xi_c}
+\end{Equation}
+电场是电势的负梯度
+\begin{Equation}&[3]
+    v_n(x)=\frac{\mu_n(\dv*{V}{x})}{1+(\dv*{V}{x})/\xi_c}
+\end{Equation}
+上下同乘$\xi_c$
+\begin{Equation}&[4]
+    v_n(x)=\frac{\mu_n\xi_c(\dv*{V}{x})}{\xi_c+(\dv*{V}{x})}
+\end{Equation}
+将\xrefpeq{3}代入\xrefpeq{1}
+\begin{Equation}&[5]
+    I_D=-\mu_nWQ_i(x)\frac{\xi_c(\dv*{V}{x})}{\xi_c+(\dv*{V}{x})}
+\end{Equation}
+两边同乘以$\xi_c+(\dv*{V}{x})$
+\begin{Equation}&[6]
+    I_D\xi_c+I_D\dv{V}{x}=-\mu_nWQ_i(x)\xi_c\dv{V}{x}
+\end{Equation}
+两边同除以$\xi_c$
+\begin{Equation}&[7]
+    I_D+\frac{I_D}{\xi_c}\dv{V}{x}=-\mu_nWQ_i(x)\dv{V}{x}
+\end{Equation}
+整理
+\begin{Equation}&[8]
+    I_D=\qty[-\mu_nWQ_i(x)-\frac{I_D}{\xi_c}]\dv{V}{x}
+\end{Equation}
+代入\xrefpeq[MOS晶体管的器件特性]{2}
+\begin{Equation}&[9]
+    I_D=\qty[\mu_nC_{ox}W\qty[V_{GT}-V(x)]-\frac{I_D}{\xi_c}]\dv{V}{x}
+\end{Equation}
+将$\dx$移至左侧
+\begin{Equation}&[10]
+    I_D\dx=\qty[\mu_nC_{ox}W\qty[V_{GT}-V(x)]-\frac{I_D}{\xi_c}]\dd{V}
+\end{Equation}
+两侧积分，左侧为$0$积至$L$，右侧为$V(0)=0$积至$V(L)=V_{DS}$，其中$L$为沟道长度
+\begin{Equation}&[11]
+    \Int[0][L]I_D\dx=
+    \Int[0][V_{DS}]\qty[\mu_nC_{ox}W\qty[V_{GT}-V(x)]-\frac{I_D}{\xi_c}]\dd{V}
+\end{Equation}
+得到
+\begin{Equation}&[12]
+    I_DL=\mu_nC_{ox}W\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]-\frac{I_D}{\xi_c}V_{DS}
+\end{Equation}
+两边同除以$L$
+\begin{Equation}&[13]
+    I_D=\mu_nC_{ox}\frac{W}{L}\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]-\frac{I_D}{\xi_cL}V_{DS}
+\end{Equation}
+整理
+\begin{Equation}
+    I_D\qty[1-\frac{V_{DS}}{\xi_cL}]=\mu_nC_{ox}\frac{W}{L}\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+\end{Equation}
+引入$k_n$
+\begin{Equation}&[14]
+    I_D\qty[1-\frac{V_{DS}}{\xi_cL}]=k_n\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+\end{Equation}
+移项
+\begin{Equation}&[15]
+    I_D=k_n\qty[\frac{\xi_cL}{\xi_cL-V_{DS}}]\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+\end{Equation}
+即
+\begin{Equation}&[16]
+    I_D=k_n\qty[\frac{1}{1-V_{DS}/\xi_cL}]\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+\end{Equation}
+这里我们引入一个速度饱和因子$\kappa(V_{DS})$进行代换
+\begin{BoxDefinition}[速度饱和因子]
+    定义速度饱和因子$\kappa(V)$为
+    \begin{Equation}
+        \kappa(V)=\frac{1}{1+V/\xi_cL}
+    \end{Equation}
+\end{BoxDefinition}\setpeq{速度饱和}
+由此\xrefpeq{16}可以表示为
+\begin{Equation}&[17]
+    I_D=k_n\kappa(V_{DS})\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+\end{Equation}
+
+由此可见，当考虑速度饱和时，在线性区的表达式与原先基本相同，只不过多了一项速度饱和因子$\kappa(V_{DS})$，\xref{fig:速度饱和因子的函数图像}中展示了$\kappa(V_{DS})$的图像，其随$V_{DS}$的增加而减小，并且注意到
+\begin{itemize}
+    \item 对于$L$较大的长沟器件，速度饱和因子$\kappa(V_{DS})$接近于$1$。
+    \item 对于$L$较小的短沟器件，速度饱和因子$\kappa(V_{DS})$则明显小于$1$。
+\end{itemize}
+\begin{Figure}[速度饱和因子的函数图像]
+    \includegraphics{build/Chapter03B_01c.fig.pdf}
+\end{Figure}
+这就意味着，对于短沟器件，速度饱和因子$\kappa(V_{DS})$将使电流$I_D$远小于预期。
+
+\paragraph{饱和区}
+那么现在的问题是，当$V_{DS}$达到多少后，速度饱和将发生？速度$v_{n}$将达到$v_{sat}$？这看上去很困难，因为$v_n$的表达式并不直接关于$V_{DS}$。不过，这里有一个巧妙的解法，\xrefpeq{1}指出
+\begin{Equation}&[18]
+    I_D=-v_n(x)Q_i(x)W
+\end{Equation}
+代入\xrefpeq[MOS晶体管的器件特性]{2}
+\begin{Equation}&[19]
+    I_D=v_n(x)C_{ox}W(V_{GT}-V_{DS})
+\end{Equation}
+试想，如果速度饱和发生，那此处$v_n(x)$就是$v_{sat}$，这时$I_D,V_{DS}$改记为$I_{DSAT},V_{DSAT}$
+\begin{Equation}&[20]
+    I_{DSAT}=v_{sat}C_{ox}W(V_{GT}-V_{DSAT})
+\end{Equation}
+而另外一方面，我们将$I_{DSAT},V_{DSAT}$代入\xrefpeq{17}
+\begin{Equation}&[21]
+    I_{DSAT}=k_n\kappa(V_{DSAT})\qty[V_{GT}V_{DSAT}-\frac{V_{DSAT}^2}{2}]
+\end{Equation}
+现在联立\xrefpeq{20}和\xrefpeq{21}
+\begin{Equation}&[22]
+    \qquad\qquad\qquad
+    v_n(x)C_{ox}W(V_{GT}-V_{DSAT})=k_n\kappa(V_{DSAT})\qty[V_{GT}V_{DSAT}-\frac{V_{DSAT}^2}{2}]
+    \qquad\qquad\qquad
+\end{Equation}
+在\xrefpeq{22}中，依据\xref{def:速度饱和因子}、\xref{fml:速度饱和效应}、\xref{def:MOSFET的增益因子与工艺跨导}代入$\kappa(V_{DS}), v_{sat}, k_n$
+\begin{Equation}&[23]
+    \qquad
+    \frac{1}{2}\mu_n\xi_cC_{ox}W(V_{GT}-V_{DSAT})=
+    \frac{1}{1+V_{DSAT}/\xi_cL}\mu_nC_{ox}\frac{W}{L}\qty[V_{GT}V_{DSAT}-\frac{V_{DSAT}^2}{2}]
+    \qquad
+\end{Equation}
+两边同除$\mu_nC_{ox}W$
+\begin{Equation}&[24]
+    \qquad\qquad\qquad
+    \frac{1}{2}\xi_c(V_{GT}-V_{DSAT})=\frac{1}{1+V_{DSAT}/\xi_cL}\frac{1}{L}\qty[V_{GT}V_{DSAT}-\frac{V_{DSAT}^2}{2}]
+    \qquad\qquad\qquad
+\end{Equation}
+两边同乘以$1+V_{DSAT}/\xi_cL$，并从右侧方括号内提取一个$(1/2)$至方括号外
+\begin{Equation}&[25]
+    \qquad\qquad
+    \frac{\xi_c}{2}\qty(V_{GT}-V_{DSAT})+\frac{1}{2L}\qty(V_{GT}-V_{DSAT})V_{DSAT}=\frac{1}{2L}\qty(2V_{GT}V_{DSAT}-V_{DSAT}^2)
+    \qquad\qquad
+\end{Equation}
+将左侧第二项的$V_{DSAT}$乘入括号中
+\begin{Equation}&[26]
+    \qquad\qquad
+    \frac{\xi_c}{2}\qty(V_{GT}-V_{DSAT})+\frac{1}{2L}(V_{GT}V_{DSAT}-V_{DSAT}^2)=\frac{1}{2L}\qty(2V_{GT}V_{DSAT}-V_{DSAT}^2)
+    \qquad\qquad
+\end{Equation}
+观察左侧第二项和右侧项，它们是相似的
+\begin{Equation}&[27]
+    \frac{\xi_c}{2}\qty(V_{GT}-V_{DSAT})-\frac{1}{2L}\qty(V_{GT}V_{DSAT})=0
+\end{Equation}
+两边同乘$2$，展开所有括号
+\begin{Equation}&[28]
+    \xi_cV_{GT}-\xi_cV_{DSAT}-\frac{1}{L}V_{GT}V_{DSAT}
+\end{Equation}
+整理
+\begin{Equation}&[29]
+    \xi_cV_{GT}-\qty(\xi_c+\frac{V_{GT}}{L})V_{DSAT}=0
+\end{Equation}
+得到
+\begin{Equation}&[30]
+    V_{DSAT}=\frac{\xi_cV_{GT}}{\xi_c+V_{GT}/L}
+\end{Equation}
+上下同除$\xi_c$
+\begin{Equation}&[31]
+    V_{DSAT}=\frac{V_{GT}}{1+V_{GT}/\xi_cL}
+\end{Equation}
+依据\fancyref{def:速度饱和因子}
+\begin{Equation}&[32]
+    V_{DSAT}=\kappa(V_{GT})V_{GT}
+\end{Equation}
+至此，我们就确定了$V_{DS}$发生速度饱和的临界值$V_{DSAT}$的表达式，与过去对比一下
+\begin{itemize}
+    \item 当$V_{DS}=V_{GT}$时，发生夹断饱和。
+    \item 当$V_{DS}=V_{GT}\cdot\kappa(V_{GT})=V_{DSAT}$时，发生速度饱和。
+\end{itemize}
+由此可见，介于$\kappa(V_{GT})<1$，速度饱和实际总是先于夹断饱和发生的。通过\xref{fig:速度饱和电压的函数图像}，我们也可以看出，沟道长度$L$越短，速度饱和电压$V_{GT}\cdot\kappa(V_{GT})$偏离夹断饱和电压$V_{GT}$就会越多。
+
+\begin{Figure}[速度饱和电压的函数图像]
+    \includegraphics{build/Chapter03B_01d.fig.pdf}
+\end{Figure}
+
+由于$V_{DSAT}$已经被求出，$I_{DSAT}$就很容易得到了，在\xrefpeq{17}代入$V_{DS}=V_{DSAT}$即可
+\begin{Equation}&[33]
+    I_D=k_n\kappa(V_{DSAT})\qty[V_{GT}V_{DSAT}-\frac{V_{DSAT}^2}{2}]
+\end{Equation}
+
+综合\xrefpeq{17}和\xrefpeq{33}，以及关于$V_{DSAT}$的\xrefpeq{32}，就可以建立速度饱和下的器件方程。
+
+\begin{BoxFormula}[MOSFET的速度饱和]
+    当$V_{GT}<0$时，NMOS处于截止区
+    \begin{Equation}
+        I_D=0\qquad V_{GT}<0
+    \end{Equation}
+    当$V_{GT}>0$且$V_{DS}<V_{DSAT}$时，NMOS处于线性区
+    \begin{Equation}
+        I_D=k_n\kappa(V_{DS})\qty[V_{GT}V_{DS}-\frac{V_{DS}^2}{2}]
+    \end{Equation}
+    当$V_{GT}>0$且$V_{DS}>V_{DSAT}$时，NMOS处于饱和区
+    \begin{Equation}
+        I_D=k_n\kappa(V_{DSAT})\qty[V_{GT}V_{DSAT}-\frac{V_{DSAT}^2}{2}]=I_{DSAT}
+    \end{Equation}
+    速度饱和电压$V_{DSAT}$为
+    \begin{Equation}
+        V_{DSAT}=\kappa(V_{GT})V_{GT}
+    \end{Equation}
+\end{BoxFormula}
+
+% \newpage
+\xref{fig:MOSFET的速度饱和}绘制了MOSFET考虑速度饱和时的的器件特性曲线$I_D=I_D(V_{DS},V_{GS})$
+\begin{Figure}[MOSFET的速度饱和]
+    \begin{FigureSub}[输出特性;速度饱和输出特性]
+        \includegraphics[width=7.3cm]{build/Chapter03B_01e.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[转移特性;速度饱和转移特性]
+        \includegraphics[width=7.3cm]{build/Chapter03B_01h.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.2cm}
+    \begin{FigureSub}[三维图;速度饱和三维图]
+        \includegraphics{build/Chapter03B_01j.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+关于\xref{fig:MOSFET的速度饱和}，我们作两点说明
+\begin{enumerate}
+    \item \xref{fig:速度饱和输出特性}中，我们注意到，在速度饱和发生处，特性曲线的导数出现不连续的突变，尽管这实际是源于描述$v_n(x)$的函数本身不够精确，事实并非如此。但客观上，在现有理论体系下，特性曲线在饱和点是否光滑，确实可以作为判断饱和类型的判据，即发生的是夹断饱和还是速度饱和。\xref{fig:速度饱和输出特性}我们还标注了$V_{DS}=V_{DSAT}$和$V_{DS}=V_{GT}$的界线，从中，我们也能直观的看到，速度饱和总是先于夹断饱和发生的。但应当特别强调的是，速度饱和是这里唯一发生的饱和，夹断饱和的界线在这里只有指示$V_{DS}=V_{GT}$位置的理论意义，而并不是代表，随着$V_{DS}$增大，先发生速度饱和，后发生夹断饱和。
+    \item \xref{fig:速度饱和转移特性}中，我们可以将其与先前的转移特性，即\xref{fig:转移特性}作对比
+    \begin{itemize}
+        \item 理想模型\xref{fig:转移特性}下，$I_D$与$V_{GS}$间的转移特性，表现为平方关系。\vspace{0.2cm}
+        \item 速度饱和\xref{fig:速度饱和转移特性}下，$I_D$与$V_{GS}$间的转移特性，先呈平方关系，后呈线性关系。
+    \end{itemize}
+\end{enumerate}
+问题在于，我们可能会疑惑，为什么是“先平方，后线性”而不是“始终线性”？并且，平方关系和线性关系之间的分界线在哪里？这种困惑来自速度饱和时的电流表达式，依据\xref{fml:MOSFET的速度饱和}
+\begin{Equation}
+    I_D=k_n\kappa(V_{DSAT})\qty[V_{GT}V_{DSAT}-\frac{V_{DSAT}^2}{2}]
+\end{Equation}
+看起来，这里$I_D$是关于$V_{GT}$的线性函数，但请考虑到$V_{DSAT}=\kappa(V_{GT})V_{GT}$也是关于$V_{GT}$的，因此两者的关系的绝不可能是“始终线性”。而$\kappa(V_{GT})$的形式是复杂的，因此，实际上，此处$I_D$与$V_{GT}$的函数关系是极为复杂的，难以从解析式上得到对关系的简单描述，但我们从图像上观察，可以将两者的关系大致概况为“先平方，后线性”，故两者没有明确分界限。
+
+\subsubsection{沟道长度调制}
+从前面的讨论看出，无论是理想模型还是速度饱和模型，当$V_{DS}$增大至饱和后，MOSFET看起来就像是一个理想的恒定电流源，源漏之间的电流$I_D$与源漏间的电压$V_{DS}$无关。但事实是，这并不完全正确，\empx{沟道长度实际由漏源间的电压调制}，随着$V_{DS}$增大，漏和衬底间结的耗尽区将增大，沟道被挤压，沟道的有效长度将因此减小，这将使$I_D$比原先预期的更大些。
+
+沟长调制听起来很复杂，但总之，它的效果是为$I_D$引入了一个额外修正项。
+\begin{BoxFormula}[沟道长度调制]
+    \uwave{沟道长度调制}（Channel Length Modulation）对$I_D$的影响表现为
+    \begin{Equation}
+        I_D=I_D'(1+\lambda V_{DS})
+    \end{Equation}
+    其中，$I_D'$是原先的电流大小，$I_D$是修正后的电流大小，$\lambda$称为\uwave{沟长调制系数}（Channel Length Modulation Coefficient），$\lambda$越大，沟道长度调制效应的影响就越大。
+\end{BoxFormula}
+
+沟长调制对$I_D$的影响是，它会使$I_D$的输出特性曲线整体以斜率$\lambda$上翘。
+
+沟长调制系数$\lambda$是一个经验参数，$\lambda$的解析式已被证明是复杂和不精确的。通常来说$\lambda$与沟道长度成反比，沟道越短，漏结耗尽区就会相对挤占更大比例的区域，沟道调制效应也更显著。
+
+\subsubsection{MOS晶体管的手工分析模型}
+现在我们要做这样一件事，调和MOSFET的理想模型和速度饱和模型！这听上去可能难以置信，介于速度饱和总是在夹断饱和前发生，但确实是可行的，且具有良好的效果
+\begin{enumerate}
+    \item 将速度饱和模型中的$\kappa(V_{DS})$项移除，这样与理想模型的表达式就一致了。
+    \item 将速度饱和模型中的$V_{DSAT}$视为一个固定常数。
+    \item 若$V_{DS}$先到达$V_{GT}$，电流此后按$V_{DS}=V_{GT}$变为常数，则为夹断饱和。
+    \item 若$V_{DS}$先到达$V_{DSAT}$，电流此后按$V_{DS}=V_{DSAT}$变为常数，则为速度饱和。
+\end{enumerate}
+由此一来，我们就能兼顾速度饱和模型的影响，又不至于面对令人绝望的公式。
+
+\begin{BoxFormula}[MOS晶体管的手工分析模型]
+    MOS晶体管的手工分析模型中，其被视为一个漏源之间的电流源$I_D$。
+    \begin{itemize}
+        \item 若$V_{GT}<0$，则处于截止状态，此时$I_D=0$
+        \item 若$V_{GT}>0$，则处于导通状态，此时$I_D$满足以下公式
+    \end{itemize}
+    \begin{Equation}
+        I_D=k_n\qty(V_{GT}V_{\min}-\frac{V_{\min}^2}{2})(1+\lambda V_{DS})
+    \end{Equation}
+    其中$V_{\min}$代表$V_{DS},V_{GT},V_{DSAT}$的最小值
+    \begin{Equation}
+        V_{\min}=\min(V_{DS},V_{GT},V_{DSAT})
+    \end{Equation}
+    这三种取值分别代表了MOS管的三种工作状态：线性区、夹断饱和、速度饱和。
+\end{BoxFormula}
+
+\begin{Figure}[MOS晶体管的手工分析模型]
+    \includegraphics[width=\linewidth]{build/Chapter03B_12.fig.pdf}
+\end{Figure}
+
+这一模型的特性曲线在\xref{fig:MOS晶体管的手工分析模型的图像}展现了（未考虑沟道调制），从中可以清楚的看到三个工作区
+
+\begin{Figure}[MOS晶体管的手工分析模型的图像]
+    \begin{FigureSub}[二维图像;MOS手工分析二维]
+        \includegraphics[scale=1.3]{build/Chapter03B_01g.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[三维图像;MOS手工分析三维]
+        \includegraphics[scale=1.3]{build/Chapter03B_01l.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+这一模型中，$I_D$除了作为晶体管四个端口上的电压的函数外，还一共使用了五个参数，分别是$V_{T0}, \gamma, V_{DSAT}, k', \lambda$（其中$k=k'(W/L)$，而$V_{T0}, \gamma$来自$V_T$的表达式，参见\xref{def:速度饱和因子}和\xref{fml:MOSFET的阈值电压}）。在\xref{tab:MOS管的手工分析模型参数}中，给出了通用的$0.25\si{um}$的CMOS工艺中NMOS和PMOS的参数值
+
+\begin{Tablex}[$0.25\si{um}$的CMOS工艺的手工分析模型参数;MOS管的手工分析模型参数]{XYYYYY}
+<参数&$V_{T0}~(\si{V})$&$\gamma~(\si{V}^{0.5})$&$V_{DSAT}~(\si{V})$&$k'~(\si{A.V^{-1}})$&$\lambda~(\si{V^{-1}})$\\>
+NMOS&$+0.43$&$+0.4$&$+0.63$&$+115\times 10^{-6}$&$+0.06$\\
+PMOS&$-0.40$&$-0.4$&$-1.00$&$-\hphantom{1}30\times 10^{-6}$&$-0.10$\\
+\end{Tablex}
+
+在本小节最后，让我们来看看NMOS和PMOS之间的关系
+\begin{itemize}
+    \item 关于$I_D,V_{DS},V_{GS}，V_{SB},V_{T0},\gamma,V_{DSAT},k',\lambda$等参数，NMOS为正，PMOS为负。\footnote{费米势$\phi_F$是一个特例，对于NMOS为负，对于PMOS为正。}
+    \item 关于$I_D$表达式，PMOS的表达式要在NMOS的表达式前额外加一个负号。
+    \item NMOS在$V_{GT}>0$时开启，PMOS在$V_{GT}<0$时开启。
+    \item NMOS在$V_{GT}<0$时截止，PMOS在$V_{GT}>0$时截止。
+    \item NMOS取$V_{\min}=\min(V_{DS},V_{GT},V_{DSAT})$，PMOS取$V_{\max}=\max(V_{DS},V_{GT},V_{DSAT})$。
+    \item NMOS的特性曲线位于第一象限，PMOS的特性曲线位于第三象限。
+    \item NMOS的体电极通常接地，PMOS的体电极通常接电源。
+    \item NMOS为电子导电（迁移率$\mu_n$较大），PMOS为空穴导电（迁移率$\mu_p$较小）。
+\end{itemize}
+通过这些要点，我们就可以立即将上述所有关于NMOS的知识用到PMOS的分析上了。
+
+\subsubsection{MOS晶体管的电阻模型}
+\fancyref{fml:MOS晶体管的手工分析模型}给出的的手工分析模型，代表了我们对MOS管最简练的理解，但终究，它仍然是一个非线性的模型。因此，这里有必要再介绍一个更简单且直接明了的模型。它就是\xref{fig:MOS晶体管的电阻模型}给出的电阻模型。电阻模型下，MOS管只不过是一个开关，它有无穷大的“断开”电阻和有限的“导通”电阻$R_{on}$。电阻模型是许多数字设计中的基本假设。
+\begin{Figure}[MOS晶体管的电阻模型]
+    \includegraphics{build/Chapter03B_18.fig.pdf}
+\end{Figure}
+
+电阻模型的主要困难在于$R_{on}$是时变且非线性的，对此，一个很合理的方法是采用在所关心的工作区域上电阻的平均值$R_{eq}$。\xref{tab:MOS管的电阻模型}给出了$0.25\si{um}$的CMOS工艺的等效电阻值的参数。
+\begin{Tablex}[$0.25\si{um}$的CMOS工艺的电阻参数;MOS管的电阻模型]{XYYYYY}
+<电阻参数&$V_{DD}~(\si{V})$&1.0&1.5&2.0&2.5\\>
+NMOS&$R_{eq}~(\si{k\ohm})$&35&19&15&13\\
+PMOS&$R_{eq}~(\si{k\ohm})$&115&55&38&31\\
+\end{Tablex}
+
+应指出，\xref{tab:MOS管的电阻模型}仅适用于$(W/L)=1$的情形，若$(W/L)$较大，将$R_{eq}$除以$(W/L)$即可。
+
+\subsection{MOS晶体管的动态特性}
+
+MOS管的动态特性主要是关于其寄生电容，这些寄生电容的分布如\xref{fig:MOS管的电容分布}所示。
+
+\begin{Figure}[MOS管的电容分布]
+    \begin{FigureSub}[顶视图;MOS电容顶视图]
+        \includegraphics[width=0.99\linewidth]{build/Chapter03B_14.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.25cm}
+    \begin{FigureSub}[侧视图;MOS电容侧视图]
+        \includegraphics[width=0.99\linewidth]{build/Chapter03B_13.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+应指出的是，在\xref{fig:MOS管的电容分布}中，为了标注寄生电容的分布位置，绘图时，将栅电极上移，将源漏的侧表面和底面与衬底间分离。这并不代表实际的MOS结构中这些部分之间也是分离的。
+
+简单来说，如\xref{fig:MOS电容顶视图}所示，MOS的寄生电容可以分为两部分
+\begin{itemize}
+    \item \uwave{栅电容}，它来自栅极氧化层和MOS管主体结构间的电容。
+    \item \uwave{结电容}，它来自源漏$n^{+}$区域与$p$衬底间的反偏PN结的结电容。
+\end{itemize}
+
+\subsubsection{栅电容}
+栅电容，取决于栅极的部分，可以进一步分为两部分：覆盖电容和沟道电容。
+
+栅极在理想情况下，只会覆盖源和漏间的沟道区域，这就是\uwave{沟道电容}（Channel Capacitance）的来源，也是栅电容的主体部分。然而，当通过扩散形成源区和漏区时，理想中，源和漏的扩散应当恰好终止在栅氧的边界上，但是，实际情况是，源和漏的边界都会往栅氧下延伸$x_d$的距离，这被称为横向扩散，这就导致了栅氧覆盖了一定面积的源区和漏区，从而形成了栅和源漏间的\uwave{覆盖电容}（Overlap Capacitance）。在\xref{tab:CMOS工艺简化流程}的流程中，我们看到，在源和漏的形成过程中使用了离子注入工艺而不是扩散注入工艺，，并且，在注入时源区和漏区的定义并没有使用另外的掩模版，而是直接由栅氧定义源漏的位置，称为\uwave{自对准工艺}（Self-Aligning Process）。这两者事实上都可以减少覆盖电容，提升性能。那么，两种电容具体该怎么计算呢？我们已经知道，栅氧每单位面积的电容为$C_{ox}=\varepsilon_{ox}/t_{ox}$，因此，栅氧覆盖了多少面积，就有多少电容。
+
+覆盖电容的计算非常简单，源和漏的宽度就是沟道宽度$W$，源和漏被覆盖的长度为$x_d$。
+\begin{BoxFormula}[MOS管的覆盖电容]
+    MOS管的覆盖电容$C_{GO}$分为两部分\footnote[2]{这里$GO$的下标中，$O$代表Overlap即覆盖，指覆盖电容。}：栅源$C_{GOS}$、栅漏$C_{GOD}$
+    \begin{Equation}
+        C_{GOS}=C_{GOD}=C_{ox}x_dW
+    \end{Equation}
+\end{BoxFormula}
+
+沟道电容的计算同样简单，沟道的面积即宽乘长$WL$，沟道电容就应为$C_{GC}=C_{ox}WL$。但主要存在两个困难，首先，仅知道沟道电容是不够的，关键在于，这电容存在栅氧和源、漏、体那一部分之间，这种分配关系将随工作状态非线性变化。其次，进入饱和区，沟道夹断后，沟道的实际面积并不能达到$WL$，会减小一些，这种减小同样是非线性的。这些因素将对我们的分析造成很大的困难，为了简便一些，我们采用一个逐段线性的简化模型。下面先给出结论。
+
+\begin{BoxFormula}[MOS管的沟道电容]*
+    MOS管的沟道电容$C_{GC}$分为三部分\footnote[2]{这里$GC$的下标中，$C$代表Channle即沟道，指沟道电容}：栅源$C_{GCS}$、栅漏$C_{GCD}$、栅体$C_{GCB}$
+
+    在截止区，各部分电容为（电容完全对体）
+    \begin{Equation}
+        C_{GCB}=C_{ox}WL
+    \end{Equation}
+    在线性区，各部分电容为（电容源和漏各一半）
+    \begin{Equation}
+        C_{GCS}=C_{ox}WL/2\qquad C_{GCD}=C_{ox}WL/2
+    \end{Equation}
+    在饱和区，各部分电容为（电容源为$2/3$，但总量也只有$2/3$）
+    \begin{Equation}
+        C_{GCS}=2C_{ox}WL/3
+    \end{Equation}
+\end{BoxFormula}
+
+沟道电容的分布和总量为何这样变化，考虑\xref{fig:MOS管的沟道电容的变化}
+\begin{enumerate}
+    \item \xref{fig:截止区的沟道电容}描述了截止区，此时，沟道未形成，沟道电容完全加在衬底。
+    \item \xref{fig:线性区的沟道电容}描述了线性区，此时，沟道已形成，沟道电容顺着沟道平均的分配到两侧。
+    \item \xref{fig:饱和区的沟道电容}描述了饱和区，随着饱和时的沟道夹断，沟道电容与漏极的连接断开，因此，饱和时，沟道电容完全加在源极，但由于沟道面积减小，故电容总量减为原来的$2/3$。
+\end{enumerate}
+\begin{Figure}[MOS管的沟道电容的变化]
+    \begin{FigureSub}[截止区的沟道电容]
+        \includegraphics{build/Chapter03B_15.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.8cm}
+    \begin{FigureSub}[线性区的沟道电容]
+        \includegraphics{build/Chapter03B_16.fig.pdf}
+    \end{FigureSub}\hspace{0.9cm}
+    \begin{FigureSub}[饱和区的沟道电容]
+        \includegraphics{build/Chapter03B_17.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\subsubsection{结电容}
+结电容原本应当很简单，源漏的三个侧壁加上底板（之所以是三个，是因为沟道那一侧的是导通的）与衬底构成的PN结。但麻烦在于，为了较好的隔离效果，侧壁会在$p$衬底的基础上重掺$p^{+}$形成侧墙。因此，关于结电容的讨论要分为两部分进行：底板结电容和侧壁结电容。
+
+\begin{BoxFormula}[底板结电容]
+    底板PN结，是$n^{+}$源漏与$p$衬底间的PN结，通常为$m=0.50$的突变结。
+
+    底板PN结的结电容记为$C_{bot}$，表达式为\footnote[2]{下标$bot$代表Bottom即底板，指底板结电容。}
+    \begin{Equation}
+        C_{bot}=C_jL_{S,D}W
+    \end{Equation}
+    其中$C_j$代表底板PN结的单位面积结电容。
+\end{BoxFormula}
+
+\begin{BoxFormula}[侧壁结电容]
+    侧壁PN结，是$n^{+}$源漏与$p^{+}$沟道阻挡层间的PN结，通常为$m=0.33$的缓变结。
+
+    侧壁PN结的结电容记为$C_{sw}$，表达式为\footnote[2]{下标$sw$代表Sidewall即侧墙，指侧壁结电容。}
+    \begin{Equation}
+        C_{sw}=C_{jsw}(2L_{S,D}+W)
+    \end{Equation}
+    其中$C_{jsw}$代表侧壁PN结的单位周长结电容。
+\end{BoxFormula}
+
+底板结电容$C_{bot}$和侧壁结电容$C_{sw}$的和，即为总的结电容，记为$C_{\textit{diff}}$
+\begin{Equation}
+    C_{\textit{diff}}=C_{bot}+C_{sw}
+\end{Equation}
+这里\textit{diff}代表Diffusion即扩散，这是因为早期源漏区是通过扩散工艺掺杂的。
+
+\subsubsection{MOS晶体管的电容模型}
+
+结合前面的成果，我们可以最终将MOS晶体管的电容模型概括为\xref{fig:MOS晶体管的电容模型}
+\begin{Figure}[MOS晶体管的电容模型]
+    \includegraphics{build/Chapter03B_19.fig.pdf}
+\end{Figure}
+这里总共出现了五个寄生电容，栅电容$C_{GS}, C_{GB}, C_{GD}$，结电容$C_{SB}, C_{DB}$。
+
+栅电容$C_{GS}, C_{GB}, C_{GD}$分别可以表示为
+\begin{Equation}
+    \qquad\qquad\qquad
+    C_{GS}=C_{GOS}+C_{GCS}\qquad
+    C_{GB}=C_{GCB}\qquad
+    C_{GD}=C_{GOD}+C_{GCD}
+    \qquad\qquad\qquad
+\end{Equation}
+结电容$C_{SB}, C_{DB}$分别可以表示为
+\begin{Equation}
+    C_{SB}=C_{S\textit{diff}}\qquad
+    C_{DB}=C_{D\textit{diff}}
+\end{Equation}
+有关一些与电容模型有关的参数，列在\xref{tab:MOS管的电容模型}中了
+\begin{Tablex}[$0.25\si{um}$的CMOS工艺的电容参数;MOS管的电容模型]{XYYY}
+    <电容参数&$C_{ox}~(\si{fF.um^{-2}})$&$C_j~(\si{fF.um^{-2}})$&$C_{jsw}~(\si{fM.um^{-1}})$\\>
+    NMOS&6.0&2.0&0.28\\
+    PMOS&6.0&1.9&0.22\\
+\end{Tablex}

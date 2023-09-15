@@ -2,10 +2,20 @@
 
 \newcommand{\te}[1]{\text{#1}}
 
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
 \def\xEval#1{\expandafter\csname#1\endcsname}
 
 \NewDocumentCommand{\xGeneratePoints}{mm}%
 {%
+    \foreach \x in {#1}%
+    {%
+        \path (\xEval{\x},0) coordinate(\x);%
+    }%
+    \foreach \y in {#2}%
+    {%
+        \path (0,\xEval{\y}) coordinate(\y);%
+    }%
     \foreach \x in {#1}%
     {%
         \foreach \y in {#2}%
@@ -50,14 +60,14 @@
 
 \definecolor{mnmP}{HTML}{FF0000}
 \definecolor{mnmN}{HTML}{0000FF}
-\colorlet{mnmP0}{mnmP!90!white}
-\colorlet{mnmN0}{mnmN!90!white}
-\colorlet{mnmP1}{mnmP!75!white}
-\colorlet{mnmN1}{mnmN!75!white}
-\colorlet{mnmP2}{mnmP!50!white}
-\colorlet{mnmN2}{mnmN!50!white}
-\colorlet{mnmP3}{mnmP!25!white}
-\colorlet{mnmN3}{mnmN!25!white}
+\colorlet{mnmP0}{mnmP!95!white}
+\colorlet{mnmN0}{mnmN!95!white}
+\colorlet{mnmP1}{mnmP!65!white}
+\colorlet{mnmN1}{mnmN!65!white}
+\colorlet{mnmP2}{mnmP!40!white}
+\colorlet{mnmN2}{mnmN!40!white}
+\colorlet{mnmP3}{mnmP!20!white}
+\colorlet{mnmN3}{mnmN!20!white}
 \colorlet{mnmSiO2}{green!30!white}
 \colorlet{mnmSi3N4}{green!50!yellow!30!white}
 \colorlet{mnmSiON}{green!50!red!30!white}
