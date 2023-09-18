@@ -1,0 +1,42 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-0.15]
+\xValDefine{xR}[+0.15]
+\xValOffset{xBorL}{xL}[-3.2]
+\xValOffset{xBorR}{xR}[+2]
+
+\xValDefine{yB}[-3]
+\xValDefine{yA}[+3]
+\xValMiddle{yC}{yA}{yB}
+\xValProportion{yIH}{yA}{yB}[0.3]
+\xValMirror{yIL}{yIH}{yC}
+\xValMiddle{yH}{yIH}{yA}
+\xValMiddle{yL}{yIL}{yB}
+\xValOffset{yBorB}{yB}[-0.7]
+\xValOffset{yBorA}{yA}[+0.7]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR}{yB,yA,yC,yIH,yIL,yH,yL,yBorB,yBorA}
+
+\draw[fill=black] (xL/yA) rectangle node[white] {$1$} (xR/yIH);
+\draw[fill=black] (xL/yB) rectangle node[white] {$0$} (xR/yIL);
+\draw[fill=white] (xL/yIL) rectangle (xR/yIH);
+
+\path (xR/yA) node[right] {$V_{OH}$};
+\path (xR/yIH) node[right] {$V_{IH}$};
+\path (xR/yIL) node[right] {$V_{IL}$};
+\path (xR/yB) node[right] {$V_{OL}$};
+
+\path (xR/yH) node[right=0.7cm] {$NM_H$};
+\path (xR/yL) node[right=0.7cm] {$NM_L$};
+
+\path (xL/yH) node[left] {\small 可接受的高电平范围};
+\path (xL/yL) node[left] {\small 可接受的低电平范围};
+\path (xL/yC) node[left] {\small 不确定区};
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\end{tikzpicture}
+\end{document}

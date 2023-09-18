@@ -1,0 +1,58 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[0.0]
+\xValDefine{xR}[4.0]
+\xValProportion{xGG}{xL}{xR}[0.25]
+\xValProportion{xMOS}{xL}{xR}[0.6]
+\xValProportion{xCL}{xL}{xR}[0.75]
+\xValOffset{xBorL}{xL}[-0.75]
+\xValOffset{xBorR}{xR}[+0.95]
+
+\xValDefine{yB}[-3.3]
+\xValDefine{yA}[+3.3]
+\xValMiddle{yC}{yB}{yA}
+\xValProportion{yPMOS}{yA}{yB}[0.15]
+\xValMirror{yNMOS}{yPMOS}{yC}
+\xValProportion{yCL}{yC}{yB}[0.25]
+\xValProportion{yCLGND}{yC}{yB}[0.50]
+\xValOffset{yBorB}{yB}[-0.75]
+\xValOffset{yBorA}{yA}[+1.10]
+
+\xGeneratePoints{xL,xR,xGG,xCL,xMOS,xBorL,xBorR}{yB,yA,yC,yPMOS,yNMOS,yCL,yCLGND,yBorB,yBorA}
+
+\path (xMOS/yPMOS) node[pmos,name=pmos] {} node {\tiny PMOS};
+\path (xMOS/yNMOS) node[nmos,name=nmos] {} node {\tiny NMOS};
+
+\path (pmos.G) node[above] {\tiny G};
+\path (pmos.D) node[right] {\tiny D};
+\path (pmos.S) node[right] {\tiny S};
+
+\path (nmos.G) node[below] {\tiny G};
+\path (nmos.D) node[right] {\tiny D};
+\path (nmos.S) node[right] {\tiny S};
+
+\draw (pmos.G) -| (xGG/yC);
+\draw (nmos.G) -| (xGG/yC);
+\draw (xGG/yC) to[short,*-o] (xL/yC) node[left] {$V_{in}$};
+
+\draw (pmos.D|-yC) to[short,i_={\small $I_{Dp0}$}] (pmos.D);
+\draw (nmos.D|-yC) to[short,i^={\small $I_{Dn0}$}] (nmos.D);
+
+\draw (pmos.D|-yC) to[short,*-o] (xR/yC) node[right] {$V_{out}$};
+
+\draw (pmos.S) -- (pmos.S|-yA) node[vdd] {$V_{DD}$};
+\draw (nmos.S) -- (pmos.S|-yB) node[ground] {};
+
+\path (pmos.S) node[left] {\small $V_{GSp}$};
+\path (nmos.S) node[left] {\small $V_{GSn}$};
+\path (pmos) node[right=0.4cm] {\small $V_{DSp}$};
+\path (nmos) node[right=0.4cm] {\small $V_{DSn}$};
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+
+\end{tikzpicture}
+\end{document}

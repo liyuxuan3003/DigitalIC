@@ -1,0 +1,49 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[0]
+\xValDefine{xR}[6]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xRa}{xR}{xL}[0.2]
+\xValProportion{xIL}{xL}{xRa}[0.3]
+\xValSymmetrize{xIH}{xIL}{xL}{xRa}
+\xValMiddle{xVM}{xIL}{xIH}
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+
+\xValDefine{yB}[0]
+\xValDefine{yA}[6]
+\xValMiddle{yC}{yA}{yB}
+\xValProportion{yOH}{yA}{yB}[0.2]
+\xValMiddle{yVM}{yB}{yOH}
+\xValOffset{yBorB}{yB}[-0.7]
+\xValOffset{yBorA}{yA}[+0.7]
+
+\xGeneratePoints{xL,xR,xC,xIL,xIH,xRa,xVM,xBorL,xBorR}{yB,yA,yC,yOH,yVM,yBorB,yBorA}
+
+\draw[-latex] (xL/yB) -- (xR/yB) node[right] {$V_{in}$};
+\draw[-latex] (xL/yB) -- (xL/yA) node[above] {$V_{out}$};
+
+\path (xL/yOH) node[left] {$V_{OH}$};
+\path (xL/yB) node[point] {} node[left] {$V_{OL}$};
+\path (xIL/yB) node[below] {$V_{IL}$};
+\path (xIH/yB) node[below] {$V_{IH}$};
+
+\draw[dashed] (xIL/yB) -- (xIL/yOH);
+\draw[dashed] (xVM/yVM) -- (xVM/yB) node[below] {$V_M$};
+
+\draw[very thick]
+(xL/yOH) node[point] {} --
+(xIL/yOH) node[point] {} --
+(xIH/yB) node[point] {} -- 
+(xRa/yB) node[point] {};
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xVM/yVM) node[point] {} node[right] {$g$};
+
+
+\end{tikzpicture}
+\end{document}
