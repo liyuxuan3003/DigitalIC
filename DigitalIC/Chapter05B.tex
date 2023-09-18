@@ -1,0 +1,89 @@
+\section{CMOS反相器的电压传输特性}
+在\xref{sec:CMOS反相器的直观综述}中，我们已经定性了解了CMOS反相器的基本特性，输入高输出低，输入低输出高。但是，这这还远远不够，我们需要掌握$V_{out}$和$V_{in}$之间的函数关系，需要了解反相器是如何在两种稳态间切换的。该关系被称为\uwave{电压传输特性}（Voltage Transfer Characteristic, VTC）。
+
+在分析电压传输特性前，我们有必要先将NMOS和PMOS的坐标统一到一组公共坐标系
+
+对于NMOS，原有坐标系是$(V_{GSn},V_{DSp},I_{Dn0})$，转换公式为
+\begin{Equation}
+    I_{Dn0}=+I_{Dn}\qquad
+    V_{GSn}=V_{in}\qquad
+    V_{DSn}=V_{out}
+\end{Equation}
+对于PMOS，原有坐标系是$(V_{GSp},V_{DSp},I_{Dp0})$，转换公式为
+\begin{Equation}
+    I_{Dp0}=-I_{Dp}\qquad
+    V_{GSp}=V_{in}-V_{DD}\qquad
+    V_{DSp}=V_{out}-V_{DD}
+\end{Equation}
+
+换言之，如\xref{fig:CMOS反相器VTC推导中的变量变换}所示，我们期望NMOS和PMOS的栅源和漏源电压均能以$V_{in}$和$V_{out}$为变量表示，而两者的沟道电流的方向统一为原先NMOS的电流方向，用$I_{Dn}$和$I_{Dp}$表示。
+
+\begin{Figure}[CMOS反相器VTC推导中的变量变换]
+    \begin{FigureSub}[原始变量空间]
+        \includegraphics{build/Chapter05A_05.fig.pdf}
+    \end{FigureSub}
+    \hspace{1.5cm}
+    \begin{FigureSub}[新的变量空间]
+        \includegraphics{build/Chapter05A_06.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+参照\fancyref{fml:MOS晶体管的手工分析模型}，将坐标转换后$I_{Dn}$和$I_{Dp}$的公式整理如下
+\begin{BoxFormula}[CMOS反相器的电流电压关系]
+    CMOS反相器的公共坐标系$(V_{in},V_{out},I_D)$下，NMOS服从
+    \begin{Gather}[6pt]
+        I_{Dn}=+k_n\qty[(V_{in}-V_{Tn})V_{\min}-\frac{V_{\min}^2}{2}][1+\lambda_n V_{out}]\\
+        V_{\min}=\min(V_{out},V_{in}-V_{Tn},V_{DSATn})
+    \end{Gather}
+    CMOS反相器的公共坐标系$(V_{in},V_{out},I_D)$下，PMOS服从
+    \begin{Gather}[6pt]
+        I_{Dp}=-k_p\qty[(V_{in}-V_{DD}-V_{Tn})V_{\max}-\frac{V_{\max}^2}{2}][1+\lambda_p (V_{out}-V_{DD})]\hspace{-0.9em}\\
+        V_{\max}=\max(V_{out}-V_{DD},V_{in}-V_{DD}-V_{Tn},V_{DSATp})
+    \end{Gather}
+    此处$\min$或$\max$的三个取值，分别对应线性区、夹断饱和区、速度饱和区。
+\end{BoxFormula}
+
+我们现在就有PMOS和NMOS的电流--电压关系$I_{Dp}(V_{in},V_{out})$和$I_{Dn}(V_{in},V_{out})$了。而为了使得一个直流工作点成立，两者的电流$I_{Dp}$和$I_{Dn}$必须相等，这是因为一个反相器的输出总是连接到下一个反相器的输入，而CMOS反相器的输入电阻为无穷大，这就意味着不可能有电流从反相器的输出端流出，故应当有$I_{Dp}=I_{Dn}$成立。这相当于要让我们在三维空间中考察$I_{Dp}(V_{in},V_{out})$和$I_{Dn}(V_{in},V_{out})$这两个曲面的交线，该交线在$V_{in}$和$V_{out}$平面上的投影就是我们关心的电压传输特性。由于三维中不容易观察，仍采取二维绘图，用颜色标识$I_{D}$轴。
+
+这里先绘制了$I_{Dp}(V_{in},V_{out})$和$I_{Dn}(V_{in},V_{out})$的图像，如\xref{fig:PMOS特性示意}和\xref{fig:NMOS特性示意}。而在\xref{fig:CMOS的电压传输特性示意}绘制了$I_{Dp}-I_{Dn}$的图像，此时值为$0$的等高线即$I_{Dp}=I_{Dn}$的直流工作点，即VTC曲线。
+
+\begin{Figure}[CMOS反相器的电压传输特性分析]
+    \begin{FigureSub}[NMOS特性示意]
+        \includegraphics[width=0.4\linewidth]{build/Chapter05A_01c.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[PMOS特性示意]
+        \includegraphics[width=0.4\linewidth]{build/Chapter05A_01d.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.35cm}
+    \begin{FigureSub}[CMOS的电压传输特性示意]
+        \includegraphics[width=0.55\linewidth]{build/Chapter05A_01e.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+这里可能比较让人困惑的是\xref{fig:NMOS特性示意}和\xref{fig:PMOS特性示意}中的曲线，它与我们熟悉的那种MOS的特性曲线，也就是类似\xref{fig:速度饱和输出特性}的输出特性曲线非常相似，但好像总有些不太一样。实际上，这两者毫无关系，过去绘制过的，输出特性是$I_D$关于$V_{out}$的，转移特性是$I_{D}$关于$V_{in}$的，而现在我们要研究的是$V_{out}$关于$V_{in}$的曲线。从三维角度看，即过去是从两个侧面观察曲面，而现在是自顶向下观察，看到的曲线是等高线。在\xref{fig:MOS特性曲面网格的对比}中，可以清楚看到这种研究重点的变化。
+\begin{Figure}[MOS特性曲面网格的对比]
+    \begin{FigureSub}[坐标线网格]
+        \includegraphics[width=0.36\linewidth]{build/Chapter05A_01a.fig.pdf}
+    \end{FigureSub}
+    \hspace{1cm}
+    \begin{FigureSub}[等高线网格]
+        \includegraphics[width=0.36\linewidth]{build/Chapter05A_01b.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+在\xref{fig:NMOS特性示意}和\xref{fig:PMOS特性示意}中，我们用蓝线和红线分别标注了NMOS管和PMOS管各个工作区的边界范围。这样一来，我们将两者叠加后，在\xref{fig:CMOS的电压传输特性示意}中，就可以看到在CMOS的电压特性曲线上随着$V_{in}$增大CMOS依次经历了哪些工作状态。\xref{fig:CMOS反相器的电压传输特性曲线}中更为清晰的展示了这一点。
+
+\begin{Figure}[CMOS反相器的电压传输特性曲线]
+    \includegraphics{build/Chapter05A_02a.fig.pdf}\hspace{0.7cm}
+\end{Figure}
+
+\begin{enumerate}
+    \item NMOS位于截止区，PMOS位于线性区，宽度为$V_{Tn}$，CMOS处于输出高电平的稳态。
+    \item NMOS夹断饱和区，PMOS位于线性区，宽度为$V_{DSATn}$。
+    \item NMOS速度饱和区，PMOS位于线性区，延伸至$V_M$。
+    \item NMOS速度饱和区，PMOS速度饱和区，宽度为零。\footnote{这是由于此处绘图时未考虑沟道调制效应，即假定$\lambda_n=\lambda_p=0$的缘故，否则会有很小的一段区域两者同时处于速度饱和。}
+    \item NMOS位于线性区，PMOS速度饱和区，延伸自$V_M$。
+    \item NMOS位于线性区，PMOS夹断饱和区，宽度为$V_{DSATp}$。
+    \item NMOS位于线性区，PMOS位于截止区，宽度为$V_{Tp}$，CMOS处于输出低电平的稳态。
+\end{enumerate}
+
+最后的一个问题是，为什么我们不直接计算出$V_{out}$与$V_{in}$间的解析表达式？若不考虑沟道调制效应，这是可能的，因为$V_{in}$和$V_{out}$之间不过是一个二次方程的关系，其实\xref{fig:CMOS反相器的电压传输特性曲线}中的曲线就是通过解析式绘制的，但这是由数学软件自行完成的，尽管面临的只是二次方程，但其系数依然长到另人绝望，并且求解还需要分段进行，故仔细写出解析式的意义不大。若考虑沟道调制，将进一步变成三次方程，更无法求解。因此主要通过图像理解$V_{in}$和$V_{out}$间的关系。

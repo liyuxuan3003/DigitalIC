@@ -1,0 +1,145 @@
+\section{CMOS反相器的静态特性分析}
+
+\subsection{开关阈值的计算}
+在\xref{fig:CMOS反相器的电压传输特性曲线}以及CMOS工作区的分析中，曾出现了一个称为$V_M$的分界点，它被称为反相器\uwave{开关阈值}（Threshold Voltage）。开关阈值$V_M$的定义是满足$V_{in}=V_{out}$的点，即反相器电压输出特性的不动点。开关阈值$V_M$代表了CMOS工作状态的一个中间点，它是CMOS两种工作状态之间的分解线。显然，当NMOS管和PMOS管的参数完全对称时（上述作图出于美观考虑，均是按参数对称绘制）开关阈值$V_{M}$必然位于$V_M=V_{DD}/2$位于中点处。但是，如果两者的参数并不对称，此时开关阈值$V_M$该如何计算呢？这就是本小节中要完成的任务。
+
+根据\fancyref{fml:CMOS反相器的电流电压关系}，忽略沟道调制效应，$I_{Dn}=I_{Dp}$可以展开为\setpeq{开关阈值}
+\begin{Equation}&[1]
+    \qquad\qquad
+    k_n\qty[(V_{in}-V_{Tn})V_{\min}-\frac{V_{\min}^2}{2}]+k_p\qty[(V_{in}-V_{DD}-V_{Tn})V_{\max}-\frac{V_{\max}^2}{2}]=0
+    \qquad\qquad
+\end{Equation}
+代入$V_{in}=V_{out}=V_M$
+\begin{Equation}&[2]
+    \qquad\qquad
+    k_n\qty[(V_{M}-V_{Tn})V_{\min}-\frac{V_{\min}^2}{2}]+k_p\qty[(V_{M}-V_{DD}-V_{Tn})V_{\max}-\frac{V_{\max}^2}{2}]=0
+    \qquad\qquad
+\end{Equation}
+开关阈值时NMOS和PMOS均为速度饱和，代入$V_{\min}=V_{DSATn}$和$V_{\max}=V_{DSATp}$
+\begin{Equation}&[3]
+    \quad
+    k_n\qty[(V_{M}-V_{Tn})V_{DSATn}-\frac{V_{DSATn}^2}{2}]+k_p\qty[(V_{M}-V_{DD}-V_{Tn})V_{DSATp}-\frac{V_{DSATp}^2}{2}]=0
+    \quad
+\end{Equation}
+展开得到
+\begin{Split}&[4]
+    &k_nV_{DSATn}V_M-k_nV_{DSATn}\qty(V_{Tn}+V_{DSATn}/2)+\\
+    &k_pV_{DSATp}V_M-k_pV_{DSATp}\qty(V_{DD}+V_{Tp}+V_{DSATp}/2)=0
+\end{Split}
+即得
+\begin{Split}&[5]
+    &k_nV_{DSATn}(V_{Tn}+V_{DSATn}/2)+\\
+    &k_pV_{DSATp}(V_{DD}+V_{Tp}+V_{DSATp}/2)=(k_nV_{DSATn}+k_pV_{DSATp})V_M\hspace{-1em}
+\end{Split}
+这样就解出$V_M$了
+\begin{Equation}&[6]
+    \qquad\quad
+    V_M=\frac{k_nV_{DSATn}(V_{Tn}+V_{DSATn}/2)+k_pV_{DSATp}(V_{DD}+V_{Tp}+V_{DSATp/2})}{k_nV_{DSATn}+k_pV_{DSATp}}
+    \qquad\quad
+\end{Equation}
+上下同除$k_nV_{DSATn}$
+\begin{Equation}
+    V_M=\frac{(V_{Tn}+V_{DSATn}/2)+r(V_{DD}+V_{Tp}+V_{DSATp}/2)}{1+r}
+\end{Equation}
+这里$r$为代换变量
+\begin{Equation}
+    r=\frac{k_pV_{DSATp}}{k_nV_{DSATn}}
+\end{Equation}
+至此，我们就可以整理出关于开关阈值$V_M$的计算公式了
+\begin{BoxFormula}[CMOS反相器的开关阈值]
+    开关阈值$V_M$可以表示为
+    \begin{Equation}
+        V_M=\frac{(V_{Tn}+V_{DSATn}/2)+r(V_{DD}+V_{Tp}+V_{DSATp}/2)}{1+r}
+    \end{Equation}
+    开关阈值$V_M$在$V_{DD}\gg V_{Tn},V_{Tp},V_{DSATn},V_{DSATp}$时可以表示为
+    \begin{Equation}
+        V_m=\frac{rV_{DD}}{1+r}
+    \end{Equation}
+    其中$r$为
+    \begin{Equation}
+        r=\frac{k_pV_{DSATp}}{k_nV_{DSATn}}=\frac{k_p'(W/L)_pV_{DSATp}}{k_n'(W/L)_nV_{DSATn}}
+    \end{Equation}
+\end{BoxFormula}
+上述分析表明，开关阈值很大程度上取决于$r$的值，而$r$除了$k_p',k_n',V_{DSATp},V_{DSATn}$这些常数即正比于$(W/L)_p/(W/L)_n$，若假设沟道长度是一定的，那么$r$就正比于PMOS和NMOS的沟道宽度比。\xref{fig:CMOS反相器的开关阈值}展现了$V_M$与$(W/L)_p/(W/L)_n$之间的关系，从中可以得出几点结论
+\begin{itemize}
+    \item 绘图参数依照\xref{tab:MOS管的手工分析模型参数}和$V_{DD}=2.5\si{V}$，该取值下$V_M=rV_{DD}/1+r$的近似是糟糕的。
+    \item 若增大PMOS和NMOS的沟道宽度比，$V_M$将增大，移向VDD。
+    \item 若减小PMOS和NMOS的沟道宽度比，$V_M$将减小，移向GND。
+\end{itemize}
+但总的来说，$V_M$对于宽度比而言并不敏感，将宽度比从$1$倍增大至$10$倍（实践中不可能有这么悬殊的比值，通常在$2$至$4$倍左右），开关阈值$V_M$也才仅仅变化了不到$0.5\si{V}$。因此，如果实践工艺上PMOS和NMOS的宽度比有一些细小的误差，开关阈值$V_M$也不会有太大的影响。通常，开关阈值$V_{M}$被期望位于电压摆幅的中间即$V_{DD}/2$处，此时PMOS和NMOS的宽度比应在$3.5$左右，宽度比不为$1$的原因是$r$中$k_n',k_p'$和$V_{DSATn}',V_{DSATp}'$并不对称。
+
+\begin{Figure}[CMOS反相器的开关阈值]
+    \includegraphics{build/Chapter05A_03a.fig.pdf}\hspace{0.7cm}
+\end{Figure}
+
+\subsection{噪声容限的计算}
+首先要解释几个概念，反相器输出的额定高电平和额定低电平记为$V_{OH}$和$V_{OL}$，在这里很明显两者就等于$V_{DD}$和$0$。但是，事实上也不至于如此严苛，反相器也可以接受略微偏离了额定电平的输入，这由$V_{IH}$和$V_{IL}$划定，如\xref{fig:反相器逻辑电平的范围}所示，这将电压划分了“高电平、不确定区、低电平”三个范围区间。而其中高电平和低电平的接受范围就记为$NM_{H}$和$NM_{L}$，这就是所谓的噪声容限。现在面临的问题是，对于CMOS反相器而言，$V_{IH}$和$V_{IL}$应等于多少？
+
+\begin{Figure}[CMOS反相器的噪声容限]
+    \begin{FigureSub}[反相器逻辑电平的范围]
+        \includegraphics{build/Chapter05C_01.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.5cm}
+    \begin{FigureSub}[反相器VTC曲线的线性近似]
+        \includegraphics{build/Chapter05C_02.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+实际上$V_{IH}$和$V_{IL}$的确定完全是人为的，而习惯上，会分别取增益$g=\dv*{V_{out}}{V_{in}}=-1$的两个点作为$V_{IH}$和$V_{IL}$，因为在这两点之间反相器的状态会急剧变化。诚然，我们确实可以通过$V_{out}$和$V_{in}$间（复杂到不想写出）的解析式按照该定义求出$V_{IH}$和$V_{IL}$的表达式，但显然这种表达式使用起来并不方便，并且对深刻理解什么参数会影响噪声容限没有任何帮助。\goodbreak
+
+因此，如\xref{fig:反相器VTC曲线的线性近似}所示，我们 采取分段线性近似的方法，将VTC曲线在过渡区近似为一段直线，且直线的增益$g$就等于开关阈值$V_M$处的增益$g$，它用与$V_{OH},V_{OL}$交线处的$V_{in}$的值定义$V_{IH},V_{Il}$的取值。现在，我们就可以轻松写出CMOS反相器的噪声容限的表达式了。
+
+\begin{BoxFormula}[CMOS反相器的噪声容限]
+    依照定义，噪声容限的表达式为
+    \begin{Equation}
+        NM_H=|V_{OH}-V_{IH}|\qquad
+        NM_L=|V_{OL}-V_{IL}|
+    \end{Equation}
+    在CMOS反相器中，$V_{OH}$和$V_{OL}$分别为
+    \begin{Equation}
+        V_{OH}=V_{DD}\qquad
+        V_{OL}=0
+    \end{Equation}
+    在CMOS反相器中，$V_{IH}$和$V_{IL}$分别为
+    \begin{Equation}
+        V_{IH}=V_M-\frac{V_M}{g}\qquad
+        V_{IL}=V_M+\frac{V_{DD}-V_{M}}{g}
+    \end{Equation}
+\end{BoxFormula}
+
+当然，轻松的原因只是因为我们把问题的复杂些转移到了开关阈值$V_m$增益$g$的计算上，而客观的说，它并不容易求出，故这里我们直接给出$g$的结论。唯一想说明的是，计算$g$时不能忽略沟道调制效应，如果忽略了沟道调制，如\xref{fig:CMOS反相器的增益}所示，电压传输特性在$V_M$处为一条垂直的竖线，求导后，电压增益特性在$V_M$处即为负无穷大，这是没有任何意义的。
+\begin{Figure}[CMOS反相器的增益]
+    \begin{FigureSub}[电压传输特性]
+        \includegraphics[width=0.47\linewidth]{build/Chapter05A_02b.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[电压增益特性]
+        \includegraphics[width=0.47\linewidth]{build/Chapter05A_02c.fig.pdf}
+    \end{FigureSub}
+\end{Figure}\vspace{0cm}
+
+\begin{BoxFormula}[CMOS反相器的增益]
+    CMOS反相器在$V_M$处的增益$g$为
+    \begin{Equation}
+        g=\frac{1+r}{(V_M-V_{Tn}-V_{DSATn}/2)(\lambda_n-\lambda_p)}
+    \end{Equation}
+\end{BoxFormula}
+
+\subsection{器件参数的影响}
+器件参数对CMOS反相器的VTC有一定影响，不过所幸的是，这种影响并不大。
+
+器件参数的变化可以用“好”或“差”来描述，具体来说
+\begin{itemize}
+    \item 若器件的宽长比$(W/L)$和阈值电压$V_{T}$更小，则称为“好的器件”。
+    \item 若器件的宽长比$(W/L)$和阈值电压$V_{T}$更大，则称为“差的器件”。
+\end{itemize}
+\begin{Figure}[器件参数的影响]
+    \includegraphics{build/Chapter05A_02d.fig.pdf}\hspace{0.7cm}
+\end{Figure}
+在\xref{fig:器件参数的影响}，使用“好”和“差”的NMOS和PMOS组合，可以看出VTC曲线只是发生左右偏移（NMOS好时曲线向左偏移，PMOS好时曲线向右偏移），并没有发生本质性的变化。
+
+\subsection{电源电压的影响}
+电源电压，随着工艺尺寸的减小，必然随之按相应比例越来越小。但是MOS器件的阈值电压却是恒定，现在我们要探究的，就是在该背景下CMOS反相器的VTC曲线将会如何变化。
+\begin{Figure}[器件参数的影响]
+    \includegraphics{build/Chapter05A_02e.fig.pdf}\hspace{0.7cm}
+\end{Figure}
+如\xref{fig:器件参数的影响}所示，令我们有些惊讶的是，事实上，随着电源电压$V_{DD}$的减小，过渡区反而越来越窄了，这意味着噪声容限和功耗的显著提升，换言之，至少表面上看起来电源电压的降低对数字电路设计是有利的。然而，后面我们将看到，电源电压的降低将极大的增加门的延时。

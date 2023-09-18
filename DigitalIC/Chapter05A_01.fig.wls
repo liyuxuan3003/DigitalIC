@@ -47,8 +47,8 @@ xFigCTConfig={
 	ColorFunction->ColorData["DarkRainbow"],
 	BaseStyle->{FontFamily->"Latin Modern Roman",FontSize->8},
 	ImageSize->Automatic->300,
-	PlotPoints->50,
-	MaxRecursion->5,
+	PlotPoints->20,
+	MaxRecursion->1,
 	ExclusionsStyle->{None,{Red,Thin}}};
 xFigCTFast={};
 (*xFigCTFast={PlotPoints->5,MaxRecursion->1};*)
@@ -83,6 +83,9 @@ transPMOS={VDS->(Vout-VDD),VGS->(Vin-VDD)};
 
 argNMOS={VT->+xVT,VDSAT->+xVDSAT,lambda->0,GND->xGND,VDD->xVDD};
 argPMOS={VT->-xVT,VDSAT->-xVDSAT,lambda->0,GND->xGND,VDD->xVDD};
+
+xIoutNMOSBase=Function[{Vout,Vin},Iout/.{Iout->+xIDNMOS[VDS,VGS]}/.transNMOS];
+xIoutPMOSBase=Function[{Vout,Vin},Iout/.{Iout->-xIDPMOS[VDS,VGS]}/.transPMOS];
 
 xIoutNMOS=Function[{Vout,Vin},Iout/.{Iout->+xIDNMOS[VDS,VGS]}/.transNMOS/.argNMOS];
 xIoutPMOS=Function[{Vout,Vin},Iout/.{Iout->-xIDPMOS[VDS,VGS]}/.transPMOS/.argPMOS];
@@ -195,7 +198,7 @@ fig4=ContourPlot[ID1-ID2/.{ID1->xIoutNMOS[Vout,Vin],ID2->xIoutPMOS[Vout,Vin]},{V
 	Evaluate@xFigLabel["V_{in}","V_{out}"]]
 
 
-s[Vin_]:=Solve[ID1==ID2/.{ID1->xIoutNMOS[Vout,Vin],ID2->xIoutPMOS[Vout,Vin]},Vout]
+s=Function[{Vin},Solve[ID1==ID2/.{ID1->xIoutNMOS[Vout,Vin],ID2->xIoutPMOS[Vout,Vin]},Vout]]
 fig1=Plot[Vout/.s[Vin],{Vin,0,xVDD},Evaluate@xFigConfig]
 
 

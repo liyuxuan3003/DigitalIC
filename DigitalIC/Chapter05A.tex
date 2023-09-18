@@ -1,0 +1,24 @@
+\section{CMOS反相器的直观综述}
+
+\xref{fig:CMOS反相器}展示了一个静态CMOS反相器的电路图，我们可以很容易理解它的工作原理
+\begin{itemize}
+    \item 当$V_{in}$为高等于VDD时，PMOS截止，NMOS导通，此时$V_{out}$与GND相连为低。
+    \item 当$V_{in}$为低等于GND时，PMOS导通，NMOS截止，此时$V_{out}$与VDD相连为高。
+\end{itemize}
+
+% 由此可见，$V_{in}$为高$V_{out}$为低，$V_{in}$为低$V_{out}$为高，这就实现了反相器的功能。
+
+静态CMOS反相器有许多优点
+\begin{enumerate}
+    \item 静态CMOS反相器的高电平和低电平分别为VDD和GND，换言之，电压摆幅等于电源电压$V_{DD}$，高电平和低电平的区分度很大，或者说，噪声容限很大，不容易受到干扰。
+    \item 静态CMOS反相器的逻辑电平与器件相对尺寸无关，因此晶体管可以采用最小尺寸。这种特性被称为\uwave{无比逻辑}（Unlimited Logic），反之则称为\uwave{有比逻辑}（Ratioed Logic）。
+    \item 静态CMOS反相器具有低输出电阻，稳态时，$V_{out}$与VDD或GND间总存在一条低电阻通路，这个电阻是来自PMOS和NMOS的沟道电阻，而沟道电阻并不是很大。
+    \item 静态CMOS反相器具有高输入电阻，因为MOS管的栅极是绝缘体，输入电阻为无穷大。
+    \item 静态CMOS反相器不存在静态功率，因为稳态时VDD和GND间没有直接通路。
+\end{enumerate}
+
+\begin{Figure}[CMOS反相器]
+    \includegraphics{build/Chapter05A_04.fig.pdf}
+\end{Figure}
+
+尽管上面的观察看起来很明显，会让我们觉得使用静态CMOS反相器是理所当然的，但却是非常重要的。这些原因是目前数字技术选择CMOS的主要原因，但在20世纪70年代时的早期，情况则完全不同。那时的微处理器，例如\xref{chap:引论}提到的Intel 4004和Inter 8008等，都是只用NMOS工艺实现的，并非受限于理论，而是受限于那时的工艺中缺少互补器件。无法使反相器具有零静态功耗，就限制了集成密度，最终到20世纪80年代时转向CMOS工艺。
