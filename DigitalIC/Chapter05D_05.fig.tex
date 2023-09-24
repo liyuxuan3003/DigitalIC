@@ -1,0 +1,41 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-7.0]
+\xValDefine{xR}[+7.0]
+\xValOffset{xBorL}{xL}[-0.5]
+\xValOffset{xBorR}{xR}[+0.5]
+\xValProportion{xO}{xL}{xR}[0.85]
+\xValMiddle{xCL}{xO}{xR}
+\xValMiddle{xInva}{xL}{xO}
+\xValMiddle{xCga}{xL}{xInva}
+\xValMiddle{xCgag}{xO}{xInva}
+
+\xValDefine{yA}[+1.0]
+\xValDefine{yB}[-1.0]
+\xValOffset{yBorA}{yA}[+1.0]
+\xValOffset{yBorB}{yB}[-1.0]
+\xValOffset{yAz}{yA}[+0.82]
+\xValOffset{yBz}{yB}[-0.82]
+\xValProportion{yCL}{yA}{yB}[1.0]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xO,xCL,xInva,xCga,xCgag}{yA,yB,yBorA,yBorB,yAz,yBz,yCL}
+
+\path (xInva/yA) node[not port,name=na] {} node[above=0.25cm] {$G$};
+\draw (xL/yA) node[above] {In} to[short,o-] (na.in) (na.out) to[short,-o] (xR/yA) node[above] {Out};
+
+\draw (xCL/yA) to[C=$C_{ext}$,*-] (xCL/yB) node[ground] {};
+
+\draw (xCga/yA) to[C=$C_{g}$,*-] (xCga/yB) node[ground] {};
+\draw (xCgag/yA) to[C={$C_{int}=\gamma C_g$},*-] (xCgag/yB) node[ground] {};
+
+\draw[dashed,thick,gray] (xO/yAz) -- (xO/yBz);
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\draw[gray,latex-latex,thin] (xCgag/yCL) -- node[above,pos=0.4] {\small $C_L=C_{int}+C_{ext}$} (xCL/yCL);
+
+\end{tikzpicture}
+\end{document}

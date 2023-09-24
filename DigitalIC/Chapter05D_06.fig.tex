@@ -1,0 +1,77 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-7.0]
+\xValDefine{xR}[+7.0]
+\xValOffset{xBorL}{xL}[-0.5]
+\xValOffset{xBorR}{xR}[+0.5]
+\xValProportion{xO}{xL}{xR}[0.85]
+\xValMiddle{xCL}{xO}{xR}
+\xValProportion{xInva}{xL}{xO}[0.12]
+\xValProportion{xInvd}{xL}{xO}[0.88]
+\xValProportion{xInvb}{xInva}{xInvd}[1/3]
+\xValProportion{xInvc}{xInva}{xInvd}[2/3]
+
+\xValProportion{xCga}{xL}{xInva}[0.4]
+\xValProportion{xCgb}{xInva}{xInvb}[2/3]
+\xValProportion{xCgc}{xInvb}{xInvc}[2/3]
+\xValProportion{xCgd}{xInvc}{xInvd}[2/3]
+
+\xValProportion{xCgag}{xInva}{xInvb}[1/3]
+\xValProportion{xCgbg}{xInvb}{xInvc}[1/3]
+\xValProportion{xCgcg}{xInvc}{xInvd}[1/3]
+\xValProportion{xCgdg}{xInvd}{xO}[0.6]
+
+\xValProportion{xdL}{xCgcg}{xCgd}[0.25]
+\xValProportion{xdR}{xCgcg}{xCgd}[0.75]
+\xValMiddle{xdC}{xdL}{xdR}
+
+\xValDefine{yA}[+1.0]
+\xValDefine{yB}[-1.0]
+\xValOffset{yBorA}{yA}[+1.0]
+\xValOffset{yBorB}{yB}[-1.0]
+\xValOffset{yAz}{yA}[+0.82]
+\xValOffset{yBz}{yB}[-0.82]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xO,xCL,xInva,xInvb,xInvc,xInvd,xCga,xCgb,xCgc,xCgd,xCgag,xCgbg,xCgcg,xCgdg,xdL,xdR,xdC}{yA,yB,yBorA,yBorB,yAz,yBz}
+
+\path (xInva/yA) node[not port,name=na] {} node[above=0.25cm] {$G_1$};
+\path (xInvb/yA) node[not port,name=nb] {} node[above=0.25cm] {$G_2$};
+\path (xInvc/yA) node[not port,name=nc] {} node[above=0.25cm] {$G_3$};
+\path (xInvd/yA) node[not port,name=nd] {} node[above=0.25cm] {$G_N$};
+
+\draw (xL/yA) node[above] {In} to[short,o-] 
+(na.in) (na.out) to[short] 
+(nb.in) (nb.out) to[short] 
+(nc.in) (nc.out) to[short] 
+(xdL/yA) to[open] (xdR/yA) to[short]
+(nd.in) (nd.out) to[short,-o] 
+(xR/yA) node[above] {Out};
+
+\path (xdC/yA) node[below] {$\cdots$};
+
+\draw (xCL/yA) to[C=$C_{ext}$] (xCL/yB) node[ground] {};
+
+\draw (xCga/yA) to[C={$C_{g1}$}] (xCga/yB) node[ground] {};
+\draw (xCgb/yA) to[C={$C_{g2}$}] (xCgb/yB) node[ground] {};
+\draw (xCgc/yA) to[C={$C_{g3}$}] (xCgc/yB) node[ground] {};
+\draw (xCgd/yA) to[C={$C_{gN}$}] (xCgd/yB) node[ground] {};
+
+\draw (xCgag/yA) node[above] {\small $\gamma C_{g1}$} to[C] (xCgag/yB) node[ground] {};
+\draw (xCgbg/yA) node[above] {\small $\gamma C_{g2}$} to[C] (xCgbg/yB) node[ground] {};
+\draw (xCgcg/yA) node[above] {\small $\gamma C_{g3}$} to[C] (xCgcg/yB) node[ground] {};
+\draw (xCgdg/yA) node[above] {\small $\gamma C_{gN}$} to[C] (xCgdg/yB) node[ground] {};
+
+\draw[gray,-latex,ultra thin] (xCga/yB) -- node[above] {$f_1$} (xCgb/yB); 
+\draw[gray,-latex,ultra thin] (xCgb/yB) -- node[above] {$f_2$} (xCgc/yB); 
+\draw[gray,-latex,ultra thin] (xCgd/yB) -- node[above,pos=0.4] {$f_N$} (xCL/yB); 
+\draw[gray,-latex,ultra thin] (xCgc/yB) --(xInvc/yB) node[right] {$\cdots$}; 
+
+\draw[dashed,thick,gray] (xO/yAz) -- (xO/yBz);
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\end{tikzpicture}
+\end{document}

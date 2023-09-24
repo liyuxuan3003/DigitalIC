@@ -1,0 +1,431 @@
+\section{CMOS反相器的动态特性分析}
+
+在\xref{sec:CMOS反相器的电压传输特性}和\xref{sec:CMOS反相器的静态特性分析}中，我们已经对CMOS反相器的静态特性有了一定了解，而本节，我们将研究CMOS反相器的动态特性。所谓动态特性，就是指CMOS反相器中的寄生电容将会造成多大程度的延时。更重要的是，从工艺和设计上，我们如何尽可能的使这种延时最小化。
+
+\subsection{传播延时}
+首先我们要理解，为什么CMOS反相器会产生“令人恼火”的延时？本质上说，电路中的延时都是由“磨磨蹭蹭”的电容产生的，而在\xref{subsec:MOS晶体管的动态特性}中，我们已经充分了解MOS管内部各部分间存在的寄生电容了。因此CMOS反相器中存在电容并不值得奇怪，但讨论如此多的电容仍然是很繁琐的。简洁起见，我们考虑这样一个模型，将CMOS反相器自身内部各个部分间的电容和其外部负载电容的效果等效为其输出端上的一个接地电容$C_L$，如\xref{fig:CMOS反相器的输出接地电容}所示。
+
+\begin{Figure}[CMOS反相器的输出接地电容]
+    \includegraphics{build/Chapter05D_04.fig.pdf}
+\end{Figure}
+
+这样一来，整个充放电过程就变成了一个简单的一阶RC电路模型了
+\begin{itemize}
+    \item 如\xref{fig:充电}\hspace{0.2em}所示，输入$V_{in}$在零时刻由高电平跃变为低电平，NMOS截止，PMOS速度饱和导通，输出$V_{out}$与VDD接通，应变为高电平，但电容使充电需要一定的时间。
+    \item 如\xref{fig:放电}所示，输入$V_{in}$在零时刻由低电平跃变为高电平，PMOS截止，NMOS速度饱和导通，输出$V_{out}$与GND接通，应变为高电平，但电容使放电需要一定的时间。
+\end{itemize}
+在速度饱和状态下，PMOS和NMOS分别可以等效为电阻$R_{eqp}$和$R_{eqn}$，两者在充电和放电过程中就分别与电容$C_L$构成了RC电路，而这个RC电路就是造成传输延时的关键。我们将充电或放电至$V_{DD}/2$的时间分别记为$t_\textit{pHL}$和$t_\textit{pLH}$。电路基础中我们曾学过，对于RC电路，时间常数$\tau=RC$，时间常数代表的是弛豫过程进行到$1/e$的时间，而这里传播延时$t_p$的定义为进行到一半的时间，因此就有$t_p=\ln 2\tau=\ln 2RC$。由此就可以写下以下的表达式。
+
+\begin{BoxFormula}[CMOS反相器的传播延时]
+    当输入由高至低跳变，输出节点经PMOS充电至$V_{DD}/2$的时间$t_\textit{pLH}$
+    \begin{Equation}
+        t_\textit{pLH}=\ln 2 R_{eqp}C_L
+    \end{Equation}
+    当输入由低至高跳变，输出节点经NMOS放电至$V_{DD}/2$的时间$t_\textit{pHL}$
+    \begin{Equation}
+        t_\textit{pHL}=\ln 2 R_{eqn}C_L
+    \end{Equation}
+    传播延时$t_p$定义为两者的平均
+    \begin{Equation}
+        t_p=\frac{t_\textit{pLH}+t_\textit{pHL}}{2}=\ln 2 C_L\frac{R_{eqp}+R_{eqn}}{2}
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{Figure}[CMOS反相器的延时分析]
+    \begin{FigureSub}[充电]
+        \includegraphics[scale=0.9]{build/Chapter05D_02.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.11cm}
+    \begin{FigureSub}[放电]
+        \includegraphics[scale=0.9]{build/Chapter05D_03.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+在\xref{tab:MOS管的电阻模型}中，我们给出了$(W/L)=1$时PMOS和NMOS的电阻值，当$V_{DD}=2.5\si{V}$时
+\begin{Equation}
+    R_{eqp0}=31\si{k\ohm}\qquad
+    R_{eqn0}=13\si{k\ohm}
+\end{Equation}
+在$(W/L)$不为零时，要将上述值除以$(W/L)$
+\begin{Equation}
+    R_{eqp}=R_{eqp0}/(W/L)_p\qquad
+    R_{eqn}=R_{eqn0}/(W/L)_n
+\end{Equation}
+我们先定义如下的两个比值
+\begin{BoxDefinition}[CMOS电阻比]
+    定义$r_0$为PMOS和NMOS间在$(W/L)=1$时等效电阻的比值，在$V_{DD}=2.5\si{V}$下
+    \begin{Equation}
+        r_0=\frac{R_{eqp0}}{R_{eqn0}}=\frac{31\si{k\ohm}}{13\si{k\ohm}}\approx 2.4
+    \end{Equation}
+\end{BoxDefinition}
+
+\begin{BoxDefinition}[CMOS宽度比]
+    定义$\beta$为PMOS和NMOS间宽长比的比值\footnote[2]{而考虑到$L_p$和$L_n$通常是相等的，我们愿意将$\beta$称为PMOS和NMOS的宽度比。}
+    \begin{Equation}
+        \beta=\frac{(W/L)_p}{(W/L)_n}
+    \end{Equation}
+\end{BoxDefinition}
+
+
+通常来说，我们会希望一个门对于上升和下降具有相同的延时，即
+\begin{Equation}
+    \frac{t_\textit{pLH}}{t_\textit{pHL}}=\frac{\ln 2 R_{eqp} C_L}{\ln 2 R_{eqn}C_L}=\frac{R_{eqp}}{R_{eqn}}=\frac{R_{eqp0}/(W/L)_p}{R_{eqn0}/(W/L)_n}=\frac{r_0}{\beta}=1
+\end{Equation}
+由此可见，若要令延时对称，就要令$\beta$满足
+\begin{BoxFormula}[延时对称下的CMOS宽长比]
+    若要令延时对称，则CMOS的宽度比$\beta$应当满足
+    \begin{Equation}
+        \beta=r_0
+    \end{Equation}
+\end{BoxFormula}
+
+以上基于$R_{eqp0}=31\si{k\ohm}$和$
+R_{eqn0}=13\si{k\ohm}$的经验值的分析固然有效，但此处我们愿意直接计算一下$R_{eqp}$和$R_{eqn}$的解析式。这是因为传播延时的表达式是$t_p=\ln 2R_{eq}C_L$，\empx{减小传播延时的最佳方法就是减小电阻或电容}，如果我们能弄清等效电阻$R_{eqp}$和$R_{eqn}$到底和哪些参数有关，我们就可以知道调整哪些参数可以减小电阻，从而最终降低传播延时$t_p$，提高性能。
+
+以下计算以$R_{eqn}$为例进行（两者的计算过程完全对称），假若放电出现在$t_1$和$t_2$间
+\begin{Equation}
+    R_{eqn}=\frac{1}{t_2-t_1}\Int[t_1][t_2]\frac{V_{DS}(t)}{I_D(t)}\dd{t}
+\end{Equation}
+换元为对$V_{DS}(t)=V$的积分，很明显，$V_{DS}(t_1)=V_{DD}$，$V_{DS}(t_2)=V_{DD}/2$
+\begin{Equation}
+    R_{eqn}=\frac{1}{-V_{DD}/2}\Int[V_{DD}][V_{DD}/2]\frac{V}{I_{DSATn}(1+\lambda_n V)}\dd{V}
+\end{Equation}
+没有人愿意计算上面的积分，因此，运用Mathematica软件，积分结果为
+\begin{Equation}
+    R_{eqn}=\frac{1}{I_{DSATn}\lambda_n^2V_{DD}}\qty[\lambda V_{DD}-\ln 4-2\ln(1+\lambda V_{DD})+2\ln(2+\lambda V_{DD})]
+\end{Equation}
+没有人愿意处理这么复杂的表示，因此，运用Mathematica软件，级数展开并取至一次项
+\begin{Equation}
+    R_{eqn}=\frac{3V_{DD}}{4I_{DSATn}}\qty(1-\frac{7}{9}\lambda_nV_{DD})
+\end{Equation}
+这才是有建设性的结果，我们将它总结如下
+\begin{BoxFormula}[CMOS的等效电阻]
+    CMOS反相器中，在充电过程PMOS的等效电阻为
+    \begin{Equation}
+        R_{eqp}=\frac{3V_{DD}}{4I_{DSATp}}\qty(1-\frac{7}{9}\lambda_pV_{DD})
+    \end{Equation}
+    CMOS反相器中，在放电过程NMOS的等效电阻为
+    \begin{Equation}
+        R_{eqn}=\frac{3V_{DD}}{4I_{DSATn}}\qty(1-\frac{7}{9}\lambda_nV_{DD})
+    \end{Equation}
+\end{BoxFormula}
+
+由此，我们就可以更清楚的分析什么因素会影响在影响延时。
+
+仍然以NMOS的$t_\textit{pHL}$为例，根据\fancyref{fml:CMOS反相器的传播延时}
+\begin{Equation}
+    t_\textit{pHL}=\ln 2R_{eqn}C_L
+\end{Equation}
+代入\fancyref{fml:CMOS反相器的传播延时}
+\begin{Equation}
+    t_\textit{pHL}=\frac{3\ln 2}{4}\frac{V_{DD}C_L}{I_{DSATn}}\qty(1-\frac{7}{9}\lambda_n V_{DD})
+\end{Equation}
+这里姑且忽略沟道调制影响
+\begin{Equation}
+    t_\textit{pHL}=\frac{3\ln 2}{4}\frac{V_{DD}C_L}{I_{DSATn}}
+\end{Equation}
+这里再就$I_{DSATn}$代入\fancyref{fml:MOS晶体管的手工分析模型}
+\begin{Equation}
+    t_\textit{pHL}=\frac{3\ln 2}{4}\frac{V_{DD}C_L}{k_nV_{DSATn}(V_{DD}-V_{Tn}-V_{DSATn}/2)}
+\end{Equation}
+这里我们或许无法清楚的看到$t_{p}$与$V_{DD}$间的关系，但是通过\xref{fig:CMOS反相器传播延时与电源电压的关系}，我们可以清楚的看到随着电源电压$V_{DD}$的减小，$t_{p}$相较$V_{DD}=2.5\si{V}$时的$t_{p}$迅速增大。换言之，\empx{电源电压的降低将导致延时增加}，这也是为何\xref{subsec:电源电压的影响}中提到，不能一味减小电源电压以追求高噪声容限。
+
+\begin{Figure}[CMOS反相器传播延时与电源电压的关系]
+    \includegraphics{build/Chapter05D_01a.fig.pdf}
+    \hspace{0.3cm}
+\end{Figure}
+
+\subsection{通过调控宽度比优化传播延时}
+在\xref{subsec:传播延时}中，\xref{fml:CMOS反相器的传播延时}给出了CMOS反相器传播延时的表达式，\xref{fml:延时对称下的CMOS宽长比}进一步指出若要令上升和下降具有相同的延时，则PMOS和NMOS的宽度比$\beta$应当正比于最小尺寸电阻比$r_0\approx 2.4$。但是，如果我们愿意适当放弃这种对称的要求，实际上我们还有机会取得更小的平均传播延时。最基本的想法是这样的，增大PMOS的宽度可以使其等效电阻$R_{eqp}$减小，但同时，也会使得电容$C_L$增大。这两者间势必存在某个平衡点$\beta$，能使得总延时$t_p$最小。
+
+在开始之前，我们要更充分的理解负载电容$C_L$包含哪些组分，试考虑两个完全相同的CMOS反相器连接在一起，那第一个CMOS反相器的负载电容$C_L$就将包含以下三个部分\setpeq{传播延时的最小化}
+\begin{itemize}
+    \item 第一个反相器的输出电容，即漏电容$C_{dp1}+C_{dn1}$（\xref{fig:MOS晶体管的电容模型}中的$C_{DB}$）
+    \item 第二个反相器的输入电容，即栅电容$C_{gp1}+C_{gp2}$\hspace{0.1em}（\xref{fig:MOS晶体管的电容模型}中的$C_{GB}$）。
+    \item 两者间的连线电容$C_W$（其中W代表Wire）。
+\end{itemize}
+
+即$C_L$可以表示为
+\begin{Equation}&[1]
+    C_L=(C_{dp1}+C_{dn1})+(C_{gp2}+C_{gn2})+C_W
+\end{Equation}
+由于PMOS的宽度是NMOS的$\beta$倍，因此前者的电容也是后者的$\beta$倍
+\begin{Equation}&[2]
+    C_L=(1+\beta)(C_{dn1}+C_{gn2})+C_W
+\end{Equation}
+另外一方面，我们也知道，电阻间的关系是
+\begin{Equation}&[3]
+    \frac{R_{eqp}}{R_{eqn}}=\frac{r_0}{\beta}\qquad R_{eqp}=R_{eqn}\frac{r_0}{\beta}
+\end{Equation}
+根据\fancyref{fml:CMOS反相器的传播延时}
+\begin{Equation}&[4]
+    t_p=\ln 2 C_L\frac{R_{eqp}+R_{eqn}}{2}
+\end{Equation}
+将\xrefpeq{2}和\xrefpeq{3}代入\xrefpeq{4}
+\begin{Equation}&[5]
+    t_p=\frac{\ln 2}{2}\qty[(1+\beta)(C_{dn1}+C_{gn2})+C_W]R_{eqn}\qty(1+\frac{r_0}{\beta})
+\end{Equation}
+将$t_p$对$\beta$求导
+\begin{Equation}
+    \pdv{t_p}{\beta}=\frac{\ln 2}{2}R_{eqn}\qty[(C_{dn1}+C_{gn2})-\frac{1}{\beta^2}(C_{dn1}+C_{gn2}+C_W)r_0]
+\end{Equation}
+当导数为零时$t_p$取极小值
+\begin{Equation}
+    \pdv{t_p}{\beta}=0
+\end{Equation}
+解得
+\begin{Equation}
+    \beta^2(C_{dn1}+C_{gn2})=(C_{dn1}+C_{gn2}+C_W)r_0
+\end{Equation}
+即
+\begin{Equation}
+    \beta=\sqrt{r_0\qty(\frac{C_{dn1}+C_{gn2}+C_W}{C_dn1+C_{gn2}})}
+\end{Equation}
+或
+\begin{Equation}
+    \beta=\sqrt{r_0\qty(1+\frac{C_W}{C_{dn1}+C_{dn2}})}
+\end{Equation}
+这样一来，我们就得到了使延时最小化时的$\beta$取值
+\begin{BoxFormula}[延时最小化的CMOS宽长比]
+    若要令延时最小化，则CMOS的宽度比$\beta$应当满足
+    \begin{Equation}
+        \beta=\sqrt{r_0\qty(1+\frac{C_W}{C_{dn1}+C_{dn2}})}
+    \end{Equation}
+    若$C_{dn1}+C_{gn2}\gg C_W$，即导线电容可以忽略不记的话
+    \begin{Equation}
+        \beta=\sqrt{r_0}
+    \end{Equation}
+\end{BoxFormula}
+由此可见
+\begin{itemize}
+    \item \fancyref{fml:延时对称下的CMOS宽长比}指出，若要令延时$t_p$对称，则$\beta=r_0$
+    \item \fancyref{fml:延时最小化的CMOS宽长比}指出，若要令延时$t_p$最小化，则$\beta=\sqrt{r_0}$
+\end{itemize}
+换言之，适当减小PMOS的宽度可以改善延时时间，但这是以牺牲延时的对称性为代价的。
+
+\subsection{通过反相器链优化传播延时}\setpeq{通过反相器链优化传播延时}
+
+在\xref{subsec:通过调控宽度比优化传播延时}中，我们讨论了两个完全相同的反相器相连时，如何调控PMOS和NMOS的宽度比$\beta$使传播延时最小化。在这一小节，我们来考虑一个新的问题。在此之前，我们先阐述一些基本的定义，如\xref{fig:使用一个反相器}所示，实际上，反相器输出端的总负载$C_L$可以视为由\uwave{自载电容}和\uwave{负载电容}两部分组成，分别记为$C_{int}$和$C_{ext}$，前者是该反相器自身的输出电容，后者则是该反相器带动的负载的输入电容，或许还有一些连线电容，但我们不在这里考虑。此时$t_p$为
+\begin{Equation}&[1]
+    t_p=\ln 2 R_{eq}C_{L}=\ln 2 R_{eq}(C_{int}+C_{ext})
+\end{Equation}
+这里假定$\beta=r_0$，延时和电阻是对称的，故我们不必区分$t_\textit{pLH},t_\textit{tHL}$或$R_{eqp},R_{eqn}$的差异。
+
+就\xrefpeq{1}，作一些形式上的改变
+\begin{Equation}&[2]
+    t_p=\ln 2 R_{eq}C_{int}\qty(1+\frac{C_{ext}}{C_{int}})
+\end{Equation}
+这里，我们引入本征延时$t_{p0}$的定义，作为上式系数的代换
+\begin{BoxDefinition}[CMOS反相器的本征延时]
+    定义CMOS反相器的\uwave{本征延时}为$C_{ext}$为零时的自载电容
+    \begin{Equation}
+        t_{p0}=\ln 2R_{eq}C_{int}
+    \end{Equation}
+\end{BoxDefinition}\setpeq{通过反相器链优化传播延时}
+
+这里要指出的是，本征延时$t_{p0}$的一个重要性质是，在PMOS和NMOS间的宽度比$\beta$固定时，同时等比例的放大PMOS和NMOS的宽度$(W/L)_p$和$(W/L)_n$并不改变$t_{p0}$的值。这是因为增大宽度会使得等效电阻$R_{eq}$减小，但同时$C_{int}$将因面积增大相应增大，两者相乘后抵消。当然我们会问，这有什么意义呢？总是使$(W/L)_n=1$为最小尺寸不是更节约面积的做法吗？暂且搁置一下问题，但事实是，本征延时不随缩放改变的性质，是本小节的根基。
+
+应用\xref{def:CMOS反相器的本征延时}，\xrefpeq{2}可以简化为
+\begin{Equation}&[3]
+    t_p=t_{p0}\qty(1+\frac{C_{ext}}{C_{int}})
+\end{Equation}
+有趣的问题是$C_{int}$如何进一步表示？很显然自载电容就是漏电容$C_{d}=C_{dp}+C_{dn}=C_{int}$，而另外一个概念是栅电容$C_{g}=C_{gp}+C_{gn}$，介于$C_g,C_{d}=C_{int}$都正比于晶体管的尺寸，因此当晶体管的尺寸缩放时，两者会被等比例的改变，所以$C_{g},C_{d}=C_{int}$间具有固定的比例系数。
+\begin{BoxDefinition}[CMOS反相器的比例系数]    
+    定义CMOS反相器的比例系数$\gamma$为漏电容$C_{d}=C_{int}$和栅电容$C_g$的比
+    \begin{Equation}
+        C_{int}=C_d=\gamma C_g
+    \end{Equation}
+    该比例系数$\gamma$是与工艺有关的常量，通常可以取$\gamma$=1。
+\end{BoxDefinition}\setpeq{通过反相器链优化传播延时}
+应用\xref{def:CMOS反相器的比例系数}，\xrefpeq{3}可以变为
+\begin{Equation}&[4]
+    t_p=t_{p0}\qty(1+\frac{C_{ext}}{\gamma C_g})
+\end{Equation}
+
+我们愿意再引入一个定义
+\begin{BoxDefinition}[等效扇出]
+    定义等效扇出$f$为外接负载电容$C_{ext}$和输入电容$C_g$间的比
+    \begin{Equation}
+        f=\frac{C_{ext}}{C_g}
+    \end{Equation}
+\end{BoxDefinition}\setpeq{通过反相器链优化传播延时}
+我们会有这样的疑问，为什么外接负载电容$C_{ext}$和输入电容$C_{g}$的比$f$被称为等效扇出？扇出指的是一个逻辑门的输出连接了几个其他的逻辑门。试想，假如具有输入电容$C_{g}$的反相器连接了$f$个完全相同的反相器，那其外接负载电容就为$C_{ext}=fC_{g}$，这就是“扇出”的来由。\goodbreak
+
+由此，我们就发现了一个重要的事实
+\begin{Equation}&[5]
+    t_p=t_{p0}\qty(1+f/\gamma)
+\end{Equation}\nopagebreak
+即，\empx{反相器的延时，完全取决于反相器的等效扇出，与反相器的自身尺寸大小无关}。
+
+至此，我们就可以引出本小节想要研究的问题了。假如我们要自最小尺寸的反相器的输入电容$C_g$带动一个很大的负载$C_{ext}$，比如说，总等效扇出$F=C_{ext}/C_g=10000$，此时延时是非常恐怖的，若$\gamma=1$则延时将达到$10001t_{p0}$！而我们优化延时的基本想法是，我们引入两个反相器$G_1,G_2$，但后者是尺寸是前者的$100$倍，即$C_{g2}=100C_{g1}$，此时两个反相器的等效扇出均为$f_1=f_2=100$，而总延时立即减小到$2\times 101t_{p0}=202t_{p0}$，这种优化是非常客观的。而问题是，很明显，增加至$3$个或$4$个反相器，还能使延时减小，但再进一步增加就未必了。反相器的延时再不断减小，但是，反相器的总数量也在增加，这两者势必会达到某个平衡点。
+
+\begin{Figure}[反相器链]
+    \begin{FigureSub}[使用一个反相器]
+        \includegraphics[width=0.98\linewidth]{build/Chapter05D_05.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[使用多个反相器]
+        \includegraphics[width=0.98\linewidth]{build/Chapter05D_06.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+现在的问题是，对于给定总扇出$F$，如何确定反相器链的长度$N$，使总延时$t_p$最小？
+
+反相器链中，第$j$级反相器的延时表达式为
+\begin{Equation}&[6]
+    t_{p,j}=t_{p0}\qty(1+\frac{C_{g,j+1}}{\gamma C_{g,j}})=t_{p0}\qty(1+f_j/\gamma)
+\end{Equation}
+反相器链中每一反相器可以具有不同等效扇出$f_j=C_{g, j+1}/C_{g,j}$，这是出于一般化的考虑，但我们后面会证明延时最小时各反相器的等效扇出$f_j$应相等。另外，此处认为
+\begin{Equation}&[7]
+    C_{g,N+1}=C_{ext}
+\end{Equation}
+即将外部负载电容视为“第$N+1$个反相器”的输入栅电容，这使表达式在边界仍然适用。
+
+由\xrefpeq{6}，可以推导出反相器链的总延时
+\begin{Equation}&[8]
+    t_p=\Sum[j=1][N]t_{p,j}=t_{p,0}\Sum[j=1][N]\qty(1+\frac{C_{g, j+1}}{\gamma C_{g,j}})
+\end{Equation}
+这个方程包含$N-1$个未知数，即$C_{g,2}, C_{g,3}, \cdots, C_{g,N}$，我们的目的是求$t_p$的最小值，这可以通过将$t_p$分别对$N-1$个未知数分别求偏导，并令它们都等于零，即考虑以下方程组
+\begin{Equation}&[9]
+    \pdv{t_p}{C_{g,j}}=0\qquad j=2,3,\cdots,N
+\end{Equation}
+这个方程组的解给出了一组约束条件（证明从略），即
+\begin{Equation}
+    C_{g, j+1}/C_{g, j}=C_{g, j}/C_{g, j-1}\qquad j=2,3,\cdots, N
+\end{Equation}
+换言之
+\begin{Equation}
+    f_{j}=f_{j-1}\qquad j=2,3,\cdots, N
+\end{Equation}
+这意味着总延时最小时，反相器必须具有相同的等效扇出$f=f_j$，因此
+\begin{Equation}
+    f=\sqrt[N]{C_L/C_{g,1}}=\sqrt[N]{F}
+\end{Equation}
+这时，反相器链的总最小延时即为
+\begin{BoxFormula}[长度一定时反相器链的最小延时]
+    当总扇出$F$和反相器链长度$N$一定时，最小延时为
+    \begin{Equation}
+        t_p=t_{p0}N\qty(1+\sqrt[N]{F}/\gamma)
+    \end{Equation}
+    这时每一反相器的等效扇出$f$均相等
+    \begin{Equation}
+        f=\sqrt[N]{F}
+    \end{Equation}
+\end{BoxFormula}
+然而，事情至此还并没有结束。我们已经知道了总扇出$F$和反相器链长度$N$一定时的最小延时的表达式了。\xref{fig:反相器链的延时}绘制了$F=10,100,1000$时$t_p$关于$N$的函数曲线。但问题是，很多情况下，我们并不关心反相器链的长度$N$的值，我们的最优化问题仅建立在总扇出$F$一定的基础上，在此基础上$N$的选取同样是最优化问题的一部分。换言之，我们就是要找到使链长度一定的最小延时$t_p$在链长度可变时取最小值$t_{p,opt}$的那一链长度$N=N_{opt}$的取值。\xref{fig:反相器链的延时}中用红点绘制了$F$取各值时$N_{opt},t_{p,opt}$的未知，而蓝点则是考虑了$N_{opt}$只能取整数时的位置。
+
+\begin{Figure}[反相器链的延时]
+    \includegraphics{build/Chapter05D_01c.fig.pdf}\hspace{0.3cm}
+\end{Figure}
+
+而为了达成这一点，我们可以将$t_p$对$N$求导并令其为零，结果是
+\begin{Equation}
+    \pdv{t_p}{N}=t_{p0}\qty(1+\sqrt[N]{F}/\gamma-\sqrt[N]{F}\ln F/\gamma N)=0
+\end{Equation}
+这里$t_{p0}$可以直接移除，随后同乘$\gamma N$
+\begin{Equation}
+    N\gamma+N\sqrt[N]{F}-\sqrt[N]{F}\ln F=0
+\end{Equation}
+
+这里援引\xref{fml:长度一定时反相器链的最小延时}给出的$f=\sqrt[N]{F}$代换关系
+\begin{Equation}
+    N\gamma+Nf-f\ln f^N=0
+\end{Equation}
+化简得到
+\begin{Equation}
+    N\gamma+Nf-Nf\ln f=0
+\end{Equation}
+约去$N$
+\begin{Equation}
+    \gamma+f-f\ln f=0
+\end{Equation}
+得到
+\begin{Equation}
+    \ln f=1+\gamma/f
+\end{Equation}
+即有
+\begin{Equation}
+    f=\e^{1+\gamma/f}
+\end{Equation}
+这里的$f$就已经是使延时最小的$f_{opt}$了，因此得到以下结论
+\begin{BoxFormula}[反相器等效扇出的最优值]
+    若要令延时最小，反相器的等效扇出$f$的最优值$f_{opt}$满足以下超越方程
+    \begin{Equation}
+        f_{opt}=\e^{1+\gamma/f_{opt}}
+    \end{Equation}
+    特别的，当$\gamma=1$时，数值求解给出
+    \begin{Equation}
+        f_{opt}\approx 3.591
+    \end{Equation}
+\end{BoxFormula}
+遗憾的是，\xref{fml:反相器等效扇出的最优值}并没有真正给出$f_{opt}$的解析式，因为$f_{opt}$的表达式中仍包含$f_{opt}$，这实际是一个关于$f_{opt}$的超越方程，而这类超越方程是不存在解析解的，但这并不妨碍我们计算数值解。如\xref{fig:反相器等效扇出的最优值}所示，通过软件通过数值方法绘制出了$f_{opt}(\gamma)$的曲线，我们这里特别关心的是最常见的$\gamma=1$的情况，通过软件得到$f_{opt}(\gamma=1)\approx 3.591$，后续分析均基于这一结果。
+
+\begin{Figure}[反相器等效扇出的最优值]
+    \includegraphics{build/Chapter05D_01b.fig.pdf}\hspace{0.3cm}
+\end{Figure}
+
+而$N_{opt}$和$f_{opt}$的关系是简单的，两者受到$f=\sqrt[N]{F}=F^{1/N}$的约束，即
+\begin{Equation}
+    f_{opt}=F^{1/N_{opt}}
+\end{Equation}
+两边作$N_{opt}$次幂
+\begin{Equation}
+    f_{opt}^{~~N_{opt}}=F
+\end{Equation}
+取对数
+\begin{Equation}
+    N_{opt}\ln f_{opt}=\ln F
+\end{Equation}
+即
+\begin{BoxFormula}[反相器链长度的最优值]*
+    若要令延时最小，反相器链长度的最优值为\footnote[2]{若$\gamma=1$，此处可按$\ln f_{opt}=\ln 3.591=1.278$计算。}
+    \begin{Equation}
+        N_{opt}=\ln F/\ln f_{opt}
+    \end{Equation}
+\end{BoxFormula}
+
+至此，随着\xref{fml:反相器链长度的最优值}的给出，我们就解决了本小节的核心问题，当总扇出为$F$时如何选取反相器链的长度$N=N_{opt}$使总延时最小。\xref{fig:反相器链长度的最优值}直观反映了这点，当$F=10,100,1000$时，反相器链长度的最优值为$N_{opt}=1.8,3.6,5.4$，或$N_{opt}=2,4,5$，若考虑到整数限制。这就分别解释了\xref{fig:反相器链的延时}中红点和蓝点横坐标（即$F$一定时，令延时最小时$N_{opt}$的取值）的数据来源。
+
+\begin{Figure}[反相器链长度的最优值]
+    \includegraphics{build/Chapter05D_01d.fig.pdf}\hspace{0.3cm}
+\end{Figure}
+
+当然，我们仍然想知道$N=N_{opt}$时的最小延时$t_{p}=t_{p,opt}$到底是多少，根据\xref{fml:长度一定时反相器链的最小延时}
+\begin{Equation}
+    t_p=t_{p0}N\qty(1+\sqrt[N]{F}/\gamma)
+\end{Equation}
+在上述最优化条件下，$N=N_{opt}$，$\sqrt[N]{F}=f_{opt}$，代入\xref{fml:反相器等效扇出的最优值}和\xref{fml:反相器链长度的最优值}
+\begin{Equation}
+    t_{p,opt}=t_{p0}(\ln F/\ln f_{opt})\qty(1+f_{opt}/\gamma)
+\end{Equation}
+将该结论整理如下
+\begin{BoxFormula}[长度不定时反相器链的最小延时]
+    当总扇出$F$一定时，最小延时为
+    \begin{Equation}
+        t_{p,opt}=t_{p0}(\ln F/\ln f_{opt})\qty(1+f_{opt}/\gamma)
+    \end{Equation}
+\end{BoxFormula}
+
+\xref{fml:长度不定时反相器链的最小延时}的结论对应\xref{fig:链长度无整数限制}，它代表的是我们假定反相器链长度$N$可以连续取值时的最小延时$t_{p,opt}$，但实际上$N$只能取整数，因此实际可行的最小延时总比$t_{p,opt}$大一些。实际值反而是很好的计算的，只要考虑$N$取各整数时$t_p$的最小值就可以了，它对应\xref{fig:链长度有整数限制}。我们看到，随着$F$的增大，使延时最小的$N$逐渐从$1$增大至$2,3,4,5,\cdots$，这是非常合理的。
+\begin{itemize}
+    \item \xref{fig:链长度无整数限制}给出了\xref{fig:反相器链的延时}中红点（$N$无整数限制）的纵坐标数据。
+    \item \xref{fig:链长度有整数限制}给出了\xref{fig:反相器链的延时}中蓝点（$N$有整数限制）的纵坐标数据。
+\end{itemize}
+
+\begin{Figure}[反相器链的最优延时]
+    \begin{FigureSub}[链长度无整数限制]
+        \includegraphics{build/Chapter05D_01e.fig.pdf}\hspace{0.3cm}
+    \end{FigureSub}\\ \vspace{1.5cm}
+    \begin{FigureSub}[链长度有整数限制]
+        \includegraphics{build/Chapter05D_01g.fig.pdf}\hspace{0.3cm}
+    \end{FigureSub}\\ \vspace{1.5cm}
+    \begin{FigureSub}[链长度取各整数时的延时]
+        \includegraphics{build/Chapter05D_01f.fig.pdf}\hspace{0.3cm}
+    \end{FigureSub}
+\end{Figure}
+
+我们注意到，当总扇出$F=10, 100, 1000$时
+\begin{itemize}
+    \item \xref{fig:链长度无整数限制}给出的最小延时依次为$8.27, 16.54, 24.81$。
+    \item \xref{fig:链长度有整数限制}给出的最小延时依次为$8.32, 16.65, 24.91$。
+\end{itemize}
+由此可见，即便不考虑$N$只能取整数，造成的最小延时的误差也很小，故\xref{fml:长度不定时反相器链的最小延时}是相当正确的。至此，我们就完成了本小节的全部任务，现在我们知道，总扇出$F$一定时使用反相器链可以显著减小延时，且我们建立了最优链长度$N_{opt}$和最小延时$t_{p,opt}$与$F$间的函数关系。

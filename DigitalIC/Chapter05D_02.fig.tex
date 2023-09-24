@@ -1,0 +1,70 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-3]
+\xValDefine{xR}[+3]
+\xValOffset{xBorL}{xL}[-1.0]
+\xValOffset{xBorR}{xR}[+1.0]
+\xValProportion{xC}{xL}{xR}[0.35]
+\xValProportion{xGA}{xL}{xR}[0.10]
+\xValProportion{xGB}{xL}{xR}[0.25]
+\xValProportion{xCL}{xC}{xR}[0.55]
+
+\xValDefine{yB}[0.0]
+\xValDefine{yA}[6.0]
+\xValOffset{yBorB}{yB}[-1]
+\xValOffset{yBorA}{yA}[+1.1]
+\xValMiddle{yC}{yA}{yB}
+\xValProportion{yPMOS}{yA}{yB}[0.25]
+\xValMirror{yNMOS}{yPMOS}{yC}
+\xValOffset{yNMOSa}{yNMOS}[-0.65]
+\xValOffset{yPMOSa}{yPMOS}[+0.65]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xGA,xGB,xCL}{yB,yA,yBorB,yBorA,yC,yPMOS,yNMOS,yPMOSa,yNMOSa}
+
+\draw
+(xC/yA) node[vdd] {$V_{DD}$}
+to[R=$R_{eqp}$,i_=$I_{DSATp}$] 
+(xC/yC)
+to[ospst,mirror] 
+(xC/yB) node[ground] {};
+
+\draw 
+(xC/yC) to[short,*-,i=$~$] (xCL/yC) to[short,-o] (xR/yC) node[right] {$V_{out}$};
+
+\draw
+(xGB/yPMOS) node[above] {\tiny G}
+to[short,o-]
+(xGA/yPMOS)
+to[short]
+(xGA/yNMOS)
+to[short,-o]
+(xGB/yNMOS) node[below] {\tiny G};
+
+\draw
+(xL/yC) node[left] {$V_{in}$}
+to[short,o-*]
+(xGA/yC);
+
+\path
+(xGA/yPMOS)
+++(-1.5,0)
+++(0,0.8)
+node[right] {\small $V_{in}(0^{+})=0$}
+++(0,0.6)
+node[right] {\small $V_{in}(0^{-})=V_{DD}$};
+
+\draw
+(xCL/yC) node[above] {\small $0\xlarr[$t_\textit{pLH}$]V_{DD}/2\xlarr V_{DD}$}
+to[C=$C_L$,*-]
+(xCL/yB) node[ground] {};
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xC/yPMOSa) node[right] {\tiny PMOS速度饱和};
+\path (xC/yNMOSa) node[right] {\tiny NMOS截止};
+
+\end{tikzpicture}
+\end{document}
