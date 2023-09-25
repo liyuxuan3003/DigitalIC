@@ -1,0 +1,170 @@
+\section{CMOS反相器的功耗}
+到目前为止，我们已经看到静态CMOS反相器表现出极佳的稳定性。静态CMOS的另一个诱人之处是它在稳态工作状态时几乎完全没有功耗，因此，静态CMOS技术已经成为了大多数现代数字设计的选择。本节将具体讨论静态CMOS的功耗，主要分为动态功耗和静态功耗。
+
+\subsection{动态功耗}
+动态功耗可以分为两类：由电容充电放电引起的动态功耗、由直接通路引起的动态功耗。
+
+\subsubsection{由电容充电放电引起的动态功耗}
+当反相器由低至高翻转，电容$C_L$将通过PMOS充电过，它的电压从$0$升至$V_{DD}$，此时反相器从电源吸取了一定量的能量，这些能量一部分被立即消耗在PMOS器件的等效电阻上，其余被存储在电容$C_L$上。当反相器由高至低翻转时，这部分电容中存储的能量在放电过程中被消耗在NMOS的等效电阻上。那么，PMOS和NMOS在一个周期中分别消耗了多少能量？
+
+下面，我们对此做定量计算。简单起见，假定输入波形具有为零的上升和下降时间。
+
+由低至高的翻转过程中，反相器整体从电源汲取的能量由以下积分确定
+\begin{Equation}
+    \qquad
+    E_{VDD}=\Int[0][\infty]I(t)V_{DD}\dd{t}=\Int[0][\infty]C_L\dv{V_{out}}{t}V_{DD}\dd{t}=\Int[0][V_{DD}]C_LV_{DD}\dd{V_{out}}=C_LV_{DD}^2
+    \qquad
+\end{Equation}
+由低至高的翻转过程中，反相器的总负载电容$C_L$存储的能量由以下积分确定
+\begin{Equation}
+    \qquad
+    E_{C}=\Int[0][\infty]I(t)V_{out}(t)\dd{t}=\Int[0][\infty]C_L\dv{V_{out}}{t}V_{out}\dd{t}=\Int[0][V_{DD}]C_LV_{out}\dd{V_{out}}=\frac{1}{2}C_LV_{DD}^2
+    \qquad
+\end{Equation}
+以上讨论表明，由低至高的翻转过程中，有一半的能量直接消耗在PMOS上，另一半的能量被存储在电容$C_L$中，随后在高至低的翻转过程中，这一半能量被消耗在NMOS上，而这个结论与PMOS和NMOS的尺寸无关，换言之，无论两者尺寸的比例如何，两者消耗的能量都是相等的，即为$C_LV_{DD}^2/2$。总之，每个开关周期中，反相器将总共消耗$C_LV_{DD}^2$的能量。
+
+假设反相器每秒通断$f_{0\to 1}$次，则功耗为
+\begin{Equation}
+    P_{dyn}=C_LV_{DD}^2f_{0\to 1}
+\end{Equation}
+这里$f_{0\to 1}$也被称为\uwave{开关活动性}（Switching Activity），但实践中，我们很难确定某一个反相器到底每秒通断多少次。这取决于电路结构和输入信号的特性，具体分析是不可行的，只可能从统计上考虑。因此，我们更倾向于将$f_{0\to 1}$转换为概率表达。引入$f_{0\to 1}=P_{0\to 1} f$，这里$f$代表了翻转的最大可能速率，换言之，即为时钟速率，而$P_{0\to 1}$代表了时钟变化引起该门翻转的概率，称为\uwave{开关因子}（Switching Factor）。这样一来，功耗就可以被表示为
+\begin{Equation}
+    P_{dyn}=C_{L}V_{DD}^2P_{0\to 1}f
+\end{Equation}
+这里我们将该结论整理如下
+\begin{BoxFormula}[CMOS反相器的动态功耗（电容充电放电）]
+    CMOS反相器由电容充电放电，导致的动态功耗$P_{dyn}$为
+    \begin{Equation}
+        P_{dyn}=C_LV_{DD}^2P_{0\to 1}f
+    \end{Equation}
+\end{BoxFormula}
+由此可见，降低电压$V_{DD}$可以显著减小功耗，介于$V_{DD}$对$P_{dyn}$的影响呈二次方关系。
+
+由电容充电放电引起的动态功耗，事实上也是静态CMOS的主要功耗。
+
+\subsubsection{由直接通路引起的动态功耗}
+然而，实际情况是，假定输入波形具有为零的上升和下降时间是并不正确的，输入波形在高电平和低电平间存在一个短暂的变化过程。这就导致了反相器的动态过程中，存在一段短暂的时间内PMOS和NMOS同时导通，形成一条VDD和GND间的通路，这也会产生功耗。
+
+如\xref{fig:由直接通路引起的动态功耗}所示，用$I_{sc}$表示VDD和GND间的通路电流，在上升沿和下降沿将各有$t_{sc}$的时间出现VDD和GND间的通路，该过程中$I_{sc}$的变化可以合理的近似视为一个三角形脉冲。
+
+如果记$I_{peak}$是$I_{sc}$三角脉冲的峰值，在一整个开关周期中消耗的能量即为
+\begin{Equation}
+    E_{dp}=2\qty(V_{DD}I_{peak}t_{sc}/2)=V_{DD}I_{peak}t_{sc}
+\end{Equation}
+这样一来，功耗就是
+\begin{Equation}
+    P_{dp}=V_{DD}I_{peak}t_{sc}P_{0\to 1}f
+\end{Equation}
+这里我们将该结论整理如下
+\begin{BoxFormula}[CMOS反相器的动态功耗（电源直接通路）]
+    CMOS反相器由电源直接通路，导致的动态功耗为
+    \begin{Equation}
+        P_{dp}=V_{DD}I_{peak}t_{sc}P_{0\to 1}f
+    \end{Equation}
+\end{BoxFormula}
+
+\begin{Figure}[由直接通路引起的动态功耗]
+    \includegraphics{build/Chapter05E_01.fig.pdf}
+\end{Figure}
+
+\subsection{静态功耗}
+静态功耗可以用以下公式表示，其中$I_{stat}$是静态下电源和地间的电流
+\begin{BoxFormula}[CMOS反相器的静态功耗]
+    CMOS反相器的静态功耗为
+    \begin{Equation}
+        P_{stat}=I_{stat}V_{DD}
+    \end{Equation}
+\end{BoxFormula}
+
+静态功耗对于理想的静态CMOS反相器而言是不存在的，但实际上，总有些非理想的情况
+\begin{itemize}
+    \item MOS管在未导通时，源和漏间有异种掺杂的衬底间隔，这相当于两个方向相反的PN结，然而，其中反偏的那一PN结严格来说并不是完全截止，而是存在一个很微弱的反向电流，反向电流构成了$I_{stat}$的一部分，但只是很小的一部分，介于PN结的反向电流很小。
+    \item MOS管的另一个问题是，实际上，即便栅源电压低于阈值电压，源和漏之间也并非立即截止的，而是逐渐减小至零，这被称为亚阈值电流，亚阈值电流是$I_{stat}$的主要组成部分。
+\end{itemize}
+
+随着$V_{DD}$不断降低接近阈值电压，亚阈值电流引发的静态功耗逐渐需要被纳入考虑。
+
+\subsection{综合考虑}
+结合\xref{fml:CMOS反相器的动态功耗（电容充电放电）}、\xref{fml:CMOS反相器的动态功耗（电源直接通路）}、\xref{fml:CMOS反相器的传播延时}，我们就得到了CMOS反相器的总功耗
+\begin{BoxFormula}[CMOS反相器的功耗]*
+    CMOS反相器的总功耗$P_{tot}$可以视为$P_{dyn}, P_{dp}, P_{stat}$三部分的和
+    \begin{Equation}
+        P_{tot}=P_{dyn}+P_{dp}+P_{stat}
+    \end{Equation}
+    即
+    \begin{Equation}
+        P_{tot}=(C_LV_{DD}^2+V_{DD}I_{peak}t_{sc})P_{0\to 1}f+V_{DD}I_{stat}
+    \end{Equation}
+\end{BoxFormula}
+
+接下来，我们引入两个指标来综合考虑功耗和延时的影响：功耗--延时积、能量--延时积。
+
+\begin{BoxDefinition}[功耗--延时积]
+    功耗--延时积PDP定义为功耗和延时的乘积
+    \begin{Equation}
+        \text{PDP}=P_{tot}t_p
+    \end{Equation}
+\end{BoxDefinition}\setpeq{电源电压最优化}
+功耗--延时积PDP代表了什么意义？依据\xref{fml:CMOS反相器的功耗}
+\begin{Equation}&[1]
+    P_{tot}=(C_LV_{DD}^2+V_{DD}I_{peak}t_{sc})P_{0\to 1}f+V_{DD}I_{stat}
+\end{Equation}
+这里我们仅考虑电容充放电的功耗，即
+\begin{Equation}&[2]
+    P_{tot}=C_LV_{DD}^2P_{0\to 1}f
+\end{Equation}
+这时PDP即为
+\begin{Equation}&[3]
+    \text{PDP}=P_{tot}t_p=C_LV_{DD}^2P_{0\to 1}ft_p
+\end{Equation}
+假定门以最高频率翻转，换言之，设$P_{0\to 1}=1$且使用最高可能频率的时钟$f=1/(2t_p)$
+\begin{Equation}&[4]
+    \text{PDP}=C_LV_{DD}^2/2
+\end{Equation}
+由此可见，若反相器以最高频率翻转，则PDP就代表了反相器单次翻转所消耗的能量。
+
+由此也衍生出一个问题，尽管PDP衡量了反相器状态翻转所需的能量，但是PDP并不是一个综合考虑“功耗”和“延时”的量。若以PDP为最优化的目标，我们可以无限制降低电源电压$V_{DD}$，然而这会造成延时$t_p$的迅速增大。从这一角度看，最优电压$V_{DD}$必须要综合考虑“功耗”和“延时”两个因素。能量--延时积EDP就是这样一个量，它是PDP与$t_p$的积。
+
+\begin{BoxDefinition}[能量--延时积]
+    能量--延时积EDP定义为功耗和延时平方的乘积，即PDP和延时的乘积
+    \begin{Equation}
+        \text{EDP}=\text{PDP}\cdot t_{p}=P_{tot}t_p^2
+    \end{Equation}
+\end{BoxDefinition}\setpeq{电源电压最优化}
+
+值得分析一下EDP和$V_{DD}$的关系。如果以EDP为最优化目标，$V_{DD}$的最佳取值为多少？
+
+重新引用\xrefpeq{4}的结果
+\begin{Equation}&[5]
+    \text{PDP}=C_LV_{DD}^2/2
+\end{Equation}
+依据\xref{def:能量--延时积}
+\begin{Equation}&[6]
+    \text{EDP}=C_LV_{DD}^2t_p/2
+\end{Equation}
+依据\xrefeq{延时和电压的关系}给出的延时和电压的关系，忽略PMOS和NMOS间的参数差异
+\begin{Equation}&[7]
+    t_p=\frac{3\ln 2}{4}\frac{V_{DD}C_L}{kV_{DSAT}(V_{DD}-V_{T}-V_{DSAT}/2)}
+\end{Equation}
+将常数部分记为$\alpha$
+\begin{Equation}&[8]
+    t_p=\alpha\frac{V_{DD}C_L}{(V_{DD}-V_T-V_{DSAT}/2)}
+\end{Equation}
+将\xrefpeq{8}代入\xrefpeq{6}中，得到
+\begin{Equation}&[9]
+    \text{EDP}=\alpha\frac{V_{DD}^3C_L^2}{2(V_{DD}-V_T-V_{DSAT}/2)}
+\end{Equation}
+计算EDP对$V_{DD}$的导数，运用Mathematica得到
+\begin{Equation}
+    \dv{\text{EDP}}{V_{DD}}=\frac{3\alpha C_L^2 V_{DD}^2}{2(V_{DD} - V_{DSAT}/2 - V_T)}-
+    \frac{\alpha C_L^2 V_{DD}^3}{2(V_{DD} - V_{DSAT}/2 - V_T)^2}
+\end{Equation}
+而为了使EDP最小，导数应为零
+\begin{Equation}
+    \dv{\text{EDP}}{V_{DD}}=0
+\end{Equation}
+运用Mathematica得到方程的解为
+\begin{Equation}
+    V_{DD}=\frac{3}{2}(V_T+V_{DSAT}/2)
+\end{Equation}
+由此，根据器件$V_T, V_{DSAT}$的特性就可以计算出使功耗和延时最优的$V_{DD}$的取值。

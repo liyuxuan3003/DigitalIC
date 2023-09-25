@@ -125,7 +125,7 @@ R_{eqn0}=13\si{k\ohm}$的经验值的分析固然有效，但此处我们愿意�
     t_\textit{pHL}=\frac{3\ln 2}{4}\frac{V_{DD}C_L}{I_{DSATn}}
 \end{Equation}
 这里再就$I_{DSATn}$代入\fancyref{fml:MOS晶体管的手工分析模型}
-\begin{Equation}
+\begin{Equation}[延时和电压的关系]
     t_\textit{pHL}=\frac{3\ln 2}{4}\frac{V_{DD}C_L}{k_nV_{DSATn}(V_{DD}-V_{Tn}-V_{DSATn}/2)}
 \end{Equation}
 这里我们或许无法清楚的看到$t_{p}$与$V_{DD}$间的关系，但是通过\xref{fig:CMOS反相器传播延时与电源电压的关系}，我们可以清楚的看到随着电源电压$V_{DD}$的减小，$t_{p}$相较$V_{DD}=2.5\si{V}$时的$t_{p}$迅速增大。换言之，\empx{电源电压的降低将导致延时增加}，这也是为何\xref{subsec:电源电压的影响}中提到，不能一味减小电源电压以追求高噪声容限。

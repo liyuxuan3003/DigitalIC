@@ -15,4 +15,9 @@ Solve[D[tp[beta],beta]==0,beta]
 D[F^(1/n),{n}]
 
 
+EDP=Function[{VDD},alpha (VDD^3CL^2)/(2(VDD-VT-VDSAT/2))]
+EDPx=Function[{VDD},D[EDP[a],a]/.{a->VDD}]
+Solve[EDPx[VDD]==0,VDD]
+
+
 (*-*)

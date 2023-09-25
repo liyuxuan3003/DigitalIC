@@ -1,0 +1,75 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-5]
+\xValDefine{xR}[+5]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-0.9]
+\xValOffset{xBorR}{xR}[+0.9]
+\xValProportion{xAL}{xL}{xR}[0.15]
+\xValProportion{xBL}{xL}{xR}[0.30]
+\xValProportion{xALz}{xL}{xR}[0.2]
+\xValSymmetrize{xBLz}{xALz}{xAL}{xBL}
+\xValMiddle{xLz}{xAL}{xBL}
+\xValMirror{xAR}{xAL}{xC}
+\xValMirror{xBR}{xBL}{xC}
+\xValMirror{xARz}{xALz}{xC}
+\xValMirror{xBRz}{xBLz}{xC}
+\xValMirror{xRz}{xLz}{xC}
+\xValMiddle{xVT}{xL}{xAL}
+
+\xValDefine{yC}[0]
+\xValOffset{yBa}{yC}[0.8]
+\xValOffset{yAa}{yBa}[2.50]
+\xValMirror{yBb}{yAa}{yC}
+\xValMirror{yAb}{yBa}{yC}
+\xValOffset{yBorAa}{yAa}[+0.25]
+\xValOffset{yBorBa}{yBa}[-0.25]
+\xValMirror{yBorAb}{yBorBa}{yC}
+\xValMirror{yBorBb}{yBorAa}{yC}
+\xValProportion{yVTA}{yAa}{yBa}[0.2]
+\xValSymmetrize{yVTB}{yVTA}{yAa}{yBa}
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR,xAL,xBL,xAR,xBR,xVT,xALz,xBLz,xARz,xBRz,xLz,xRz}{yC,yBa,yAa,yBb,yAb,yBorAa,yBorBa,yBorAb,yBorBb,yVTA,yVTB}
+
+\draw[ultra thin] (xBorL/yBorBb) rectangle (xBorR/yBorAb);
+\draw[ultra thin] (xBorL/yBorBa) rectangle (xBorR/yBorAa);
+
+\foreach \y in {yBa,yAa,yVTB,yVTA,yBb,yAb}
+{
+    \draw[thin,gray,dotted] (xL/\y) -- (xR/\y);
+}
+
+\foreach \x in {xL,xR,xAL,xBL,xAR,xBR,xALz,xBLz,xARz,xBRz}
+{
+    \draw[thin,gray,dotted] (\x/yAa) -- (\x/yBa);
+    \draw[thin,gray,dotted] (\x/yAb) -- (\x/yBb);
+}
+
+\path (xL/yBa) node[left,gray]  {\small $0$};
+\path (xR/yBa) node[right,gray] {\small $0$};
+\path (xL/yAa) node[left,gray]  {\small $V_{DD}$};
+\path (xR/yAa) node[right,gray] {\small $V_{DD}$};
+
+\path (xL/yBb) node[left,gray]  {\small $0$};
+\path (xR/yBb) node[right,gray] {\small $0$};
+\path (xL/yAb) node[left,gray]  {\small $I_{peak}$};
+\path (xR/yAb) node[right,gray] {\small $I_{peak}$};
+
+\draw[thin,gray,latex-latex] (xVT/yAa) -- node[right] {\small $V_{T}$} (xVT/yVTA);
+\draw[thin,gray,latex-latex] (xVT/yBa) -- node[right] {\small $V_{T}$} (xVT/yVTB);
+
+\draw[thick] (xL/yBa) -- (xAL/yBa) -- (xBL/yAa) -- (xBR/yAa) -- (xAR/yBa) -- (xR/yBa);
+
+\draw[thick] (xL/yBb) -- (xALz/yBb) -- (xLz/yAb) -- (xBLz/yBb) -- (xBRz/yBb) -- (xRz/yAb) -- (xARz/yBb) -- (xR/yBb);
+
+\draw[thin,gray,latex-latex] (xALz/yVTB) -- node[below] {$t_{sc}$} (xBLz/yVTB);
+\draw[thin,gray,latex-latex] (xARz/yVTB) -- node[below] {$t_{sc}$} (xBRz/yVTB);
+
+\path (xC/yBorAa) node[above] {$V_{in}$};
+\path (xC/yBorAb) node[above] {$I_{sc}$};
+
+\end{tikzpicture}
+\end{document}

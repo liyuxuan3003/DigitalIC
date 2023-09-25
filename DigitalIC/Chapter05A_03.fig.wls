@@ -31,6 +31,17 @@ xFigTicks=(FrameTicks->{
 xFigLabel=(FrameLabel->{xLaTeX[#1,0.8],xLaTeX[#2,0.8]})&;
 
 
+xTicks=(Table[{x,xLaTeX[ToString[PaddedForm[x,{#2[[1]],#2[[2]]}]],0.5]},{x,#1[[1]],#1[[2]],#1[[3]]}])&;
+xTicksLog=(Table[{10^x,xLaTeX["10^{"<>ToString[x]<>"}",0.5]},{x,#1[[1]],#1[[2]],#1[[3]]}])&;
+xTicksLog1=(Table[{10^x,xLaTeX["1\\times 10^{"<>ToString[x]<>"}",0.5]},{x,#1[[1]],#1[[2]],#1[[3]]}])&;
+xTicksLog2=(Table[{2 10^x,xLaTeX["2\\times 10^{"<>ToString[x]<>"}",0.5]},{x,#1[[1]],#1[[2]],#1[[3]]}])&;
+xTicksLog5=(Table[{5 10^x,xLaTeX["5\\times 10^{"<>ToString[x]<>"}",0.5]},{x,#1[[1]],#1[[2]],#1[[3]]}])&;
+
+
+xGrids=(Table[x,{x,#1[[1]],#1[[2]],#1[[3]]}])&;
+xGridsLog=(Flatten[Table[Table[{If[#2[[1]]<=(n 10^x)<=#2[[2]],(n 10^x),{}]},{n,1,9,1}],{x,#1[[1]],#1[[2]],#1[[3]]}]])&;
+
+
 xVM=((VTn+VDSATn/2)+r(VDD+VTp+VDSATp/2))/(1+r)
 xVMa=(r VDD)/(1+r)
 xr=(kp0 VDSATp)/(kn0 VDSATn) WLpn
@@ -45,6 +56,8 @@ fig1=LogLinearPlot[Evaluate[{VM,VMa}/.{VM->xVM,VMa->xVMa}/.{r->xr}/.val],{WLpn,1
 		Style["\:8fd1\:4f3c\:503c",FontSize->8,FontFamily->"Noto Sans Mono CJK SC"]},
 		LegendFunction->"Panel",
 		LegendLayout -> {"Row",2}],{Left,Top}],
+	FrameTicks->{xTicksLog[{-2,2,1}],xTicks[{0.0,2.5,0.5},{2,1}]},
+	GridLines->{xGridsLog[{-2,2,1},{0.01,100}],xGrids[{0.0,2.5,0.5}]},
 	Evaluate@xFigLabel["(W/L)_p/(W/L)_n","V_M~(\\si{V})"],
 	Evaluate@xFigConfig]
 
