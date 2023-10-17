@@ -1,0 +1,40 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-1]
+\xValDefine{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+
+\xValDefine{yB}[-2.75]
+\xValDefine{yA}[+2.75]
+\xValMiddle{yC}{yB}{yA}
+\xValMiddle{yBx}{yB}{yC}
+\xValMiddle{yAx}{yA}{yC}
+\xValProportion{yAa}{yA}{yC}[1/4]
+\xValProportion{yAb}{yA}{yC}[3/4]
+\xValProportion{yBa}{yB}{yC}[3/4]
+\xValProportion{yBb}{yB}{yC}[1/4]
+\xValOffset{yBorB}{yB}[-1]
+\xValOffset{yBorA}{yA}[+1.2]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR}{yB,yA,yC,yAx,yBx,yBorB,yBorA,yAa,yAb,yBa,yBb}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xC/yBx) node[nmos] (nmos) {};
+\path (xC/yAx) node[pmos] (pmos) {};
+
+\draw (nmos.D) -- (pmos.D);
+\draw (pmos.S) -- (pmos.S |- yA) node[vdd] {$V_{DD}$};
+\draw (nmos.S) -- (nmos.S |- yB) node[ground] {};
+
+\path (nmos.G) node[left] {$A$};
+\path (pmos.G) node[left] {$A$};
+\draw (nmos.S |- yC) to[short,-o] (xR/yC) node[right] {$F$};
+ 
+\end{tikzpicture}
+\end{document}

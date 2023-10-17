@@ -1,0 +1,41 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-1.5]
+\xValDefine{xR}[+1.5]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xPNL}{xL}{xR}[0.1]
+\xValMirror{xPNR}{xPNL}{xC}
+\xValProportion{xMa}{xPNL}{xPNR}[0.15]
+\xValMirror{xMb}{xMa}{xC}
+\xValOffset{xBorL}{xL}[-1.2]
+\xValOffset{xBorR}{xR}[+1.2]
+
+\xValDefine{yB}[-2.75]
+\xValDefine{yA}[+2.75]
+\xValMiddle{yC}{yB}{yA}
+\xValProportion{yP}{yA}{yB}[1/4]
+\xValMirror{yN}{yP}{yC}
+\xValProportion{yPolyA}{yA}{yB}[1/8]
+\xValMirror{yPolyB}{yPolyA}{yC}
+\xValOffset{yBorB}{yB}[-0.5]
+\xValOffset{yBorA}{yA}[+0.5]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR,xPNL,xPNR,xMa,xMb}{yB,yA,yC,yBorB,yBorA,yP,yN,yPolyA,yPolyB}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\draw[mnmAl,ultra thick] (xL/yA) node[left] {VDD} -- node[above] {\footnotesize Metal 1}  (xR/yA) node[right] {VDD};
+\draw[mnmAl,ultra thick] (xL/yB) node[left] {GND} -- (xR/yB) node[right] {GND};
+\draw[mnmP0,thick] (xPNL/yP) node[left] {\footnotesize PMOS} -- (xPNR/yP);
+\draw[mnmN0,thick] (xPNL/yN) node[left] {\footnotesize NMOS} -- (xPNR/yN);
+\draw[mnmAl,thick] (xMa/yA) -- (xMa/yP) node {$\times$} node[below] {\small $\te{S}_A$};
+\draw[mnmAl,thick] (xMa/yB) -- (xMa/yN) node {$\times$} node[above] {\small $\te{S}_A$};
+\draw[mnmAl,thick] (xMb/yP) node {$\times$} node[above] {\small $\te{D}_A$} -- node[right] {$F=\bar{A}$}  (xMb/yN) node[below] {\small $\te{D}_A$} node {$\times$};
+\draw[mnmPolySi,very thick] (xC/yPolyA) node[above] {\footnotesize Poly-Si} -- (xC/yPolyB) node[below] {$A$};
+
+ 
+\end{tikzpicture}
+\end{document}

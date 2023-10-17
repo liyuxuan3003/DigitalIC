@@ -1,0 +1,45 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-1]
+\xValDefine{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-2]
+\xValOffset{xBorR}{xR}[+2]
+
+\xValDefine{yB}[-2.75]
+\xValDefine{yA}[+2.75]
+\xValMiddle{yC}{yB}{yA}
+\xValMiddle{yBx}{yB}{yC}
+\xValMiddle{yAx}{yA}{yC}
+\xValProportion{yAa}{yA}{yC}[1/4]
+\xValProportion{yAb}{yA}{yC}[3/4]
+\xValProportion{yBa}{yB}{yC}[3/4]
+\xValProportion{yBb}{yB}{yC}[1/4]
+\xValOffset{yBorB}{yB}[-1]
+\xValOffset{yBorA}{yA}[+1.2]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR}{yB,yA,yC,yAx,yBx,yBorB,yBorA,yAa,yAb,yBa,yBb}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xL/yAx) node[pmos] (pmosA) {};
+\path (xR/yAx) node[pmos,xscale=-1] (pmosB) {};
+\path (xC/yBa) node[nmos] (nmosA) {};
+\path (xC/yBb) node[nmos] (nmosB) {};
+\path (pmosA.G) node[ocirc] {} node[left] {A};
+\path (pmosB.G) node[ocirc] {} node[right] {B};
+\path (nmosA.G) node[ocirc] {} node[left] {A};
+\path (nmosB.G) node[ocirc] {} node[left] {B};
+
+\draw (pmosA.D) -- (pmosB.D);
+\draw (pmosA.S) -- (pmosB.S);
+\draw (nmosA.D |- pmosA.S) to[short,*-] (nmosA.D |- yA) node[vdd] {$V_{DD}$};
+\draw (nmosA.D |- pmosA.D) to[short,-] (nmosA.D);
+\draw (nmosB.S) node[ground] {};
+\draw (nmosA.D |- yC) to[short,*-o] (xR/yC) node[right] {F};
+ 
+\end{tikzpicture}
+\end{document}

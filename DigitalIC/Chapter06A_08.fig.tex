@@ -1,0 +1,26 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-1]
+\xValDefine{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-0.5]
+\xValOffset{xBorR}{xR}[+0.5]
+
+\xValDefine{yB}[-1.5]
+\xValDefine{yA}[+1.5]
+\xValMiddle{yC}{yB}{yA}
+\xValProportion{yBx}{yB}{yA}[0.2]
+\xValMirror{yAx}{yBx}{yC}
+\xValOffset{yBorB}{yB}[-0.65]
+\xValOffset{yBorA}{yA}[+0.25]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR}{yB,yA,yC,yBx,yAx,yBorB,yBorA}
+
+\draw (xC/yA) to[switch=$A$] (xC/yC) to[switch=$B$] (xC/yB) node[below] {$F=AB$};
+
+
+\end{tikzpicture}
+\end{document}

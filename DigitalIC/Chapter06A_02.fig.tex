@@ -1,0 +1,51 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-0.95]
+\xValOffset{xBorR}{xR}[+0.95]
+
+\xValDefine{yB}[-2]
+\xValDefine{yA}[+2]
+\xValMiddle{yC}{yB}{yA}
+\xValProportion{yText}{yA}{yB}[0.1]
+\xValProportion{ySt}{yA}{yB}[0.9]
+\xValOffset{yBorB}{yB}[-0.3]
+\xValOffset{yBorA}{yA}[-0.0]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR}{yB,yA,yC,yBorB,yBorA,yText,ySt}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+    
+\draw (xC/yC) node[qfpchip,
+num pins=12, hide numbers, no topmark,
+external pins width=0] (Chip) {\footnotesize 组合逻辑电路};
+
+\draw (xC/ySt) node[qfpchip,
+num pins=4, hide numbers, no topmark,
+external pins width=0] (ChipX) {\footnotesize 状态};
+
+\draw[-latex] (xL |- Chip.pin 1) -- (Chip.pin 1); 
+\draw[-latex] (xL |- Chip.pin 2) node[left] {\scriptsize 输入} -- (Chip.pin 2);
+
+\draw[-latex] (Chip.pin 7) -- (xR |- Chip.pin 7) -- (xR |- ChipX.pin 3) -- (ChipX.pin 3);
+\draw[-latex] (ChipX.pin 1) -- (xL |- ChipX.pin 1) -- (xL |- Chip.pin 3) -- (Chip.pin 3); 
+
+
+\draw[-latex] (Chip.pin 8) -- (xR |- Chip.pin 8) node[right] {\scriptsize 输出};
+\draw[-latex] (Chip.pin 9) -- (xR |- Chip.pin 9);  
+
+\path (xC/yText) node {时序电路};
+
+% \foreach \x in {1,2,3,7,8,9}
+% {
+
+% }
+
+\end{tikzpicture}
+\end{document}

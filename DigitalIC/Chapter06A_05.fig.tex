@@ -1,0 +1,31 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-2.5]
+\xValDefine{xR}[+2.5]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xFET}{xL}{xR}[0.35]
+\xValProportion{xCL}{xL}{xR}[0.7]
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+
+\xValDefine{yB}[-1]
+\xValDefine{yA}[+1]
+\xValMiddle{yC}{yB}{yA}
+\xValOffset{yBorB}{yB}[-0.85]
+\xValOffset{yBorA}{yA}[+0.65]
+
+\xGeneratePoints{xL,xR,xC,xFET,xCL,xBorL,xBorR}{yB,yA,yC,yBorB,yBorA}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xFET/yC) node[pmos] (fet) {};
+\draw (fet.G) node[above] {\footnotesize G} to[short,-o] (xL/yC) node[left] {$0$};
+\draw (fet.S) node[left] {\footnotesize S} -- (fet.S |- yA) to[short,-o] (xR/yA) node[right] {Out};
+\draw (fet.D) node[left] {\footnotesize D} -- (fet.D |- yB) node[ground] {};
+\draw (xCL/yA) node[above] {$V_{DD}\to |V_{Tp}|$} to[C=$C_L$,*-] (xCL/yB)  node[ground] {};  
+
+\end{tikzpicture}
+\end{document}

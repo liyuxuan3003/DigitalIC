@@ -1,0 +1,49 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-0.95]
+\xValOffset{xBorR}{xR}[+0.95]
+
+\xValDefine{yB}[-4]
+\xValDefine{yA}[+4]
+\xValMiddle{yC}{yB}{yA}
+\xValProportion{yPUN}{yA}{yB}[0.25]
+\xValMirror{yPDN}{yPUN}{yC}
+\xValOffset{yBorB}{yB}[-1.25]
+\xValOffset{yBorA}{yA}[+1.25]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR}{yB,yA,yC,yBorB,yBorA,yPUN,yPDN}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\ctikzset{multipoles/qfpchip/pin spacing=0.3}
+
+\draw (xC/yPUN) node[qfpchip,
+num pins=20, hide numbers, no topmark,
+external pins width=0] (PUN) {PUN};
+\draw (xC/yPDN) node[qfpchip,
+num pins=20, hide numbers, no topmark,
+external pins width=0] (PDN) {PDN};
+
+\draw (xL |- PUN.pin 1) node[left=0.03cm] {$\te{In}_1$} to[short,o-] (PUN.pin 1);
+\draw (xL |- PUN.pin 2) node[left=0.03cm] {$\te{In}_2$} to[short,o-] (PUN.pin 2);
+\draw (xL |- PUN.pin 5) node[left] {$\te{In}_n$} to[short,o-] (PUN.pin 5);
+\path ($(xL|-PUN.pin 3)!0.3!(xL|-PUN.pin 4)$) node {$\vdots$};
+
+\draw (xL |- PDN.pin 1) node[left=0.03cm] {$\te{In}_1$} to[short,o-] (PDN.pin 1);
+\draw (xL |- PDN.pin 2) node[left=0.03cm] {$\te{In}_2$} to[short,o-] (PDN.pin 2);
+\draw (xL |- PDN.pin 5) node[left] {$\te{In}_n$} to[short,o-] (PDN.pin 5);
+\path ($(xL|-PDN.pin 3)!0.3!(xL|-PDN.pin 4)$) node {$\vdots$};
+
+\draw (PUN.pin 8) -- (PDN.pin 18);
+\draw (PUN.pin 18) -- (PUN.pin 18 |- yA) node[vdd] {$V_{DD}$};
+\draw (PDN.pin 8) -- (PDN.pin 8 |- yB) node[ground] {};
+\draw (xC/yC) to[short,*-o] (xR/yC) node[right] {Out};
+
+\end{tikzpicture}
+\end{document}

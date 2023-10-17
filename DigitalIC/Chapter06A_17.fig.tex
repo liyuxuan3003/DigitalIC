@@ -1,0 +1,58 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-1]
+\xValDefine{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-1.5]
+\xValOffset{xBorR}{xR}[+1.5]
+\xValProportion{xF}{xL}{xR}[1.4]
+\xValMiddle{xCL}{xF}{xC}
+
+\xValDefine{yB}[-4]
+\xValDefine{yA}[+4]
+\xValMiddle{yC}{yB}{yA}
+\xValProportion{yF}{yA}{yB}[0.35]
+\xValProportion{yAx}{yA}{yF}[0.5]
+\xValProportion{yAa}{yA}{yF}[0.05]
+\xValProportion{yAb}{yA}{yF}[0.8]
+\xValMiddle{yBx}{yB}{yF}
+\xValProportion{yBa}{yF}{yBx}[0.5]
+\xValProportion{yBb}{yBx}{yB}[0.5]
+\xValOffset{yBorB}{yB}[-1.5]
+\xValOffset{yBorA}{yA}[+1.2]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR,xF,xCL}{yB,yA,yC,yAx,yAa,yAb,yF,yBorB,yBorA,yBx,yBa,yBb}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\draw (xC/yAa) -- (xL/yAa)
+to[R,l_=$R_p$] (xL/yAx)
+to[ncs,mirror,l_=$\bar{A}~$] (xL/yAb) -- (xC/yAb);
+
+\draw (xC/yAa) -- (xR/yAa)
+to[R,l^=$R_p$] (xR/yAx)
+to[nos,l=$~\bar{B}$] (xR/yAb) -- (xC/yAb);
+
+\draw (xC/yF) to[short,*-o] (xF/yF) node[right] {$F$}; 
+
+\draw (xC/yAa) to[short,*-] (xC/yA) node[vdd] {$V_{DD}$};
+
+\draw (xC/yAb) -- (xC/yF)
+to[R,l_=$R_n$] (xC/yBa)
+to[nos,mirror,l_=$A$] (xC/yBx)
+to[R,l_=$R_n$] (xC/yBb)
+to[ncs,mirror,l_=$B$] (xC/yB)
+node[ground] {}
+node[below=0.75cm] {$A,B=01$};
+
+\draw (xCL/yF) to[C=$C_L$,*-] (xCL/yBa) node[ground] {};
+\draw (xC/yBx) to[short,*-] (xCL/yBx) to[C=$C_{int}$] (xCL/yBb) node[ground] {};
+
+\path (xC/yF) node[above right] {$0\to V_{DD}$};
+\path (xC/yBx) node[above right] {$0$};
+
+\end{tikzpicture}
+\end{document}

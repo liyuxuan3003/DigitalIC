@@ -1,0 +1,55 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-2.5]
+\xValDefine{xR}[+2.5]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xPNL}{xL}{xR}[0.1]
+\xValMirror{xPNR}{xPNL}{xC}
+\xValProportion{xMa}{xPNL}{xPNR}[0.1]
+\xValOffset{xMb}{xC}
+\xValMirror{xMc}{xMa}{xC}
+\xValMiddle{xGA}{xMa}{xMb}
+\xValMiddle{xGB}{xMc}{xMb}
+\xValOffset{xBorL}{xL}[-1.2]
+\xValOffset{xBorR}{xR}[+1.2]
+
+\xValDefine{yB}[-2.75]
+\xValDefine{yA}[+2.75]
+\xValMiddle{yC}{yB}{yA}
+\xValProportion{yP}{yA}{yB}[1/4]
+\xValMirror{yN}{yP}{yC}
+\xValProportion{yPolyA}{yA}{yB}[1/8]
+\xValMirror{yPolyB}{yPolyA}{yC}
+\xValOffset{yBorB}{yB}[-0.5]
+\xValOffset{yBorA}{yA}[+0.5]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR,xPNL,xPNR,xMa,xMb,xMc,xGA,xGB}{yB,yA,yC,yBorB,yBorA,yP,yN,yPolyA,yPolyB}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\draw[mnmAl,ultra thick] (xL/yA) node[left] {VDD} -- node[above] {\footnotesize Metal 1}  (xR/yA) node[right] {VDD};
+\draw[mnmAl,ultra thick] (xL/yB) node[left] {GND} -- (xR/yB) node[right] {GND};
+\draw[mnmP0,thick] (xPNL/yP) node[left] {\footnotesize PMOS} -- (xPNR/yP);
+\draw[mnmN0,thick] (xPNL/yN) node[left] {\footnotesize NMOS} -- (xPNR/yN);
+
+\draw[mnmPolySi,thick] (xGA/yPolyA) node[above] {\footnotesize Poly-Si} -- (xGA/yPolyB) node[below] {$A$};
+\draw[mnmPolySi,thick] (xGB/yPolyA) node[above] {\footnotesize Poly-Si} -- (xGB/yPolyB) node[below] {$B$};
+
+\draw[mnmAl,thick] (xMa/yB) -- (xMa/yN) node {$\times$};
+\draw[mnmAl,thick] (xMc/yB) -- (xMc/yN) node {$\times$};
+\draw[mnmAl,thick] (xMa/yA) -- (xMa/yP) node {$\times$};
+\draw[mnmAl,thick] (xMc/yP) node{$\times$} -- node[right] {$F=\xbar{A+B}$} (xMc/yC) -- (xMb/yC) --  (xMb/yN) node{$\times$};
+
+\path (xMa/yP) node[below] {\small $\te{S}_A$};
+\path (xMc/yP) node[above] {\small $\te{D}_B$};
+\path (xMb/yP) node[below left] {\small $\te{D}_A$} node[above right] {\small $\te{S}_B$};
+
+\path (xMa/yN) node[above] {\small $\te{S}_A$};
+\path (xMb/yN) node[above left] {\small $\te{D}_A$} node[above right] {\small $\te{D}_B$};
+\path (xMc/yN) node[above] {\small $\te{S}_B$};
+ 
+\end{tikzpicture}
+\end{document}
