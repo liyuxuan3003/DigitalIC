@@ -1,0 +1,48 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xValDefine{xL}[-3.5]
+\xValDefine{xR}[+3.5]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xInv}{xL}{xR}[0.85]
+\xValProportion{xT}{xL}{xR}[0.25]
+\xValOffset{xBorL}{xL}[-0.75]
+\xValOffset{xBorR}{xR}[+0.75]
+
+\xValDefine{yA}[+1]
+\xValDefine{yB}[-1]
+\xValMiddle{yC}{yA}{yB}
+\xValOffset{yBorA}{yA}[+2]
+\xValOffset{yBorB}{yB}[-2]
+
+\xGeneratePoints{xL,xR,xC,xInv,xT,xBorL,xBorR}{yA,yB,yC,yBorA,yBorB}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xInv/yB) node[nmos] (M1) {$M_1$};
+\path (xInv/yA) node[pmos] (M2) {$M_2$};
+\path (xT/yA) node[nmos,rotate=-90] (M3) {} (M3.D) node[above=0.2cm] {$M_3$};
+\path (xT/yA) node[pmos,rotate=+90] (M4) {} (M4.D) node[below=0.2cm] {$M_4$};
+\path (xT/yB) node[nmos,rotate=-90] (M5) {} (M5.D) node[above=0.2cm] {$M_5$};
+\path (xT/yB) node[pmos,rotate=+90] (M6) {} (M6.D) node[below=0.2cm] {$M_6$};
+
+\draw (M1.G) -- (M2.G);
+\draw (M1.D) -- (M2.D);
+\path (M1.S) node[ground] {};
+\path (M2.S) node[vdd] {$V_{DD}$};
+
+\draw (M4.G) -- (M5.G);
+\draw (M3.S) to[short,-o] (xL/yA) node[left] {$A$};
+\draw (M5.S) to[short,-o] (xL/yB) node[left] {$B$};
+\draw (xT/yC) to[short,*-o] (M3.S |- yC) node[left] {$\bar{S}$};
+\draw (M3.G) node[ocirc] {} node[above] {$S$};
+\draw (M6.G) node[ocirc] {} node[below] {$S$};
+
+\draw (M3.D) -- (xC/yA) -- (xC/yB) -- (M5.D);
+\draw (xC/yC) to[short,*-*] (M1.G |- yC);
+\draw (xInv/yC) to[short,*-o] (xR/yC) node[right] {$F$};
+
+\end{tikzpicture}
+\end{document}

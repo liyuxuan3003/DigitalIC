@@ -1,0 +1,34 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xValDefine{xL}[-3.5]
+\xValDefine{xR}[+3.5]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xMa}{xL}{xR}[1/5]
+\xValProportion{xMb}{xL}{xR}[3/5]
+\xValOffset{xBorL}{xL}[-0.75]
+\xValOffset{xBorR}{xR}[+0.75]
+
+\xValDefine{yA}[0]
+\xValDefine{yB}[0]
+\xValMiddle{yC}{yA}{yB}
+\xValOffset{yBorA}{yA}[+1.7]
+\xValOffset{yBorB}{yB}[-1.3]
+
+\xGeneratePoints{xL,xR,xC,xMa,xMb,xBorL,xBorR}{yA,yB,yC,yBorA,yBorB}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xMa/yC) node[nmos,rotate=-90] (M1) {\rotatebox{90}{$M_1$}};
+\path (xMb/yC) node[nmos] (M2) {$M_2$};
+\draw (xL/yC) node[left] {$A$} to[short,o-] (M1.S);
+\draw (M1.D) -- node[above] {\footnotesize $V_{DD}-V_{Tn}$} (M2.G);
+\draw (M2.S) -- node[above] {\footnotesize $V_{DD}-2V_{Tn}$} (xR |- M2.S) node[ocirc] {} node[above] {Out};
+\draw (M2.D) node[ocirc] {} node[above] {$C$};
+\draw (M1.G) node[ocirc] {} node[above] {$B$};
+
+
+\end{tikzpicture}
+\end{document}

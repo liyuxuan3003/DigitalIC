@@ -1,0 +1,52 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-7.0]
+\xValDefine{xR}[+7.0]
+\xValOffset{xBorL}{xL}[-0.5]
+\xValOffset{xBorR}{xR}[+0.5]
+\xValProportion{xInva}{xL}{xR}[1/11]
+\xValProportion{xInvb}{xL}{xR}[3/11]
+\xValProportion{xInvc}{xL}{xR}[5/11]
+\xValProportion{xInvd}{xL}{xR}[7/11]
+\xValProportion{xInve}{xL}{xR}[9/11]
+
+\xValProportion{xCgag}{xInva}{xInvb}
+\xValProportion{xCgbg}{xInvb}{xInvc}
+\xValProportion{xCgcg}{xInvc}{xInvd}
+\xValProportion{xCgdg}{xInvd}{xInve}
+\xValProportion{xCgeg}{xInve}{xR}
+
+\xValDefine{yA}[+1.0]
+\xValDefine{yB}[-1.0]
+\xValOffset{yBorA}{yA}[+1.7]
+\xValOffset{yBorB}{yB}[-1.0]
+\xValOffset{yAz}{yA}[+0.82]
+\xValOffset{yBz}{yB}[-0.82]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xInva,xInvb,xInvc,xInvd,xInve,xCgag,xCgbg,xCgcg,xCgdg,xCgeg}{yA,yB,yBorA,yBorB,yAz,yBz}
+
+\foreach \x in {xInva,xInvb,xInvc,xInve}
+{
+    \path (\x/yA) node[nmos,rotate=-90] (nmos\x) {} node[pmos,rotate=90] (pmos\x) {};
+    \draw (nmos\x.G) node[ocirc] {} node[above] {$V_{DD}$};
+    \draw (pmos\x.G) node[ocirc] {} node[below] {$0$};
+}
+
+\foreach \x in {xCgag,xCgbg,xCgcg,xCgeg}
+{
+    \draw (\x/yA) to[C=$C$,*-] (\x/yB) node[ground] {};
+}
+
+\draw (xL/yA) node[above] {In} to[short,o-] (nmosxInva.S);
+\draw (nmosxInva.D) -- (nmosxInvb.S);
+\draw (nmosxInvb.D) -- (nmosxInvc.S);
+\draw (nmosxInvc.D) -- (xInvd/yA) node[right=0.5cm] {$\cdots$};
+\draw (nmosxInve.D) -- (xR/yA) node[ocirc] {} node[above] {Out};
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\end{tikzpicture}
+\end{document}

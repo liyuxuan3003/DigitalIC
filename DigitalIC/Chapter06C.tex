@@ -1,0 +1,101 @@
+\section{静态传输管逻辑}
+
+\subsection{传输管逻辑}
+传输管逻辑采取了另外一种方法减小所需的晶体管数目。我们知道，本质上，数字电路的所有晶体管都是用作开关，过去，在互补CMOS逻辑和伪NMOS逻辑中，这些开关都是存在于输出和电源间，输入和输出是隔离的。传输管的新想法就是，输入为什么不能直接用于驱动输出呢？\xref{fig:传输管的基本原理}给出了传输管逻辑的基本原理，信号$A$是输入，信号$B$则控制了传输管的通断
+\begin{itemize}
+    \item 当$B=1$时，传输管导通，此时输出节点将等于输入信号$A$的值。
+    \item 当$B=0$时，传输管截止，此时输出节点将处于悬空状态。
+\end{itemize}
+
+\begin{Figure}[传输管的基本原理]
+    \includegraphics{build/Chapter06C_01.fig.pdf}
+\end{Figure}
+
+当然，我们通过传输管构建逻辑门时，是不会让输出处于悬空状态的，\xref{fig:传输管逻辑门}给出了一些示例。
+\begin{itemize}
+    \item 传输管与门\hphantom{门}，栅极分别接$B,\bar{B}$，源漏输入端分别接$A,B$
+    \item 传输管或门\hphantom{门}，栅极分别接$\bar{B},B$，源漏输入端分别接$A,B$
+    \item 传输管异或门，栅极分别接$\bar{B},B$，源漏输入端分别接$A,\bar{A}$
+\end{itemize}
+
+\begin{Figure}[传输管逻辑门]
+    \begin{FigureSub}[传输管与门]
+        \includegraphics[scale=0.8]{build/Chapter06C_03.fig.pdf}
+    \end{FigureSub}
+    \hspace{1cm}
+    \begin{FigureSub}[传输管或门]
+        \includegraphics[scale=0.8]{build/Chapter06C_04.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[传输管异或门]
+        \includegraphics[scale=0.8]{build/Chapter06C_05.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+传输管逻辑门的设计可能是比较难理解的，我们逐一来分析
+\begin{itemize}
+    \item 与门，两个同时为$1$才输出$1$。在传输管与门中，我们看到，当$B=1$时输出$A$，因为这时候$A$取$1,0$就决定了是否“同时为$1$”。当$B=0$时输出$B$，相当于直接输出$0$。
+    \item 或门，两个有一为$1$就输出$1$。在传输管或门中，我们看到，当$B=0$时输出$A$，因为这时候$A$取$1,0$就决定了是否“有一为$1$”。当$B=1$时输出$A$，相当于直接输出$1$。
+    \item 异或门，两个相异为$1$，两个相同为$0$，
+    \begin{itemize}
+        \item 当$B=0$输出$A$，此时$A=1$相异（应输出$1$），此时$A=0$相同（应输出$0$）。
+        \item 当$B=1$输出$\bar{A}$，此时$A=0$相异（应输出$1$），此时$A=1$相同（应输出$0$）。
+    \end{itemize}
+\end{itemize}
+传输管逻辑门看起来非常的美好，非常节省晶体管，但是，它存在和伪NMOS逻辑同样的问题，无法实现轨到轨的电压全摆幅。伪NMOS逻辑的原因是有比逻辑，传输管逻辑的原因则是阈值损失。我们知道，一个NMOS器件，在下拉时很有效，在上拉时性能却非常差，即只能充电到$V_{DD}-V_{Tn}$，这里的“下拉”和“上拉”放在传输管中就是“传0”和“传1”，这就意味着，当传输管试图传输$V_{DD}$时，其输出只能达到$V_{DD}-V_{Tn}$，即损失了一个阈值电压。\goodbreak
+
+传输管逻辑门的一个有趣的变种是差分传输管逻辑，如\xref{fig:差分传输管逻辑门}所示
+\begin{Figure}[差分传输管逻辑门]
+    \begin{FigureSub}[差分传输管与门]
+        \includegraphics[scale=0.8]{build/Chapter06C_06.fig.pdf}
+    \end{FigureSub}
+    \hspace{1cm}
+    \begin{FigureSub}[差分传输管或门]
+        \includegraphics[scale=0.8]{build/Chapter06C_07.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[差分传输管异或门]
+        \includegraphics[scale=0.8]{build/Chapter06C_08.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+差分传输管逻辑（简称为CPL）的特别之处是，通过差分方式同时实现了正逻辑和反逻辑
+\begin{itemize}
+    \item CPL实现互补输出，即AND/NAND、OR/NOR、XOR/NXOR的具体方式是：栅端保持不变，源漏输入端分别变为原来的反。很容易验证其正确性。从这种意义上看，差分传输管逻辑在结构上没有什么特别的，只不过集成了两组传输管逻辑以实现互补输出。
+    \item CPL实现互补输出其实并不值得称赞，任何逻辑门通过添加一个反相器都可以得到其互补输出。关键在“差分”，这意味着互补输出信号间是同步的，不存在额外的反相器延时。
+    \item CPL的设计具有模块化的特点，容易注意到，不管具体是什么逻辑，CPL门的拓扑结构都完全相同，只是输入的排列方式不同，这使得CPL逻辑门的单元库设计非常简单。
+\end{itemize}
+差分传输管逻辑本质上仍然是传输管逻辑，因此同样存在阈值损失的问题。
+
+
+传输管逻辑门的阈值损失限制了其连接方式，当串联两个传输管时，只允许“源漏--源漏”的连接，不允许“源漏--栅”的连接，否则，阈值损失将从$V_{DD}-V_{Tn}$恶化至$V_{DD}-2V_{Tn}$。
+\begin{Figure}[传输管的串联]
+    \begin{FigureSub}[正确的串联]
+        \includegraphics{build/Chapter06C_13.fig.pdf}
+    \end{FigureSub}\\ \vspace{1.00cm}
+    \begin{FigureSub}[错误的串联]
+        \includegraphics{build/Chapter06C_14.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+当然，这只是针对传输管的串联而言。传输管仍然可以连接至反相器的栅极。
+
+\subsection{传输管逻辑与电平恢复}
+那么，如何解决阈值损失问题呢？有一种解决方案被称为\uwave{电平恢复器}。
+
+\begin{Figure}[传输管逻辑与电平恢复]
+    \begin{FigureSub}[无电平恢复]
+        \includegraphics[scale=0.8]{build/Chapter06C_15.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[有电平恢复]
+        \includegraphics[scale=0.8]{build/Chapter06C_09.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+通常来说，传输管逻辑后都会接一级反相器，如\xref{fig:无电平恢复}所示，以避免阈值损失在电路中持续传递。但是，我们仍然想从根源上彻底解决阈值损失问题，而技巧就在于，利用反馈！
+
+\xref{fig:有电平恢复}引入了一个反馈PMOS管$M_r$，栅连接到反相器的输出，漏连接到反相器的输入。\goodbreak
+
+\xref{fig:有电平恢复}中的反馈是如何运作的？考虑以下的分析\nopagebreak
+\begin{itemize}
+    \item 当传输管$M_n$传输低电平，经反相器变为高电平，反馈管$M_r$被关断，无影响
+    \item 当传输管$M_n$传输高电平，然而由于阈值损失问题，实际只能弱上拉至$V_{DD}-V_{Tn}$，但是，这足矣驱动反相器了。传输管输出，经反相器变为低电平，反馈管$M_r$被开启，而此时，传输管的输出节点与$V_{DD}$接通，被强上拉至$V_{DD}$，这样就实现了电平恢复。
+\end{itemize}
+电平恢复的一个主要问题在于有比逻辑，这发生在当$A=0$而$B=0\to 1$的翻转过程中，该过程中，$A=0$通过$M_n$对传输管输出节点下拉，$V_{DD}$通过$M_r$对传输管输出节点上拉，而这就要求$M_n$必须强于$M_r$（即$M_n$的尺寸应小于$M_r$，或$M_n$的电阻应小于$M_r$），因为这种情况下传输管的输出节点必须被下拉后才能驱动反相器输出高电平关断反馈管，否则状态将被锁死（反馈常常会导致状态的锁定，这也不总是坏事，反馈的这种特性被用于构造锁存器）。

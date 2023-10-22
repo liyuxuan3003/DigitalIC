@@ -1,0 +1,46 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValProportion{xF}{xL}{xR}[0.85]
+\xValMiddle{xC}{xL}{xF}
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+2.2]
+
+\xValDefine{yAa}[+3]
+\xValDefine{yBa}[+1]
+\xValDefine{yAb}[-1]
+\xValDefine{yBb}[-3]
+\xValMiddle{yCa}{yAa}{yBa}
+\xValMiddle{yCb}{yAb}{yBb}
+\xValOffset{yBorA}{yAa}[+1.7]
+\xValOffset{yBorB}{yBb}[-0.5]
+
+\xGeneratePoints{xL,xR,xC,xF,xBorL,xBorR}{yAa,yBa,yAb,yBb,yCa,yCb,yBorA,yBorB}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xC/yAa) node[nmos,rotate=-90] (NMOSa) {};
+\path (xC/yBa) node[nmos,rotate=-90] (NMOSb) {};
+\path (xC/yAb) node[nmos,rotate=-90] (NMOSc) {};
+\path (xC/yBb) node[nmos,rotate=-90] (NMOSd) {};
+
+\draw (NMOSa.S) to[short,-o] (xL/yAa) node[left] {$A$};
+\draw (NMOSb.S) to[short,-o] (xL/yBa) node[left] {$B$};
+\draw (NMOSa.D) -- (xF/yAa) node[above] {AND} -- (xF/yBa) -- (NMOSb.D);
+\draw (xF/yCa) to[short,*-o] (xR/yCa) node[right] {$F=AB$};
+\draw (NMOSa.G) node[ocirc] {} node[above] {$B$};
+\draw (NMOSb.G) node[ocirc] {} node[above] {$\bar{B}$};
+
+\draw (NMOSc.S) to[short,-o] (xL/yAb) node[left] {$\bar{A}$};
+\draw (NMOSd.S) to[short,-o] (xL/yBb) node[left] {$\bar{B}$};
+\draw (NMOSc.D) -- (xF/yAb) node[above] {NAND} -- (xF/yBb) -- (NMOSd.D);
+\draw (xF/yCb) to[short,*-o] (xR/yCb) node[right] {$F=\xbar{AB}$};
+\draw (NMOSc.G) node[ocirc] {} node[above] {$B$};
+\draw (NMOSd.G) node[ocirc] {} node[above] {$\bar{B}$};
+
+\end{tikzpicture}
+\end{document}
