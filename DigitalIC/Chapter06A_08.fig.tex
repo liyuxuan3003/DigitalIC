@@ -19,6 +19,8 @@
 
 \xGeneratePoints{xL,xR,xC,xBorL,xBorR}{yB,yA,yC,yBx,yAx,yBorB,yBorA}
 
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
 \draw (xC/yA) to[switch=$A$] (xC/yC) to[switch=$B$] (xC/yB) node[below] {$F=AB$};
 
 

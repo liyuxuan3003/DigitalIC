@@ -1,0 +1,70 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-2.5]
+\xValDefine{xR}[+2.5]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xLx}{xL}{xR}[0.4]
+\xValMirror{xRx}{xLx}{xC}
+\xValProportion{xCL}{xC}{xR}[0.8]
+\xValProportion{xCint}{xC}{xR}[0.5]
+\xValOffset{xBorL}{xL}[-1.75]
+\xValOffset{xBorR}{xR}[+1.75]
+
+\xValDefine{yB}[-4]
+\xValDefine{yA}[+4]
+\xValProportion{yC}{yA}{yB}[0.25]
+\xValMiddle{yBx}{yB}{yC}
+\xValMiddle{yAx}{yA}{yC}
+\xValProportion{yBa}{yC}{yB}[1/5]
+\xValProportion{yBb}{yC}{yB}[2/5]
+\xValProportion{yBc}{yC}{yB}[3/5]
+\xValProportion{yBd}{yC}{yB}[4/5]
+\xValMiddle{yBbx}{yBb}{yBa}
+\xValMiddle{yBcx}{yBc}{yBb}
+\xValMiddle{yBdx}{yBd}{yBc}
+\xValOffset{yBorB}{yB}[-0.75]
+\xValOffset{yBorA}{yA}[+1.2]
+
+\xGeneratePoints{xL,xR,xLx,xRx,xC,xBorL,xBorR,xCL,xCint}{yB,yA,yC,yAx,yBx,yBorB,yBorA,yBa,yBb,yBc,yBd,yBbx,yBcx,yBdx}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xL/yAx)  node[pmos] (pmosA) {};
+\path (xLx/yAx) node[pmos] (pmosB) {};
+\path (xRx/yAx) node[pmos,xscale=-1] (pmosC) {};
+\path (xR/yAx)  node[pmos,xscale=-1] (pmosD) {};
+\path (xC/yBa) node[nmos] (nmosA) {};
+\path (xC/yBb) node[nmos] (nmosB) {};
+\path (xC/yBc) node[nmos] (nmosC) {};
+\path (xC/yBd) node[nmos] (nmosD) {};
+\path (pmosA.G) node[ocirc] {} node[left] {A};
+\path (pmosB.G) node[ocirc] {} node[left] {B};
+\path (pmosC.G) node[ocirc] {} node[right] {C};
+\path (pmosD.G) node[ocirc] {} node[right] {D};
+\path (nmosA.G) node[ocirc] {} node[left] {A};
+\path (nmosB.G) node[ocirc] {} node[left] {B};
+\path (nmosC.G) node[ocirc] {} node[left] {C};
+\path (nmosD.G) node[ocirc] {} node[left] {D};
+
+\draw (pmosA.D) -- (pmosD.D);
+\draw (pmosA.S) -- (pmosD.S);
+\draw (nmosA.D |- pmosA.S) to[short,*-] (nmosA.D |- yA) node[vdd] {$V_{DD}$};
+\draw (nmosA.D |- pmosA.D) to[short,-] (nmosA.D);
+\draw (nmosD.S) node[ground] {};
+\draw (nmosA.D) to[short,*-o] (xR |- nmosA.D) node[right] {F};
+
+\draw (xCL |- nmosA.D) to[C=$C_L$,*-] (xCL/yBb) node[ground] {};
+
+% \draw (nmosB.D |- yBbx) to[short,*-] (xCint/yBbx) to[C,l_=$C_{int}$] (xCint/yBb) node[ground] {}; 
+% \draw (nmosB.D |- yBcx) to[short,*-] (xCint/yBcx) to[C,l_=$C_{int}$] (xCint/yBc) node[ground] {}; 
+% \draw (nmosB.D |- yBdx) to[short,*-] (xCint/yBdx) to[C,l_=$C_{int}$] (xCint/yBd) node[ground] {}; 
+
+\draw (nmosA.S) -- (nmosB.D);
+\draw (nmosB.S) -- (nmosC.D);
+\draw (nmosC.S) -- (nmosD.D);
+ 
+\end{tikzpicture}
+\end{document}

@@ -60,14 +60,14 @@
         r=\frac{k_pV_{DSATp}}{k_nV_{DSATn}}=\frac{k_p'(W/L)_pV_{DSATp}}{k_n'(W/L)_nV_{DSATn}}
     \end{Equation}
 \end{BoxFormula}
-上述分析表明，开关阈值很大程度上取决于$r$的值，而$r$除了$k_p',k_n',V_{DSATp},V_{DSATn}$这些常数即正比于$(W/L)_p/(W/L)_n$，若假设沟道长度是一定的，那么$r$就正比于PMOS和NMOS的沟道宽度比。\xref{fig:CMOS反相器的开关阈值}展现了$V_M$与$(W/L)_p/(W/L)_n$之间的关系，从中可以得出几点结论
+上述分析表明，开关阈值很大程度上取决于$r$的值，而$r$除了$k_p',k_n',V_{DSATp},V_{DSATn}$这些常数即正比于$(W/L)_p/(W/L)_n$，若假设沟道长度是一定的，那么$r$就正比于PMOS和NMOS的沟道宽度比。\xref{fig:CMOS反相器的开关阈值}展现了$V_M$与$\beta=(W/L)_p/(W/L)_n$之间的关系，从中可得出几点结论
 \begin{itemize}
     \item 绘图参数依照\xref{tab:MOS管的手工分析模型参数}和$V_{DD}=2.5\si{V}$，该取值下$V_M=rV_{DD}/1+r$的近似是糟糕的。
-    \item 若增大PMOS和NMOS的沟道宽度比，$V_M$将增大，移向VDD。
-    \item 若减小PMOS和NMOS的沟道宽度比，$V_M$将减小，移向GND。
+    \item 当沟道宽度比$\beta=3.5$时，开关阈值$V_{M}$位于电压摆幅的中间即$V_{DD}/2$处。
+    \item 若增大PMOS和NMOS的沟道宽度比$\beta$，$V_M$将增大，移向VDD。
+    \item 若减小PMOS和NMOS的沟道宽度比$\beta$，$V_M$将减小，移向GND。
 \end{itemize}
-但总的来说，$V_M$对于宽度比而言并不敏感，将宽度比从$1$倍增大至$10$倍（实践中不可能有这么悬殊的比值，通常在$2$至$4$倍左右），开关阈值$V_M$也才仅仅变化了不到$0.5\si{V}$。因此，如果实践工艺上PMOS和NMOS的宽度比有一些细小的误差，开关阈值$V_M$也不会有太大的影响。通常，开关阈值$V_{M}$被期望位于电压摆幅的中间即$V_{DD}/2$处，此时PMOS和NMOS的宽度比应在$3.5$左右，宽度比不为$1$的原因是$r$中$k_n',k_p'$和$V_{DSATn}',V_{DSATp}'$并不对称。
-
+但总的来说，$V_M$对于宽度比而言并不敏感，将宽度比从$1$倍增大至$10$倍（实践中不可能有这么悬殊的比值，通常在$2$至$4$倍左右），开关阈值$V_M$也才仅仅变化了不到$0.5\si{V}$。因此，即便工艺上PMOS和NMOS的宽度比有一些小的误差，开关阈值$V_M$也不会有太大的变化。
 \begin{Figure}[CMOS反相器的开关阈值]
     \includegraphics{build/Chapter05A_03a.fig.pdf}\hspace{0.7cm}
 \end{Figure}

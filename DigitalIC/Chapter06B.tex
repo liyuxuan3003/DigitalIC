@@ -1,0 +1,52 @@
+\section{静态伪NMOS逻辑}
+伪NMOS逻辑试图减小互补CMOS逻辑所需的$2N$晶体管数目。伪NMOS逻辑的核心思想在于，既然PDN和PUN都可以独立的实现逻辑功能，那这其中必然存在冗余，可以省去。
+
+伪NMOS逻辑的结构如\xref{fig:静态伪NMOS逻辑}所示，仍保留下拉网络PDN，但将上拉网络PUN替换为一个电阻，当然，由于集成电路中实现电阻比较麻烦，因此这里实际使用的是一个PMOS，该负载PMOS的栅极被接地以保持常通，相当于一个电阻。那么伪NMOS逻辑是如何工作的？
+\begin{itemize}
+    \item 当PDN截止时，此时$V_{DD}$和Out通过负载PMOS连通，但无电流，故输出高电平。
+    \item 当PDN导通时，此时$V_{DD}$和GND间会形成通路，在设计上，负载PMOS的等效电阻应当远大于PDN网络的导通电阻，因此，根据分压原理，$V_{DD}$的电压将主要降落在负载PMOS的电阻上，这时，输出节点Out上的电压“几乎”为零，故输出低电平。
+\end{itemize}
+伪NMOS逻辑通过这种方式，将实现逻辑所需的晶体管数目从$2N$减少至$N+1$。
+
+\begin{Figure}[静态伪NMOS逻辑]
+    \includegraphics{build/Chapter06B_01.fig.pdf}
+\end{Figure}
+
+然而，这一切必然是有代价的，伪NMOS逻辑实际上存在很多缺陷。
+
+伪NMOS逻辑的第一个缺点是有比逻辑。问题就出在“几乎为零”上，伪NMOS逻辑的下拉是依靠负载PMOS的电阻对PDN的电阻分压实现的，换言之，伪NMOS逻辑无法将输出电压下拉至$\SI{0}{V}$，即$V_{OH}=V_{DD}$但$V_{OL}\neq 0$，无法实现轨到轨的全摆幅输出。但比这影响更大的是，伪NMOS逻辑中$V_{OL}$的值，将取决于负载PMOS和PDN网络中的器件尺寸
+\begin{itemize}
+    \item 若输出与器件尺寸无关，称为\uwave{无比逻辑}（Non-Ratioed Logic），例如互补CMOS逻辑。
+    \item 若输出与器件尺寸有关，称为\uwave{有比逻辑}（Ratioed Logic），例如伪NMOS逻辑。
+\end{itemize}\goodbreak
+% 伪NMOS逻辑是一种有比逻辑，这就意味着我们在选择器件尺寸时需要更为谨慎。
+
+伪NMOS逻辑的第二个缺点是静态功耗。问题同样出在“几乎为零”，伪NMOS逻辑在下拉时VDD和GND是导通的，存在电流，因此，存在静态功耗（保持下拉也消耗能量）。
+
+不过，上面提到的两个有关伪NMOS逻辑的缺陷，即有比逻辑和静态功耗，似乎都可以通过减小负载PMOS的尺寸缓解。减小负载PMOS的尺寸可以使PMOS的等效电阻增大
+\begin{itemize}
+    \item 对于有比逻辑，较大的PMOS电阻可以使更多的电压降在PMOS上，输出更接近零。
+    \item 对于静态功耗，较大的PMOS电阻可以减小VDD至GND间的电流，减小功耗。
+\end{itemize}
+然而，减小PMOS的尺寸增大PMOS的电阻会产生其他影响，电阻增大将使延时急剧增大。\goodbreak
+
+总结起来，伪NMOS逻辑将造成性能的损失，调整PMOS的尺寸可以分配损失的位置
+\begin{itemize}
+    \item 减小PMOS的尺寸（电阻增大），下拉性能将更好，静态功耗将更小，延时将增大。
+    \item 增大PMOS的尺寸（电阻减小），下拉性能将更差，静态功耗将更大，延时将减小。
+\end{itemize}
+
+\begin{Figure}[反相器的两种不同实现方式]
+    \begin{FigureSub}[互补CMOS逻辑的反相器]
+        \hspace{1cm}
+        \includegraphics[scale=0.8]{build/Chapter06A_12.fig.pdf}
+        \hspace{1cm}
+    \end{FigureSub}
+    \begin{FigureSub}[伪NMOS逻辑的反相器]
+        \hspace{1cm}
+        \includegraphics[scale=0.8]{build/Chapter06B_02.fig.pdf}
+        \hspace{1cm}
+    \end{FigureSub}
+\end{Figure}
+
+尽管伪NMOS逻辑存在诸多问题，然而，将晶体管数目从$2N$减小至$N+1$在大扇入时仍然是十分有吸引力的，例如4输入的NAND门或NOR门，使用伪NMOS逻辑可以显著减小面积开销。

@@ -25,8 +25,8 @@
 
 \draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
 
-\path (xC/yBx) node[nmos] (nmos) {};
-\path (xC/yAx) node[pmos] (pmos) {};
+\path (xC/yBx) node[nmos] (nmos) {} node[right] {1};
+\path (xC/yAx) node[pmos] (pmos) {} node[right] {2};
 
 \draw (nmos.D) -- (pmos.D);
 \draw (pmos.S) -- (pmos.S |- yA) node[vdd] {$V_{DD}$};

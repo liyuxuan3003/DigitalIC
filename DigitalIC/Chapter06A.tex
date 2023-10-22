@@ -1,0 +1,352 @@
+\section{静态互补CMOS逻辑}
+这一节我们先来介绍原理最容易理解的静态互补CMOS逻辑，它直接源于CMOS反相器。
+
+\subsection{静态互补CMOS逻辑的原理}
+静态互补CMOS逻辑如\xref{fig:静态互补CMOS逻辑}所示，它与\xref{fig:CMOS反相器}非常相似
+\begin{itemize}
+    \item 包含一个由NMOS组成的，连接GND的\uwave{下拉网络}（Pull-Down Network, PDN）。
+    \item 包含一个由PMOS组成的，连接VDD的\uwave{上拉网络}（Pull-Up Network, PUN）。
+\end{itemize}
+当电路要输出$1$时，PUN导通PDN截止，当电路要输出$0$时，PDN导通PUN截止。电路的输出通过“上拉”和“下拉”，就可以在VDD和GND两条“电源轨线”之间来回摆动。
+
+\begin{Figure}[静态互补CMOS逻辑]
+    \includegraphics[scale=0.8]{build/Chapter06A_03.fig.pdf}
+\end{Figure}
+
+
+在进一步研究互补CMOS逻辑之前，这里我们先要提出两个问题
+\begin{enumerate}
+    \item 我们为什么总是用PMOS上拉而用NMOS下拉？反过来可以吗？
+    \item 我们如果要实现一个给定的逻辑，应当如何构建上拉网络PUN和下拉网络PDN？
+\end{enumerate}
+
+\subsubsection{关于PUN和PDN的器件选择}
+PMOS用于上拉，NMOS用于下拉，我们总是这么做，但到底为什么呢？如\xref{fig:关于PUN和PDN的器件选择}所示。
+
+第一个问题是，为什么\xref{fig:关于PUN和PDN的器件选择}中的源和漏这样标注？
+\begin{itemize}
+    \item 对于NMOS，电压最低的那一端是源极，因为NMOS需要正栅源电压$V_{GS}>0$导通。
+    \item 对于PMOS\hspace{0.1em}，电压最高的那一端是源极，因为PMOS\hspace{0.37em}需要负栅源电压$V_{GS}<0$导通。
+\end{itemize}
+其实，我们要充分认识到，MOSFET是对称的，因此源和漏更多的是功能上的称呼，如果漏的电压比源还低，那么，漏就变成源了（可以认为是MOSFET类似BJT的“反向放大”）。
+
+\begin{Figure}[关于PUN和PDN的器件选择]
+    \begin{FigureSub}[使用NMOS下拉]
+        \includegraphics{build/Chapter06A_04.fig.pdf}
+    \end{FigureSub}\hspace{0.5cm}
+    \begin{FigureSub}[使用PMOS下拉]
+        \includegraphics{build/Chapter06A_05.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[使用NMOS上拉]
+        \includegraphics{build/Chapter06A_06.fig.pdf}
+    \end{FigureSub}\hspace{0.5cm}
+    \begin{FigureSub}[使用PMOS上拉]
+        \includegraphics{build/Chapter06A_07.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+第二个问题是，为什么说，NMOS适合下拉，PMOS适合上拉？从\xref{fig:关于PUN和PDN的器件选择}中可以看出
+\begin{itemize}
+    \item NMOS下拉，PMOS上拉，源极接地或接电源，在整个放电过程和充电过程中，栅压保持不变，器件始终是处于导通状态，因此，可以实现轨到轨的全摆幅输出。
+    \item NMOS上拉，PMOS下拉，源极接输出端，在最初的放电过程和充电过程中，栅电压是足矣使器件沟道导通的，然而，随着放电和充电的进行，源极，也就是输出端的电压，将越来越接近栅极电压，当两者的差减小的阈值电压$V_{Tn}$或$V_{Tp}$以下时，器件将进入截止状态，放电和充电过程。换言之，这样的设计存在\uwave{阈值电压损失}，无法实现轨到轨的全摆幅，上拉只能达到$V_{DD}-|V_{Tn}|$，下拉只能达到$|V_{Tp}|$，这显然对设计是不利的。
+\end{itemize}
+简而言之，NMOS下拉，PMOS上拉，是因为这样源极是恒定的地或电源，避免阈值损失。
+
+\subsubsection{关于PUN和PDN的综合}
+尽管MOSFET的器件特性很复杂，但在这里，它本质上就是开关，如\xref{fig:开关的逻辑规则}所示。
+
+\begin{Figure}[开关的逻辑规则]
+    \begin{FigureSub}[开关的串联]
+        \includegraphics{build/Chapter06A_08.fig.pdf}
+    \end{FigureSub}\hspace{2cm}
+    \begin{FigureSub}[开关的并联]
+        \includegraphics{build/Chapter06A_09.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+我们作以下规定和分析
+\begin{itemize}
+    \item 对于输入，我们规定，开关闭合为$1$，开关断开为$0$。
+    \item 对于输出，我们规定，链路导通为$1$，链路断开为$0$。
+    \item 将两个开关串联，代表了逻辑“与”，因为需要两个开关同时闭合才能导通。
+    \item 将两个开关并联，代表了逻辑“或”，因为只要一个开关闭合就能导通。
+\end{itemize}
+
+因此，对于一个给定的逻辑，只需要通过开关，即NMOS和PMOS的串并联就可以实现。
+
+然而实际的情况还要更复杂一些，原因是电路的输出以及NMOS和PMOS作为开关的输入和上面规定的有一些不同。事实是，若PDN网络的逻辑为$f$，则PUN网络的逻辑为$\hat{f}$，这里的$\hat{f}$代表$f$的对偶式，即交换表达式中所有的“与”和“或”，或者说，如果我们从电路上看，即交换“串联”和“并联”。但为什么是对偶式？数字电路的知识告诉我们，对偶式是同真同假的，然而，PDN和PUN恰恰不能同时导通，两者必须是互补的。这里的问题是出在，PDN和PUN从开关网络层面确实是对偶的，但是，PUN网络中的PMOS的开关是一个反的开关，输入$0$闭合，输入$1$断开，换言之，PUN网络中的输入其实都被反相了，即
+\begin{Equation}
+    \te{PUN}|_\te{导通}=\hat{f}(\xbar{A_1},\xbar{A_2},\cdots,\xbar{A_n})\qquad
+    \te{PDN}|_\te{导通}=f(A_1,A_2,\cdots,A_n)
+\end{Equation}
+这样一来，变量取反，与或交换，两者的关系就从对偶式变成了反演式了，确实是互补的。
+
+这是从导通上看的，PUN导通输出逻辑1，PDN导通输出逻辑0，故从逻辑来看
+\begin{Equation}
+    \te{PUN}|_\te{逻辑}=\hat{f}(\xbar{A_1},\xbar{A_2},\cdots,\xbar{A_n})\qquad
+    \te{PDN}|_\te{逻辑}=\xbar{f(A_1,A_2,\cdots,A_n)}
+\end{Equation}
+由此可见，最终PUN和PDN实现的逻辑仍然是一致的，这是很合理的。
+
+\subsection{静态互补CMOS逻辑门}
+在本小节，我们来看一些互补CMOS逻辑门的设计，容易归纳出下面的准则
+\begin{enumerate}
+    \item 假定该逻辑门将实现的逻辑功能为$F$
+    \item 将下拉网络PDN综合为$f=\bar{F}$，即逻辑门的逻辑功能的非。
+    \item 将上拉网络PUN综合为$\hat{f}$，即PDN的对偶网络。
+\end{enumerate}
+
+这也就告诉我们，单一静态互补CMOS逻辑门，只能用于实现“与或逻辑”的反，这也就是说，“与非门”和“或非门”是可以实现的，“与门”和“或门”则是不可以实现的，当然。
+\begin{itemize}
+    \item 与门，可以通过在与非门的基础上添加非门完成。
+    \item 或门，可以通过在或非门的基础上添加非门完成。
+\end{itemize}
+这就是为什么我们说，“与非门”和“或非门”是比“与门”和“或门”更基本的逻辑门。在数字电路中，曾经探讨如何将表达式转换为“与非--与非逻辑”，其实也是出于上述考虑。究其根本，是在于互补CMOS逻辑门是派生自互补CMOS反相器，天生就带有“反向”特性。
+
+\begin{Figure}[互补CMOS逻辑门]
+    \begin{FigureSub}[非门;互补CMOS逻辑门非门]
+        \includegraphics[scale=0.8]{build/Chapter06A_12.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[与非门;互补CMOS逻辑门与非门]
+        \includegraphics[scale=0.8]{build/Chapter06A_10.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[或非门;互补CMOS逻辑门与非门]
+        \includegraphics[scale=0.8]{build/Chapter06A_11.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+在\xref{fig:互补CMOS逻辑门}中，我们看到，与非门的PDN实现的是“与”，或非门的PDN实现的是“或”。
+
+这里也可以看出，实现一个$N$输入的互补CMOS逻辑门需要的晶体管是$2N$个。
+
+\subsection{静态互补CMOS的版图}
+版图描绘的是数字设计如何逐层的实现在硅衬底上，这是一个相当复杂的问题。但这里我们想讨论的是一种简化的版图，也称为棒图，棒图不关心各工艺层的实际尺寸，棒图只关心它们的相对位置和连接关系，兼具简洁性和对实际工艺的理解。\xref{fig:互补CMOS逻辑门的棒图}中给出了一些棒图的例子。
+
+如\xref{fig:互补CMOS逻辑门的棒图非门}所示，这是一个非门对应的棒图，其可以分为三层
+\begin{itemize}
+    \item 有源区层：在绘制棒图时，对于半导体层，只需考虑有源区，不需要理会衬底和阱，不需要纠结源和漏间还有掺杂相反的区域。在图中，红线代表PMOS，蓝线代表NMOS。
+    \item 多晶硅层：多晶硅层在有源区层上方，多晶硅是栅极。在棒图中，多晶硅线的左右两侧就划分了晶体管的源区和漏区，这也符合栅位于源漏间的事实。由于CMOS电路中，在同一CMOS内的一对PMOS和NMOS的栅极是连接在同一个输入上的，因此，多晶硅栅极是贯通的。简而言之，我们应记住，\empx{多晶硅线分割源漏}，\empx{多晶硅线就是输入}。
+    \item 金属线层：金属线层在多晶硅层上方，金属线是晶体管间的互连线，上下两根金属线分别是电源VDD和地GND，即逻辑门的两根轨线，PMOS和NMOS的源极应分别连接至VDD和GND，。PMOS和NMOS的漏极则应当连接到一起作为输出，这里应注意的是，金属线和半导体有源区间的连接需要打接触孔，棒图中需用$\times$标识接触孔。
+\end{itemize}
+
+\begin{Figure}[互补CMOS逻辑门的棒图]
+    \begin{FigureSub}[非门;互补CMOS逻辑门的棒图非门]
+        \includegraphics[scale=0.9]{build/Chapter06A_13.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[与非门;互补CMOS逻辑门的棒图与非门]
+        \includegraphics[scale=0.9]{build/Chapter06A_14.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[或非门;互补CMOS逻辑门的棒图或非门]
+        \includegraphics[scale=0.9]{build/Chapter06A_15.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+如\xref{fig:互补CMOS逻辑门的棒图与非门}和\xref{fig:互补CMOS逻辑门的棒图或非门}所示，与非门和或非门的棒图复杂了一些，这里需要解释的是共享有源区的问题。在实际的数字电路制造中，若两个晶体管是串联或并联，且两者在版图上处于相邻的位置，那么，我们可以让两者直接共用一个源漏极实现这种连接，不需要上层金属引线。
+\begin{itemize}
+    \item 若有源区共享的是两个漏极，那么这两个晶体管是并联的。
+    \item 若有源区共享的是一个漏极和一个源极，那么这两个晶体管是串联的。
+\end{itemize}
+
+\subsection{静态互补CMOS的延时分析}
+在本小节中，我们将以与非门为例，分析互补CMOS的延时，如\xref{tab:与非门的上升沿延时分析}和\xref{tab:与非门的下降沿延时分析}所示。与反相器不同，延时除了来自输出端电容$C_L$的充放电，延时还可能来自内部节点$C_{int}$的充放电。
+
+% \subsubsection{延时的分析}
+\newcolumntype{I}{>{\hsize=1.25\hsize\linewidth=\hsize\centering\arraybackslash}X}
+\newcolumntype{J}{>{\hsize=0.75\hsize\linewidth=\hsize\centering\arraybackslash}X}
+\begin{Tablex}[与非门的上升沿延时分析]{|c|I|I|J|J|}
+<描述&原状态&新状态&$C_L$延时&$C_{int}$延时\\>
+    \xcell<c>{$A,B=11\to 01$\\[3mm] $F=0\to 1$}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_16.fig.pdf}}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_17.fig.pdf}}&
+    $R_pC_L$&$0$\\ \hlinelig
+    \xcell<c>{$A,B=11\to 10$\\[3mm] $F=0\to 1$}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_16.fig.pdf}}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_18.fig.pdf}}&
+    $R_pC_L$&$(R_p+R_n)C_{int}$\\ \hlinelig
+    \xcell<c>{$A,B=11\to 00$\\[3mm] $F=0\to 1$}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_16.fig.pdf}}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_19.fig.pdf}}&
+    $R_pC_L/2$&$0$\\
+\end{Tablex}
+
+\begin{Tablex}[与非门的下降沿延时分析]{|c|I|I|J|J|}
+    <描述&原状态&新状态&$C_L$延时&$C_{int}$延时\\>
+    \xcell<c>{$A,B=01\to 11$\\[3mm] $F=1\to 0$}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_20.fig.pdf}}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_21.fig.pdf}}&
+    $2R_nC_L$&$0$\\ \hlinelig
+    \xcell<c>{$A,B=10\to 11$\\[3mm] $F=1\to 0$}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_22.fig.pdf}}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_23.fig.pdf}}&
+    $2R_pC_L$&$R_nC_{int}$\\ \hlinelig
+    \xcell<c>{$A,B=00\to 11$\\[3mm] $F=1\to 0$}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_24.fig.pdf}}&
+    \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_25.fig.pdf}}&
+    $2R_pC_L$&$R_nC_{int}$ or $0$\\
+\end{Tablex}
+
+我们知道，对于与非门，输入为$00,01,10$时输出$1$，输入为$11$时输出$0$，因此\goodbreak
+\begin{itemize}
+    \item \xref{tab:与非门的上升沿延时分析}展示的是输出$F=0\to 1$的情况，这包含$A,B=11\to 00,01,10$三种可能。
+    \item \xref{tab:与非门的下降沿延时分析}展示的是输出$F=1\to 0$的情况，这包含$A,B=00,01,10\to 11$三种可能。
+\end{itemize}
+
+\xref{tab:与非门的上升沿延时分析}指出，逻辑门的上升沿延时$t_{pLH}$取决于PUN的电阻网络，与非门的PUN是并联电阻网络，因此，延时通常是$t_{pLH}=R_pC_L$，但特别的，如果是$A,B=11\to 00$的输入翻转，此时两个并联电阻$R_p$同时导通，延时将降低为$t_{pLH}=R_{p}C_L/2$，但这只是特例。另外，值得注意的是，如果是$A,B=11\to 10$的情况，即翻转后$A$仍然导通，那么位于$A,B$间的内部节点电容也将被充电，造成的延时为$(R_p+R_n)C_{int}$，介于$C_{int}\ll C_L$，这里可以忽略内部延时。
+
+\xref{tab:与非门的下降沿延时分析}指出，逻辑门的下降沿延时$t_{pHL}$取决于PDN的电阻网络，与非门的PDN是串联电阻网络，因此，延时是$t_{pHL}=2R_nC_L$，相当于反相器的两倍。与非门的下降沿有一种比较特殊的情况，即当$A,B=00\to 11$时，由于初始状态内部节点是悬空的，取决于逻辑门的前续状态，可能为$V_{DD}$需要放电至$0$，可能为$0$无需放电，这体现了逻辑门中延时计算的复杂性。
+
+\subsubsection{延时对称与尺寸规划}
+在\xref{chap:CMOS反相器}中，我们曾仔细讨论过反相器尺寸规划问题（$\beta$为PMOS和NMOS的宽度比）
+\begin{itemize}
+    \item \xref{subsec:开关阈值的计算}指出$\beta=3.5$能使开关阈值对称。
+    \item \xref{subsec:传播延时}指出$\beta=r_0=31/13=2.384\approx 2$能使延时对称。
+\end{itemize}
+这里我们比较关心的是延时对称，即$\beta=2$，然而，逻辑门比反相器要复杂一些，通过上面的讨论，忽略一些诸如内部延时和并联同时导通使延时减半之类的次要问题，可以归纳出电阻网络的连接方式对延时的影响是：\empx{并联不改变延时}，\empx{串联加倍延时}。故有以下尺寸规划原则
+\begin{itemize}
+    \item NMOS的基础尺寸为$1$，PMOS的基础尺寸为$2$。
+    \item \textbf{并联不变}：当发生并联时，晶体管的尺寸应当保持不变。
+    \item \textbf{串联加倍}：当发生串联时，晶体管的尺寸应当加倍（若是$N$个管串联则加$N$倍）。
+\end{itemize}
+\begin{Figure}[互补CMOS逻辑门的尺寸规划]
+    \begin{FigureSub}[非门;互补CMOS逻辑门的尺寸规划非门]
+        \includegraphics[scale=0.8]{build/Chapter06A_28.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[与非门;互补CMOS逻辑门的尺寸规划与非门]
+        \includegraphics[scale=0.8]{build/Chapter06A_26.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[或非门;互补CMOS逻辑门的尺寸规划或非门]
+        \includegraphics[scale=0.8]{build/Chapter06A_27.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+若对此感到困惑，请回忆这个结论：晶体管的等效电阻反比于晶体管尺寸。这也就是为什么在串联时，我们需要将晶体管的尺寸加倍以减半每个晶体管的电阻，从而使总延时保持不变。
+
+% \subsubsection{延时与扇入扇出的关系}
+% \begin{BoxFormula}[延时与扇入扇出的关系]
+%     设扇入和扇出分别为$FI$和$FO$，则延时为
+%     \begin{Equation}
+%         t_p=\alpha_1FI+\alpha_2FI^2+\alpha_3FO
+%     \end{Equation}
+% \end{BoxFormula}
+% 我们可以这样解读这个公式，考虑一个与非门，扇入为$FI$，扇出为$FO$
+% \begin{itemize}
+%     \item 输出端负载电容$C_L$来自两个部分，
+%     \item 对于上升沿，有$t_{pLH}\propto FI$，这是因为扇入的增加
+% \end{itemize}
+
+% % \begin{Figure}[四输入与非门]
+% %     \includegraphics[scale=0.8]{build/Chapter06A_29.fig.pdf}
+% % \end{Figure}
+
+% 在上升沿，参照\xref{tab:与非门的上升沿延时分析}，忽略内部节点，考虑最坏情况
+% \begin{Equation}
+%     t_{pLH}=R_{p}C_L
+% \end{Equation}
+% 在下降沿，参照\xref{tab:与非门的下降沿延时分析}，忽略内部节点
+% \begin{Equation}
+%     t_{pHL}=FI\cdot R_nC_L
+% \end{Equation}
+% 但是，由于$C_L$由
+
+\subsubsection{延时在网络中的考虑}
+正如\xref{subsec:通过反相器链优化传播延时}中提到的，使一个孤立的门的传播延时最小是一个脱离实际的努力。器件的尺寸应当在具体的环境中确定。在\xref{subsec:通过反相器链优化传播延时}中，已经建立了一种针对反相器的方法
+\begin{itemize}
+    \item 使用尺寸逐级增大的反相器链可以有效降低带大负载的传播延时。
+    \item 当级数$N$固定时，令反相器链每一级的扇出$f=(C_{L}/C_{in})^{1/N}$相等时延时最小。
+    \item 当级数$N$可以选择时，令反相器链每一级的扇出$f=f_{opt}=3.591\approx 4$时延时最小。
+\end{itemize}
+现在，我们试图将这种思想，延续到对一般组合逻辑网络的规划中，事实证明，这是可行的！
+
+根据\fancyref{fml:反相器的基本延时公式}
+\begin{Equation}
+    t_p=t_{p0}(1+f/\gamma)
+\end{Equation}
+现在我们需要将其修改为
+\begin{Equation}
+    t_p=t_{p0}\qty(p+fg/\gamma)
+\end{Equation}
+其中，各参量的意义是
+\begin{itemize}
+    \item 符号$t_{p0}$代表反相器本征延时，即反相器无外部负载电容时，由自载电容导致的延时。
+    \item 符号$p$代表复合门和反相器本征延时$t_{p0}$之比，取决于复合门的拓扑结构与版图样式。
+    \item 符号$f$称为\uwave{电气努力}（Electrical Effort），代表该逻辑门的外部负载电容与其输入电容的比值。电气努力$f$的定义与原先等效扇出$f$是一致的，只不过换了一个名称罢了。
+    \item 符号$g$称为\uwave{逻辑努力}（Logical Effor），代表了该逻辑门的输入电容与反相器的输入电容的比值。逻辑努力$g$的定义其实与前面提到的尺寸规划有关，为了使复合门具有类似反相器的延时，需要增大晶体管的尺寸以减小电阻，但是这同时增大了晶体管的电容。
+\end{itemize}
+在\xref{tab:不同逻辑门的本征延时比}中，我们列出了一些常见逻辑门的本征延时比$p$的值。
+\begin{Tablex}[不同逻辑门的本征延时比]{cYYYY}
+    <\mr{2}{门的类型/本征延时比$p$的取值}&\mc{4}(c){输入的数目}\\
+    &$FI=1$&$FI=2$&$FI=3$&$FI=n$\\>
+    反相器&1&--&--&--\\
+    与非门&--&2&3&$n$\\
+    或非门&--&2&3&$n$\\
+    异或门&--&4&12&$n2^{n-1}$\\
+    多路开关&--&4&6&$2n$\\
+\end{Tablex}
+在\xref{tab:不同逻辑门的逻辑努力}中，我们列出了一些常见逻辑门的逻辑努力$g$的值。这里，我们简要解释一下为何两输入与非门和或非门的逻辑努力分别为$g=4/3$和$g=5/3$，在\xref{fig:互补CMOS逻辑门的尺寸规划}中，我们可以看到
+\begin{itemize}
+    \item \xref{fig:互补CMOS逻辑门的尺寸规划非门}指出，非门输入端$A$的电容总和为$3$。
+    \item \xref{fig:互补CMOS逻辑门的尺寸规划与非门}指出，与非门输入端$A,B$的电容总和均为$4=2+2$。
+    \item \xref{fig:互补CMOS逻辑门的尺寸规划与非门}指出，或非门输入端$A,B$的电容总和均为$5+4+1$。
+\end{itemize}
+因此，两输入与非门和或非门的输入电容与反相器的比，就是$4/3$和$5/3$，这就是逻辑努力。
+\begin{Tablex}[不同逻辑门的逻辑努力]{cYYYY}
+    <\mr{2}{门的类型/逻辑努力$g$的取值}&\mc{4}(c){输入的数目}\\
+    &$FI=1$&$FI=2$&$FI=3$&$FI=n$\\>
+    反相器&1&--&--&--\\
+    与非门&--&4/3&5/3&$(n+2)/3$\\
+    或非门&--&5/3&7/3&$(2n+1)/3$\\
+    异或门&--&4&12&--\\
+    多路开关&--&2&2&$2$\\
+\end{Tablex}
+现在我们总结一下前面的结论
+\begin{BoxFormula}[复合门的基本延时公式]
+    复合门的基本延时公式是指
+    \begin{Equation}
+        t_p=t_{p0}(p+fg/\gamma)
+    \end{Equation}
+    亦可以改写为
+    \begin{Equation}
+        t_p=t_{p0}(p+h/\gamma)
+    \end{Equation}
+    其中$h=fg$称为\uwave{门努力}（Gate Effort）。
+\end{BoxFormula}
+现在我们就可以计算一条通过组合逻辑块的总延时
+\begin{Equation}
+    t_p=\Sum[j=1][N]t_{p,j}=t_{p0}\qty(p_j+\frac{f_jg_j}{\gamma})
+\end{Equation}
+运用相似的方法，可以确定使$t_p$最小，每一级应当具有相同的门努力
+\begin{Equation}
+    f_1g_1=f_2g_2=\cdots=f_jg_j=\cdots=f_Ng_N
+\end{Equation}
+定义路径的逻辑努力$G$，为该路径上各逻辑门的逻辑努力之积
+\begin{Equation}
+    G=\Prod[j=1][N]g_j
+\end{Equation}
+定义路径的电器努力$F$，为路径上最后一级负载电容与第一级输入电容间的关系
+\begin{Equation}
+    F=\frac{C_L}{C_{g1}}
+\end{Equation}
+这里我们显然会有这样的问题，为什么$G=\Prod[j=1][N]g_j$而$F\neq \Prod[j=1][N]f_j$？这是因为在组合逻辑网络中，每个逻辑门可能有多个扇出，这里我们关心的，只有那些保留在路径上的扇出。\goodbreak
+
+基于此，定义逻辑门的\uwave{分支努力}（Branching Effort）
+\begin{Equation}
+    b=\frac{C_\te{on-path}+C_\te{off-path}}{C_\te{on-path}}
+\end{Equation}
+其中，$C_\te{on-path}$是路径上的负载电容，$C_\te{off-path}$是离开这条路径的负载电容，特别的，如果没有分支，那么$b=1$。进一步，可以定义路径分支努力$B$为路径上各逻辑门的分支努力之积
+\begin{Equation}
+    B=\Prod[j=1][N]b_i
+\end{Equation}
+这样一来，路径电器努力$F$就可以用各级逻辑门的电气努力$f_j$和分支努力$b_j$表示
+\begin{Equation}
+    F=\Prod[j=1][N]f_j/b_j
+\end{Equation}
+这样就可以确定总路径努力$H$，即为
+\begin{Equation}
+    H=\Prod[j=1][N]h_j=\Prod[j=1][N]f_jg_j=\Prod[j=1][N](f_j/b_j)(g_j)(b_j)=FGB
+\end{Equation}
+因此，使路径延时的最小门努力就可以表示为
+\begin{Equation}
+    h_j=f_jg_j=\sqrt[N]{H}
+\end{Equation}
+这就是在网络中使延时最优化的尺寸规划方法：先计算出总路径努力$H=FGB$，其中$G,B$分别是路径上各级逻辑门的逻辑努力$g_j$和分支努力$b_j$之积，即$\Prod[j=1][N]g_j$和$\Prod[j=1][N]b_j$，而$F$则是路径上最后一级的负载电容与第一级的输入电容的比值$C_L/C_{g1}$，随后，令每一级逻辑门的门努力$h_j$相等且为$h_j=\sqrt[N]{H}$，最后，由$h_j=f_jg_j$求得各级门的等效扇出$f_j$以确定尺寸。

@@ -16,7 +16,7 @@ Export[nbPDFName,""]
 
 xLaTeX=(MaTeX[
 	#1,Magnification->#2,
-	"Preamble"->{"\\usepackage{siunitx}","\\usepackage{physics}","\\usepackage{upgreek}"}])&;
+	"Preamble"->{"\\usepackage{siunitx}","\\usepackage{physics}","\\usepackage{upgreek}","\\usepackage{xcolor}"}])&;
 
 
 xLabelFont={FontColor->Black,FontFamily->"Latin Modern",FontSize->5}
@@ -56,9 +56,10 @@ fig1=LogLinearPlot[Evaluate[{VM,VMa}/.{VM->xVM,VMa->xVMa}/.{r->xr}/.val],{WLpn,1
 		Style["\:8fd1\:4f3c\:503c",FontSize->8,FontFamily->"Noto Sans Mono CJK SC"]},
 		LegendFunction->"Panel",
 		LegendLayout -> {"Row",2}],{Left,Top}],
-	FrameTicks->{xTicksLog[{-2,2,1}],xTicks[{0.0,2.5,0.5},{2,1}]},
-	GridLines->{xGridsLog[{-2,2,1},{0.01,100}],xGrids[{0.0,2.5,0.5}]},
-	Evaluate@xFigLabel["(W/L)_p/(W/L)_n","V_M~(\\si{V})"],
+	Epilog->{Red,Point[{{Log[3.5]//.val,1.25}}],Text[xLaTeX["\\textcolor{red}{\\beta=3.5}",0.7],{Log[3.5],1.1}]},
+	FrameTicks->{xTicksLog[{-2,2,1}],xTicks[{0.0,2.5,0.25},{3,2}]},
+	GridLines->{xGridsLog[{-2,2,1},{0.01,100}],xGrids[{0.0,2.5,0.25}]},
+	Evaluate@xFigLabel["\\beta=(W/L)_p/(W/L)_n","V_M~(\\si{V})"],
 	Evaluate@xFigConfig]
 
 
