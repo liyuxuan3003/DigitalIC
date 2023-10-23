@@ -1,7 +1,7 @@
 \section{静态传输管逻辑}
 
 \subsection{传输管逻辑}
-传输管逻辑采取了另外一种方法减小所需的晶体管数目。我们知道，本质上，数字电路的所有晶体管都是用作开关，过去，在互补CMOS逻辑和伪NMOS逻辑中，这些开关都是存在于输出和电源间，输入和输出是隔离的。传输管的新想法就是，输入为什么不能直接用于驱动输出呢？\xref{fig:传输管的基本原理}给出了传输管逻辑的基本原理，信号$A$是输入，信号$B$则控制了传输管的通断
+\uwave{传输管逻辑}采取了另外一种方法减小所需的晶体管数目。我们知道，本质上，数字电路的所有晶体管都是用作开关，过去，在互补CMOS逻辑和伪NMOS逻辑中，这些开关都是存在于输出和电源间，输入和输出是隔离的。传输管的新想法就是，输入为什么不能直接用于驱动输出呢？\xref{fig:传输管的基本原理}给出了传输管逻辑的基本原理，信号$A$是输入，信号$B$则控制了传输管的通断
 \begin{itemize}
     \item 当$B=1$时，传输管导通，此时输出节点将等于输入信号$A$的值。
     \item 当$B=0$时，传输管截止，此时输出节点将处于悬空状态。
@@ -99,3 +99,93 @@
     \item 当传输管$M_n$传输高电平，然而由于阈值损失问题，实际只能弱上拉至$V_{DD}-V_{Tn}$，但是，这足矣驱动反相器了。传输管输出，经反相器变为低电平，反馈管$M_r$被开启，而此时，传输管的输出节点与$V_{DD}$接通，被强上拉至$V_{DD}$，这样就实现了电平恢复。
 \end{itemize}
 电平恢复的一个主要问题在于有比逻辑，这发生在当$A=0$而$B=0\to 1$的翻转过程中，该过程中，$A=0$通过$M_n$对传输管输出节点下拉，$V_{DD}$通过$M_r$对传输管输出节点上拉，而这就要求$M_n$必须强于$M_r$（即$M_n$的尺寸应小于$M_r$，或$M_n$的电阻应小于$M_r$），因为这种情况下传输管的输出节点必须被下拉后才能驱动反相器输出高电平关断反馈管，否则状态将被锁死（反馈常常会导致状态的锁定，这也不总是坏事，反馈的这种特性被用于构造锁存器）。
+
+\subsection{传输门逻辑}
+\uwave{传输门逻辑}是另外一种解决传输管逻辑阈值损失的方案，它的核心思想如下
+\begin{itemize}
+    \item NMOS器件适合下拉，传递强逻辑$0$和弱逻辑$1$。
+    \item PMOS器件适合上拉，传递强逻辑$1$和弱逻辑$0$。
+\end{itemize}
+传输门逻辑正是结合了这两种器件的优点，它将NMOS器件与PMOS器件并联，如\xref{fig:传输门的基本原理}
+\begin{Figure}[传输门的基本原理]
+    \includegraphics{build/Chapter06C_02.fig.pdf}
+\end{Figure}
+传输门是如何工作的呢
+\begin{itemize}
+    \item 当$B=0$时，NMOS和PMOS均关断，即传输门关断。
+    \item 当$B=1$时，NMOS和PMOS均导通，即传输门开启。
+    \item 若传递$A=1$，NMOS在上拉至$V_{DD}-V_{Tn}$时会截止，但PMOS可以继续上拉至$V_{DD}$。
+    \item 若传递$A=0$，PMOS在下拉至$V_{Tp}$时会截止，但NMOS可以继续下拉至$0$。
+\end{itemize}
+由此可见，传输门可以实现全摆幅输出！关键就是通过互补器件，补偿彼此的阈值损失。\goodbreak
+
+传输门是一个非常可靠的开关，它可以用来高效的构建某些复杂的逻辑门。
+
+\begin{Figure}[传输门逻辑门]
+    \begin{FigureSub}[传输门多路开关]
+        \includegraphics[scale=0.8]{build/Chapter06C_11.fig.pdf}
+    \end{FigureSub}
+    \begin{FigureSub}[传输门异或门]
+        \includegraphics[scale=0.8]{build/Chapter06C_10.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+\xref{fig:传输门多路开关}展示了一个传输门构造的多路开关，其中，传输门$M_3/M_4$和$M_5/M_6$分别连接了输入信号$A$和$B$，由选择信号$S$控制。$S=1$时信号$A$接入，$S=0$时信号$B$接入。随后还设置了一个反相器，这是为了提高多路开关的负载能力而设置的。最终的逻辑表达式为
+\begin{Equation}
+    F=\xbar{SA+\bar{S}B}
+\end{Equation}
+请注意！这里实现的多路开关实际自带了一个反相器，输出是选中的输入信号的反。
+
+\xref{fig:传输门异或门}展示了一个传输门构造的异或门。这个电路有一些比较特别的地方，首先其两端都是输入$A$，输出信号$F$在电路中间。其次，左端的反相器的电源和地实际连接了$B$和$\bar{B}$。
+
+\xref{fig:传输门异或门}的电路是如何工作的？可以分析如下
+\begin{itemize}
+    \item 当$B=1$时，左端的反相器工作，右端的传输门截止，此时的输出就是$\bar{A}$。
+    \item 当$B=0$时，左端的反相器截止。右端的传输门开启，此时的输出就是$A$。
+\end{itemize}
+由此构成的逻辑就是异或门
+\begin{Equation}
+    F=\bar{A}B+A\bar{B}=A\oplus B
+\end{Equation}
+传输门在实现多路开关和异或门时，相较互补CMOS，可以显著减小所需晶体管的数目。
+
+\subsection{传输门链的延时分析}
+在一些复杂的电路中，常常会出现传输门链。\xref{fig:传输门链}是一个由$n$个传输门构成的链。现在假设其中的所有传输门都导通，输入$0\to 1$，分析该过程中，整个传输门链上产生的延时。
+\begin{Figure}[传输门链]
+    \includegraphics[width=0.98\linewidth]{build/Chapter06C_12.fig.pdf}
+\end{Figure}
+很明显，其中第$k$个节点上电容$C$的充电需要经过$k$个传输门等效电阻$R_{eq}$
+\begin{Equation}
+    t_p=\ln 2\Sum[k=1][n]kR_{eq}C
+\end{Equation}
+这是很简单的数学
+\begin{Equation}
+    t_p=\ln 2R_{eq}C\frac{n(n+1)}{2}
+\end{Equation}
+这意味着传播延时将正比于$n^2$，换言之，延时将随传输门链中开关束的增加而迅速增加。这是很不好的，解决这种长延时的方法是，每隔$m$个传输门就插入一个缓冲器，切断链条。
+
+假设每个缓冲器的延时是$t_{buf}$，则总延时为
+\begin{Equation}
+    t_p=\frac{n}{m}\qty[\ln 2R_{eq}C\frac{m(m+1)}{2}]+\qty[\frac{n}{m}-1]t_{buf}
+\end{Equation}
+化简得到
+\begin{Equation}
+    t_p=\qty[\ln 2R_{eq}C\frac{n(m+1)}{2}]+\qty[\frac{n}{m}-1]t_{buf}
+\end{Equation}
+我们目的是通过调整$m$使$t_p$最小，故求导得到
+\begin{Equation}
+    \pdv{t_p}{m}=\frac{n}{2}\ln 2R_{eq}C-\frac{n}{m^2}t_{buf}=0
+\end{Equation}
+整理得
+\begin{Equation}
+    \frac{n}{2}\ln 2R_{eq}C=\frac{n}{m^2}t_{buf}
+\end{Equation}
+提取出$m^2$
+\begin{Equation}
+    m^2=\frac{2t_{buf}}{\ln 2R_{eq}C}
+\end{Equation}
+解得
+\begin{Equation}
+    m=\sqrt{\frac{2t_{buf}}{\ln 2 R_{eq} C}}
+\end{Equation}
+在当前工艺下典型的$m=3$或$m=4$，即每隔$3$或$4$个传输门插入一个缓冲器是较合适的。
