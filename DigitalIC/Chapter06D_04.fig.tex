@@ -1,0 +1,53 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xC}[0]
+\xValOffset{xL}{xC}[0]
+\xValOffset{xR}{xC}[+3.5]
+\xValProportion{xDio}{xC}{xR}[1/3]
+\xValProportion{xCL}{xC}{xR}[2/3]
+\xValOffset{xBorL}{xL}[-3.7]
+\xValOffset{xBorR}{xR}[+0.95]
+
+\xValDefine{yC}[0]
+\xValOffset{yB}{yC}[-6.0]
+\xValOffset{yA}{yC}[+2.0]
+\xValProportion{yMa}{yA}{yC}[0.35]
+\xValProportion{yMb}{yC}{yB}[1/6]
+\xValProportion{yMc}{yC}{yB}[3/6]
+\xValProportion{yMd}{yC}{yB}[5/6]
+\xValMiddle{yMbz}{yMb}{yMc}
+\xValMiddle{yMcz}{yMc}{yMd}
+\xValOffset{yBorB}{yB}[-1.25]
+\xValOffset{yBorA}{yA}[+1.25]
+
+\xGeneratePoints{xL,xR,xC,xDio,xCL,xBorL,xBorR}{yB,yA,yC,yMa,yMb,yMc,yMd,yMbz,yMcz,yBorB,yBorA}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xC/yMa) node[pmos] (Mp) {$M_p$};
+\path (xC/yMb) node[nmos] (M1) {$M_1$};
+\path (xC/yMc) node[nmos] (M2) {$M_2$};
+\path (xC/yMd) node[nmos] (Me) {$M_e$};
+
+\draw (Mp.S) -- (xC/yA) node[vdd] {$V_{DD}$};
+\draw (Mp.D) -- (M1.D);
+\draw (M1.S) -- (M2.D);
+\draw (M2.S) -- (Me.D);
+\draw (Me.S) -- (xC/yB) node[ground] {};
+
+\draw (xC/yC) to[short,*-o] (xR/yC) node[right] {Out};
+\draw (xCL/yC) node[above] {$V_{DD}\downarrow$} to[C=$C_L$,*-] (xCL/yMc) node[ground] {};
+
+\draw (xC/yMbz) node[circ] {} -- (xDio/yMbz) node[right] {$0\uparrow$} to[C=$C_a$] (xDio/yMc) node[ground] {};
+\draw (xC/yMcz) node[circ] {} -- (xDio/yMcz) node[right] {$0$} to[C=$C_b$] (xDio/yMd) node[ground] {};
+
+\draw (Mp.G) node[ocirc] {} node[left] {CLK};
+\draw (M1.G) node[ocirc] {} node[left] {$A=0\to V_{DD}$};
+\draw (M2.G) node[ocirc] {} node[left] {$B=0$};
+\draw (Me.G) node[ocirc] {} node[left] {CLK};
+
+\end{tikzpicture}
+\end{document}

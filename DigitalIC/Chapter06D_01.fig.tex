@@ -1,0 +1,53 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-2]
+\xValDefine{xR}[+2]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xOut}{xL}{xR}[1.2]
+\xValProportion{xCL}{xC}{xOut}[0.75]
+\xValOffset{xBorL}{xL}[-1.2]
+\xValOffset{xBorR}{xOut}[+0.95]
+
+\xValDefine{yB}[-4.5]
+\xValDefine{yA}[+4.5]
+\xValProportion{yC}{yB}{yA}[0.7]
+\xValProportion{yPMOS}{yA}{yC}[0.45]
+\xValProportion{yNMOS}{yB}{yC}[0.2]
+\xValProportion{yPDN}{yB}{yC}[0.63]
+\xValOffset{yBorB}{yB}[-1.25]
+\xValOffset{yBorA}{yA}[+1.25]
+
+\xGeneratePoints{xL,xR,xC,xCL,xOut,xBorL,xBorR}{yB,yA,yC,yBorB,yBorA,yPMOS,yNMOS,yPDN}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\ctikzset{multipoles/qfpchip/pin spacing=0.3}
+
+\path (xC/yPMOS) node[pmos] (PMOS) {PMOS~$M_p$};
+\path (xC/yNMOS) node[nmos] (NMOS) {NMOS~$M_e$};
+
+\draw (xC/yPDN) node[qfpchip,
+num pins=20, hide numbers, no topmark,
+external pins width=0] (PDN) {PDN};
+
+\draw (xL |- PDN.pin 1) node[left=0.03cm] {$\te{In}_1$} to[short,o-] (PDN.pin 1);
+\draw (xL |- PDN.pin 2) node[left=0.03cm] {$\te{In}_2$} to[short,o-] (PDN.pin 2);
+\draw (xL |- PDN.pin 5) node[left] {$\te{In}_n$} to[short,o-] (PDN.pin 5);
+\path ($(xL|-PDN.pin 3)!0.3!(xL|-PDN.pin 4)$) node {$\vdots$};
+
+\draw (PMOS.G) node[above] {\tiny G} to[short,-o] (xL/yPMOS) node[left] {CLK};
+\draw (PMOS.D) node[right] {\tiny D} -- (PDN.pin 18);
+\draw (PMOS.S) node[right] {\tiny S} -- (PMOS.S |- yA) node[vdd] {$V_{DD}$};
+\draw (PDN.pin 8) -- (NMOS.D) node[right] {\tiny D};
+\draw (NMOS.S) node[right] {\tiny S} -- (xC/yB) node[ground] {};
+\draw (NMOS.G) node[above] {\tiny G} to[short,-o] (xL/yNMOS) node[left] {CLK};
+\draw (xCL/yC) to[C=$C_L$] (xCL/yPDN) node[ground] {}; 
+
+
+\draw (xC/yC) to[short,*-o] (xOut/yC) node[right] {Out};
+
+\end{tikzpicture}
+\end{document}
