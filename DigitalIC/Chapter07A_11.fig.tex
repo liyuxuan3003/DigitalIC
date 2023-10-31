@@ -1,0 +1,47 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-3.5]
+\xValDefine{xR}[+3.5]
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xM}{xL}{xR}[0.7]
+\xValProportion{xPa}{xL}{xM}[1/4]
+\xValProportion{xPb}{xL}{xM}[3/4]
+\xValProportion{xQ}{xM}{xR}[0.75]
+\xValProportion{xPc}{xM}{xQ}
+\xValProportion{xPbx}{xPa}{xPb}[0.65]
+
+\xValDefine{yB}[-1]
+\xValDefine{yA}[+1]
+\xValMiddle{yC}{yA}{yB}
+\xValOffset{yI}{yA}[1.6]
+\xValOffset{yBorB}{yB}[-1.70]
+\xValOffset{yBorA}{yI}[+0.25]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xM,xPa,xPb,xPbx,xPc,xQ}{yB,yA,yC,yI,yBorB,yBorA}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xPa/yA) node[not port] (I1) {} node[above=0.25cm] {$I_0$}; 
+\path (xPc/yC) node[not port] (I2) {} node[above=0.25cm] {$I_2$}; 
+
+\path (xPb/yB) node[nmos,rotate=90] (T0n) {} node {$T_{1}$};
+\path (xPb/yB) node[pmos,rotate=-90] (T0p) {};
+
+\draw (xL/yB) node[ocirc] {} node[left] {$D$} -- (T0n.D);
+
+\draw (T0n.S) -- (xM/yB) -- (xM/yA) -- (I1.out);
+\draw (xM/yC) node[circ] {} -- (I2.in);
+\draw (I2.out) -- (xR/yC) node[ocirc] {} node[right] {$Q$};
+\draw (xQ/yC) node[circ] {} -- (xQ/yI) -- (xL/yI) -- (xL/yA) -- (I1.in);
+
+
+\draw (T0p.G) node[ocirc] {} node[above] {$\CLK*$};
+\draw (T0n.G) node[ocirc] {} node[below] {$\CLK$};
+
+\end{tikzpicture}
+\end{document}

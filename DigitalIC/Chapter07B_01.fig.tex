@@ -1,0 +1,62 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-7]
+\xValDefine{xR}[+7]
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+
+\xValProportion{xPal}{xL}{xC}[1/4]
+\xValProportion{xPbl}{xL}{xC}[2/4]
+\xValProportion{xPcl}{xL}{xC}[3/4]
+\xValProportion{xPclA}{xPbl}{xPcl}
+\xValProportion{xPclB}{xPcl}{xC}
+
+\xValProportion{xPar}{xC}{xR}[1/4]
+\xValProportion{xPbr}{xC}{xR}[2/4]
+\xValProportion{xPcr}{xC}{xR}[3/4]
+\xValProportion{xPcrA}{xPbr}{xPcr}
+\xValProportion{xPcrB}{xPcr}{xR}
+
+\xValDefine{yB}[-1]
+\xValDefine{yA}[+1]
+\xValMiddle{yC}{yA}{yB}
+\xValOffset{yBorB}{yB}[-1.00]
+\xValOffset{yBorA}{yA}[+2.20]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xPal,xPbl,xPcl,xPclA,xPclB,xPar,xPbr,xPcr,xPcrA,xPcrB}{yB,yA,yC,yBorB,yBorA}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xPcl/yA) node[not port] (I1l) {} node[above=0.25cm] {$I_1$}; 
+\path (xPcr/yA) node[not port] (I1r) {} node[above=0.25cm] {$I_1'$}; 
+
+\path (xPal/yA) node[nmos,rotate=90] (T1nl) {} node {$T_{1}$};
+\path (xPar/yA) node[nmos,rotate=90] (T1nr) {} node {$T_{1}'$};
+
+\path (xPal/yA) node[pmos,rotate=-90] (T1pl) {};
+\path (xPar/yA) node[pmos,rotate=-90] (T1pr) {};
+
+\draw (xL/yA) node[ocirc] {} node[left] {$D$} -- (T1nl.D);
+\draw (T1nl.S)  -- (I1l.in);
+\draw (I1l.out) -- (T1nr.D);
+\draw (T1nr.S) -- (I1r.in);
+\draw (I1r.out) -- (xR/yA) node[right] {$Q$} node[ocirc] {};
+
+\draw (xPbl/yA) node[above] {$A$} to[C,*-,l_=$C_1$] (xPbl/yB) node[ground] {};
+\draw (xPbr/yA) node[above] {$B$} to[C,*-,l_=$C_1'$] (xPbr/yB) node[ground] {};
+
+\path (T1nl.G) node[ocirc] {} node[below] {$\CLK*$};
+\path (T1nr.G) node[ocirc] {} node[below] {$\CLK\vphantom{\CLK*}$};
+
+\path (T1pl.G) node[ocirc] {} node[above] {$\CLK$};
+\path (T1pr.G) node[ocirc] {} node[above] {$\CLK*$};
+
+\path (xPbl/yA) node[above=1.5cm] {\small 主锁存器（负锁存器）};
+\path (xPbr/yA) node[above=1.5cm] {\small 负锁存器（正锁存器）};
+
+\end{tikzpicture}
+\end{document}

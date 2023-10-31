@@ -1,0 +1,27 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+    
+\xValDefine{xC}[0]
+\xValDefine{xBorL}[-2.5]
+\xValDefine{xBorR}[+2.5]
+
+\xValDefine{yC}[0]
+\xValDefine{yBorB}[-1.5]
+\xValDefine{yBorA}[+1.5]
+
+\xGeneratePoints{xC,xBorL,xBorR}{yC,yBorB,yBorA}
+
+\path (xC/yC) node[flipflop D] (M) {};
+
+\path (M.pin 1) node[left] {$D$};
+\path (M.pin 3) node[left] {CLK};
+\path (M.pin 4) node[right] {$\bar{Q}$};
+\path (M.pin 6) node[right] {$Q$};
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+
+\end{tikzpicture}
+\end{document}

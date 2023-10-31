@@ -6,6 +6,8 @@
 
 \ctikzset{logic ports/scale=0.65}
 
+\NewDocumentCommand{\CLK}{s}{\IfBooleanTF{#1}{\xbar{\te{CLK}}}{\te{CLK}}}
+
 \def\xEval#1{\expandafter\csname#1\endcsname}
 
 \NewDocumentCommand{\xGeneratePoints}{mm}%

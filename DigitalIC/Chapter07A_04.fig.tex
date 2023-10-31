@@ -1,0 +1,24 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-4]
+\xValDefine{xR}[+4]
+\xValOffset{xBorL}{xL}[-0.25]
+\xValOffset{xBorR}{xR}[+0.25]
+\xValMiddle{xC}{xL}{xR}
+
+\xValDefine{yB}[-1.75]
+\xValDefine{yA}[+1.75]
+\xValOffset{yBorB}{yB}[-0.25]
+\xValOffset{yBorA}{yA}[+0.75]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC}{yB,yA,yBorB,yBorA}
+
+\draw (xL/yA) node[above right] {$V_{in1}$} to[inline not] (xC/yA) to[inline not] (xR/yA) node[above left] {$V_{out2}$} -- (xR/yB) -- node[above] {$V_{in1}=V_{out2}$} (xL/yB) -- (xL/yA);
+
+\path (xC/yA) node[above] {$V_{out1}=V_{in2}$};
+
+\end{tikzpicture}
+\end{document}

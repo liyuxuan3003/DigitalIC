@@ -1,0 +1,49 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-4.4]
+\xValDefine{xR}[+4.5]
+\xValOffset{xBorL}{xL}[-1.1]
+\xValOffset{xBorR}{xR}[+1]
+\xValProportion{xC}{xL}{xR}[0.3]
+\xValProportion{xT}{xL}{xC}[0.6]
+\xValProportion{xDa}{xC}{xR}[1/4]
+\xValProportion{xDb}{xC}{xR}[2/4]
+\xValProportion{xDc}{xC}{xR}[3/4]
+\xValMiddle{xN}{xDc}{xR}
+
+\xValDefine{yB}[-1]
+\xValDefine{yA}[+1]
+\xValMiddle{yC}{yA}{yB}
+\xValOffset{yCLK}{yA}[2.0]
+\xValOffset{yBorB}{yB}[-1.75]
+\xValOffset{yBorA}{yCLK}[+0.25]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xT,xDa,xDb,xDc,xN}{yB,yA,yC,yCLK,yBorB,yBorA}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xT/yA) node[pmos] (P) {$P$};
+\path (xT/yB) node[nmos,xscale=-1] (N) {\scalebox{-1}[1]{$N$}};
+
+\path (xDa/yC) node[and port] (A1) {};
+\path (xDb/yC) node[not port] (I1) {};
+\path (xDc/yC) node[not port] (I2) {};
+
+\draw (P.D) -- (N.D);
+\path (P.S) node[vdd] {$V_{DD}$};
+\path (N.S) node[ground] {};
+
+\draw (xT|-A1.in 2) node[circ] {} -- (A1.in 2);
+\draw (A1.out) -- (I1.in);
+\draw (I1.out) -- (I2.in);
+\draw (I2.out) -- (xR/yC) node[ocirc] {} node[above] {CLKG};
+\draw (xN/yC) node[circ] {} -- (xN|-N.G) -- (N.G);
+
+\draw (A1.in 1) -- (xC |- A1.in 1) -- (xC/yCLK) -- (xL/yCLK) node[ocirc] {} node[left] {CLK};
+\draw (P.G) -- (P.G |- yCLK) node[circ] {};
+
+\end{tikzpicture}
+\end{document}

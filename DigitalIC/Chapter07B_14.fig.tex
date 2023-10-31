@@ -1,0 +1,76 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-5]
+\xValDefine{xR}[+5]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-0.9]
+\xValOffset{xBorR}{xR}[+0.9]
+\xValProportion{xA}{xL}{xR}[1/4]
+\xValProportion{xB}{xL}{xR}[3/4]
+\xValOffset{xAx}{xA}[1.5]
+\xValOffset{xBx}{xB}[1.5]
+
+\xValDefine{yC}[0]
+\xValOffset{yBa}{yC}[0.8]
+\xValOffset{yAa}{yBa}[1.50]
+\xValMirror{yBb}{yAa}{yC}
+\xValMirror{yAb}{yBa}{yC}
+\xValOffset{yBorAa}{yAa}[+0.25]
+\xValOffset{yBorBa}{yBa}[-0.25]
+\xValMirror{yBorAb}{yBorBa}{yC}
+\xValMirror{yBorBb}{yBorAa}{yC}
+\xValProportion{yVTA}{yAa}{yBa}[0.2]
+\xValSymmetrize{yVTB}{yVTA}{yAa}{yBa}
+
+\xValOffset{yNA}{yBorBb}[-0.5]
+\xValOffset{yNB}{yNA}[-0.5]
+\xValMiddle{yN}{yNA}{yNB}
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR,xA,xB,xAx,xBx}{yC,yBa,yAa,yBb,yAb,yBorAa,yBorBa,yBorAb,yBorBb,yVTA,yVTB,yNA,yNB,yN}
+
+\draw[ultra thin] (xBorL/yBorBb) rectangle (xBorR/yBorAb);
+\draw[ultra thin] (xBorL/yBorBa) rectangle (xBorR/yBorAa);
+
+\foreach \y in {yBa,yAa,yBb,yAb}
+{
+    \draw[thin,gray,dotted] (xL/\y) -- (xR/\y);
+}
+
+\foreach \x in {xL,xR,xA,xB,xAx,xBx}
+{
+    \draw[thin,gray,dotted] (\x/yAa) -- (\x/yBa);
+    \draw[thin,gray,dotted] (\x/yAb) -- (\x/yBb);
+    \draw[ultra thin] (\x/yNA) -- (\x/yNB);
+}
+
+\path (xL/yBa) node[left,gray]  {\small $0$};
+\path (xR/yBa) node[right,gray] {\small $0$};
+\path (xL/yAa) node[left,gray]  {\small $V_{DD}$};
+\path (xR/yAa) node[right,gray] {\small $V_{DD}$};
+
+\path (xL/yBb) node[left,gray]  {\small $0$};
+\path (xR/yBb) node[right,gray] {\small $0$};
+\path (xL/yAb) node[left,gray]  {\small $V_{DD}$};
+\path (xR/yAb) node[right,gray] {\small $V_{DD}$};
+
+\path (xC/yBorAa) node[above] {$\CLK$};
+\path (xC/yBorAb) node[above] {$\CLK*$};
+
+\draw[thick] (xL/yAa) -- (xA/yAa) -- (xA/yBa) -- (xB/yBa) -- (xB/yAa) -- (xR/yAa);
+\draw[thick] (xL/yBb) -- (xAx/yBb) -- (xAx/yAb) -- (xBx/yAb) -- (xBx/yBb) -- (xR/yBb);
+
+\draw [-latex,ultra thin] (xL/yN) node[ocirc] {} -- node[above] {\small 1--0} node[below] {\tiny 主级保持~从级透明} (xA/yN);
+
+\draw [latex-latex,ultra thin] (xA/yN) -- node[above] {\small 0--0} node[below] {\tiny 0--0交叠} (xAx/yN);
+
+\draw [latex-latex,ultra thin] (xAx/yN) -- node[above] {\small 0--1} node[below] {\tiny 主级透明~从级保持} (xB/yN);
+
+\draw [latex-latex,ultra thin] (xB/yN) -- node[above] {\small 1--1} node[below] {\tiny 1--1交叠} (xBx/yN);
+
+\draw[latex-,ultra thin] (xBx/yN) -- node[below] {\tiny 循环} node[above] {$\cdots$} (xR/yN) node[ocirc] {};
+
+\end{tikzpicture}
+\end{document}

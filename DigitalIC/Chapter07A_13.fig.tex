@@ -1,0 +1,52 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-4.8]
+\xValDefine{xR}[+4.8]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+\xValProportion{xMl}{xL}{xC}[0.4]
+\xValProportion{xIl}{xL}{xC}[0.8]
+\xValProportion{xMr}{xC}{xR}[0.4]
+\xValProportion{xIr}{xC}{xR}[0.8]
+
+\xValDefine{yB}[-1.6]
+\xValDefine{yA}[+1.6]
+\xValMiddle{yC}{yA}{yB}
+\xValOffset{yBorB}{yB}[-0.75]
+\xValOffset{yBorA}{yA}[+0.74]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xMl,xIl,xMr,xIr}{yB,yA,yC,yBorB,yBorA}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\tikzset{mux21/.style={muxdemux,
+muxdemux def={Lh=4,Rh=2,NL=2,NR=1,NT=0,NB=1,w=1.2}}}
+
+\path (xMl/yC) node[mux21] (muxl) {};
+\path (xMr/yC) node[mux21] (muxr) {};
+
+\path (muxl.blpin 1) node[right] {$0$};
+\path (muxl.blpin 2) node[right] {$1$};
+
+\path (muxr.blpin 1) node[right] {$0$};
+\path (muxr.blpin 2) node[right] {$1$};
+
+\draw (muxl.bpin 1) -- (muxl.bpin 1 |- yB) node[below] {$\CLK*$} node[ocirc] {};
+\draw (muxr.bpin 1) -- (muxr.bpin 1 |- yB) node[below] {$\CLK\vphantom{\CLK*}$} node[ocirc] {};
+
+\draw (muxl.lpin 2) -- (xL |- muxl.lpin 2) node[left] {$D$} node[ocirc] {};
+\draw (muxl.rpin 1) -- (xC |- muxl.rpin 1) -- (xC |- muxr.lpin 2) node[left] {$Q_M$} -- (muxr.lpin 2);
+\draw (muxr.rpin 1) -- (xR |- muxr.rpin 1) node[ocirc] {} node[right] {$Q$};
+
+\draw (xIl/yC) node[circ] {} -- (xIl/yA) -- (xL/yA) -- (xL |- muxl.lpin 1) -- (muxl.lpin 1);
+\draw (xIr/yC) node[circ] {} -- (xIr/yA) -- (xC/yA) -- (xC |- muxr.lpin 1) -- (muxr.lpin 1);
+
+\path (xMl/yA) node[above] {\small 主锁存器（负锁存器）};
+\path (xMr/yA) node[above] {\small 从锁存器（正锁存器）};
+
+\end{tikzpicture}
+\end{document}

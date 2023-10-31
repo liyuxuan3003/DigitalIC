@@ -1,0 +1,60 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-4.5]
+\xValDefine{xR}[+4.5]
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xPL}{xL}{xC}[0.3]
+\xValProportion{xQL}{xL}{xC}[0.8]
+\xValProportion{xPR}{xC}{xR}[0.1]
+\xValProportion{xQR}{xC}{xR}[0.6]
+\xValProportion{xCL}{xQR}{xR}[0.6]
+
+\xValDefine{yB}[-2.5]
+\xValDefine{yA}[+2.5]
+\xValMiddle{yC}{yA}{yB}
+\xValProportion{yAx}{yA}{yB}[1/4]
+\xValProportion{yBx}{yA}{yB}[3/4]
+\xValOffset{yBorB}{yB}[-2.00]
+\xValOffset{yBorA}{yA}[+2.00]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xPL,xQL,xPR,xQR,xCL}{yB,yA,yC,yBorB,yBorA,yAx,yBx}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xQL/yA) node[pmos] (P2) {$P_2$};
+\path (xQR/yA) node[pmos] (P2') {$P_2'$};
+
+\path (xQL/yC) node[pmos] (P1)  {$P_1$};
+\path (xQL/yB) node[nmos] (N2)  {$N_2$};
+\path (xQR/yC) node[pmos] (P1') {$P_1'$};
+\path (xQR/yB) node[nmos] (N2') {$N_2'$};
+
+\path (N2.S) node[ground] {};
+\path (N2'.S) node[ground] {};
+\path (P2.S) node[vdd] {$V_{DD}$};
+\path (P2'.S) node[vdd] {$V_{DD}$};
+
+\draw (P2.D) -- (P1.S);
+\draw (P1.D) -- (N2.D);
+
+\draw (P2'.D) -- (P1'.S);
+\draw (P1'.D) -- (N2'.D);
+
+\draw (xQL/yBx) node[circ] {} -- (xPR/yBx) node[circ] {};
+\draw (xL/yC) node[ocirc] {} node[left] {$D$} -- (xPL/yC) node[circ] {};
+\draw (P2.G) -- (xPL/yA) -- (xPL/yB) -- (N2.G);
+\path (P1.G) node[ocirc] {} node[left] {$\CLK$};
+
+\draw (xQR/yBx) node[circ] {} -- (xR/yBx) node[ocirc] {} node[right] {$Q$};
+\draw (P2'.G) -- (xPR/yA) -- (xPR/yB) -- (N2'.G);
+\path (P1'.G) node[ocirc] {} node[left] {$\CLK$};
+
+\draw (xCL/yBx) to[C=$C$,*-] (xCL|-N2.S) node[ground] {}; 
+
+\end{tikzpicture}
+\end{document}

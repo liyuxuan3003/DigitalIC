@@ -1,0 +1,38 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-2.4]
+\xValDefine{xR}[+2.4]
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xM}{xL}{xR}[0.4]
+\xValProportion{xI}{xL}{xR}[0.8]
+
+\xValDefine{yB}[-1.6]
+\xValDefine{yA}[+1.6]
+\xValMiddle{yC}{yA}{yB}
+\xValOffset{yBorB}{yB}[-0.75]
+\xValOffset{yBorA}{yA}[+0.25]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xM,xI}{yB,yA,yC,yBorB,yBorA}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\tikzset{mux21/.style={muxdemux,
+muxdemux def={Lh=4,Rh=2,NL=2,NR=1,NT=0,NB=1,w=1.2}}}
+
+\path (xM/yC) node[mux21] (mux) {};
+
+\path (mux.blpin 1) node[right] {$0$};
+\path (mux.blpin 2) node[right] {$1$};
+\draw (mux.bpin 1) -- (mux.bpin 1 |- yB) node[below] {$\xbar{\te{CLK}}$} node[ocirc] {};
+
+\draw (mux.lpin 2) -- (xL |- mux.lpin 2) node[left] {$D$} node[ocirc] {};
+\draw (mux.rpin 1) -- (xR |- mux.rpin 1) node[right] {$Q$} node[ocirc] {};
+\draw (xI/yC) node[circ] {} -- (xI/yA) -- (xL/yA) -- (xL |- mux.lpin 1) -- (mux.lpin 1);
+
+\end{tikzpicture}
+\end{document}

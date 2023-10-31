@@ -1,0 +1,48 @@
+\section{时序电路的基本概念}
+
+时序电路中的存储元件可以分为两类：\uwave{锁存器}（Latch）、\uwave{寄存器}（Register）。
+\begin{Figure}[两类存储元件]
+    \begin{FigureSub}[锁存器]
+        \includegraphics[scale=0.9]{build/Chapter07A_02.fig.pdf}
+    \end{FigureSub}
+    \hspace{1cm}
+    \begin{FigureSub}[寄存器]
+        \includegraphics[scale=0.9]{build/Chapter07A_03.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+在过去数字电路中也常提到\uwave{触发器}（Flip Flop）的概念，它可以认为是寄存器的同义词。
+
+\subsection{锁存器}
+锁存器是电平敏感的存储器，如\xref{fig:锁存器}所示，可以分为两种类型（正负指代透明期）
+\begin{itemize}
+    \item 正锁存器，在时钟高电平时处于透明模式，在时钟低电平时处于保持模式。
+    \item 负锁存器，在时钟低电平时处于透明模式，在时钟高电平时处于保持模式。
+\end{itemize}
+锁存器的主要问题是，其在整个时钟高电平期间都处于透明模式，换言之，如果我们采用锁存器作为时序电路的存储器，信号要在整个时钟高电平期间保持稳定，这限制了工作效应。
+
+\subsection{寄存器}
+寄存器是边沿敏感的存储器，如\xref{fig:寄存器}所示，可以分为两种类型
+\begin{itemize}
+    \item 正寄存器，在时钟上升沿$0\to 1$时进行采样，在其余情况中处于保持模式。
+    \item 负寄存器，在时钟下降沿$1\to 0$时进行采样，在其余情况中处于保持模式。
+\end{itemize}
+寄存器有几个重要的时序参数
+\begin{itemize}
+    \item 建立时间（Setup Time, su），记为$t_{su}$，代表输入在上升沿前需稳定的时间。
+    \item 保持时间（Hold Time, hold），记为$t_{hold}$，代表输入在上升沿后需稳定的时间。
+    \item 传播时间（Clock-to-Q Delay, cq），记为$t_{cq}$，代表在上升沿后输入到达输出$Q$的最大传播延时。这里，最大传播延时记为$t_{cq}$，最小传播延时记为$t_{cd}$，其中，下标cd意为污染延时（Contamination Delay，cd）。组合逻辑中其实也有类似概念，组合逻辑的最大延时和最小延时分别记为$t_{plogic}$和$t_{cdlogic}$，其中，下标p代表传播（Propagation）。
+\end{itemize}
+基于此，涉及寄存器的电路将必须满足以下两个时序约束。
+
+
+第一个时序约束，是关于时钟周期$T$的，其应当满足
+\begin{Equation}
+    t_{cq}+t_{plogic}+t_{su}\leq T
+\end{Equation}
+这里说明如下，首先，时钟周期$T$是一个高电平加一个低电平的时间。在上升沿后，在最坏的情况下，信号需要$t_{cq}$才能到达寄存器输出端，随后，信号还需要$t_{plogic}$才能到达组合逻辑模块的输出端，到达寄存器的输入端，并且在下一个上升沿到来前还需要稳定至少$t_{su}$的建立时间，如\xref{fig:有限状态机}所示。因此，从上升沿到上升沿，其间隔$T$需要大于等于$t_{cq}+t_{plogic}+t_{su}$。
+
+第二个时序约束，是关于保持时间$t_{hold}$的，其应当满足
+\begin{Equation}
+    t_{cd}+t_{cdlogic}\geq t_{hold}
+\end{Equation}
+这里说明如下，首先，时钟的上升沿后，要求输入仍然需要稳定$t_{hold}$的保持时间，而上升沿后，信号最快需要$t_{cd}$和$t_{cdlogic}$通过寄存器和组合逻辑模块再次出现在寄存器的输入端，而这个时间$t_{cd}+t_{cdlogic}$必须大于等于$t_{hold}$，以确保新信号出现时，已经过了旧信号的保持期。

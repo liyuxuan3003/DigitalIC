@@ -1,0 +1,13 @@
+\chapter{CMOS时序逻辑设计}
+在\xref{chap:CMOS时序逻辑设计}中，我们已经讨论组合逻辑电路。组合逻辑的特点是是，假设有足够多的时间使所有逻辑门稳定下来，那么逻辑功能块的输出就只与当前输入值有关。然而，事实上所有真正有用的系统都需要能保存状态信息，这就产生了另一类电路，称为时序逻辑电路或时序电路。
+
+\begin{Figure}[有限状态机]
+    \includegraphics[scale=0.9]{build/Chapter07A_01.fig.pdf}
+\end{Figure}
+
+在\xref{fig:有限状态机}中，我们展示的是\uwave{有限状态机}（Finite Status Machine），它可以认为是同步时序逻辑的一个模型，由组合逻辑和寄存器组成，其中所有的寄存器都在一个全局的时钟的控制下。
+
+
+\input{Chapter07A.tex}
+\input{Chapter07B.tex}
+\input{Chapter07C.tex}

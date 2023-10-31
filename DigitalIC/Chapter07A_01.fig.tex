@@ -1,0 +1,40 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-3]
+\xValDefine{xR}[+3]
+\xValMiddle{xC}{xL}{xR}
+\xValOffset{xBorL}{xL}[-0.95]
+\xValOffset{xBorR}{xR}[+0.95]
+
+\xValDefine{yB}[-1]
+\xValDefine{yA}[+1]
+\xValMiddle{yC}{yB}{yA}
+\xValProportion{yText}{yA}{yB}[0.1]
+\xValProportion{ySt}{yA}{yB}[1]
+\xValOffset{yBorB}{yB}[-0.8]
+\xValOffset{yBorA}{yA}[+1.2]
+
+\xGeneratePoints{xL,xR,xC,xBorL,xBorR}{yB,yA,yC,yBorB,yBorA,yText,ySt}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\draw (xC/yA) node[qfpchip,
+num pins=12, hide numbers, no topmark,
+external pins width=0] (Chip) {\footnotesize 组合逻辑};
+
+\draw (xC/ySt) node[qfpchip,
+num pins=4, hide numbers, no topmark,
+external pins width=0] (ChipX) {\scriptsize 寄存器};
+
+\draw[-latex] (xL |- Chip.pin 1) node[left] {\scriptsize 输入} -- (Chip.pin 1); 
+
+\draw[-latex] (Chip.pin 7) -- (xR |- Chip.pin 7) -- (xR |- ChipX.pin 3) -- (ChipX.pin 3);
+\draw[-latex] (ChipX.pin 1) -- (xL |- ChipX.pin 1) -- (xL |- Chip.pin 3) -- (Chip.pin 3); 
+
+\draw[-latex] (Chip.pin 9) -- (xR |- Chip.pin 9) node[right] {\scriptsize 输出};  
+
+\end{tikzpicture}
+\end{document}

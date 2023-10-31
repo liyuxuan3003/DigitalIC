@@ -1,0 +1,88 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-7]
+\xValDefine{xR}[+7]
+\xValOffset{xBorL}{xL}[-1]
+\xValOffset{xBorR}{xR}[+1]
+\xValMiddle{xC}{xL}{xR}
+\xValProportion{xMl}{xL}{xC}[0.7]
+\xValProportion{xPal}{xL}{xMl}[1/4]
+\xValProportion{xPbl}{xL}{xMl}[3/4]
+\xValProportion{xQl}{xMl}{xC}[0.75]
+\xValProportion{xPcl}{xMl}{xQl}
+\xValProportion{xPbxl}{xPal}{xPbl}[0.65]
+
+\xValProportion{xMr}{xC}{xR}[0.7]
+\xValProportion{xPar}{xC}{xMr}[1/4]
+\xValProportion{xPbr}{xC}{xMr}[3/4]
+\xValProportion{xQr}{xMr}{xR}[0.75]
+\xValProportion{xPcr}{xMr}{xQr}
+\xValProportion{xPbxr}{xPar}{xPbr}[0.65]
+
+\xValDefine{yB}[-1]
+\xValDefine{yA}[+1]
+\xValMiddle{yC}{yA}{yB}
+\xValOffset{yI}{yA}[1.6]
+\xValOffset{yBorB}{yB}[-1.70]
+\xValOffset{yBorA}{yI}[+0.75]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xMl,xPal,xPbl,xPbxl,xPcl,xQl,xMr,xPar,xPbr,xPbxr,xPcr,xQr}{yB,yA,yC,yI,yBorB,yBorA}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xPal/yB) node[not port] (I0l) {} node[above=0.25cm] {$I_1$}; 
+\path (xPal/yA) node[not port] (I1l) {} node[above=0.25cm] {$I_0$}; 
+\path (xPcl/yC) node[not port] (I2l) {} node[above=0.25cm] {$I_2$}; 
+
+\path (xPar/yB) node[not port] (I0r) {} node[above=0.25cm] {$I_1'$}; 
+\path (xPar/yA) node[not port] (I1r) {} node[above=0.25cm] {$I_0'$}; 
+\path (xPcr/yC) node[not port] (I2r) {} node[above=0.25cm] {$I_2'$}; 
+
+\path (xPbl/yB) node[nmos,rotate=90] (T0nl) {} node {$T_{1}$};
+\path (xPbl/yB) node[pmos,rotate=-90] (T0pl) {};
+\path (xPbl/yA) node[nmos,rotate=90] (T1nl) {} node {$T_{0}$};
+\path (xPbl/yA) node[pmos,rotate=-90] (T1pl) {};
+
+\path (xPbr/yB) node[nmos,rotate=90] (T0nr) {} node {$T_{1}'$};
+\path (xPbr/yB) node[pmos,rotate=-90] (T0pr) {};
+\path (xPbr/yA) node[nmos,rotate=90] (T1nr) {} node {$T_{0}'$};
+\path (xPbr/yA) node[pmos,rotate=-90] (T1pr) {};
+
+\draw (I0l.out) -- (T0nl.D);
+\draw (I1l.out) -- (T1nl.D);
+\draw (I0r.out) -- (T0nr.D);
+\draw (I1r.out) -- (T1nr.D);
+
+\draw (T0nl.S) -- (xMl/yB) -- (xMl/yA) -- (T1nl.S);
+\draw (T0nr.S) -- (xMr/yB) -- (xMr/yA) -- (T1nr.S);
+
+\draw (xMl/yC) node[circ] {} -- (I2l.in);
+\draw (xMr/yC) node[circ] {} -- (I2r.in);
+
+\draw (I2l.out) -- (xC/yC) node[right] {$Q_M$} -- (xC/yB) -- (I0r.in);
+\draw (I2r.out) -- (xR/yC) node[ocirc] {} node[right] {$Q$};
+
+\draw (xQl/yC) node[circ] {} -- (xQl/yI) -- (xL/yI) -- (xL/yA) -- (I1l.in);
+\draw (xQr/yC) node[circ] {} -- (xQr/yI) -- (xC/yI) -- (xC/yA) -- (I1r.in);
+
+\draw (I0l.in) -- (xL |- I0l.in) node[ocirc] {} node[left] {$D$};
+
+\draw (T1nl.G) -- (T0pl.G);
+\draw (T1nr.G) -- (T0pr.G);
+
+\draw (xPbl/yC) -- (xPbxl/yC) node[ocirc] {} node[left] {$\CLK$};
+\draw (T1pl.G) node[ocirc] {} node[above] {$\CLK*$};
+\draw (T0nl.G) node[ocirc] {} node[below] {$\CLK*$};
+
+\draw (xPbr/yC) -- (xPbxr/yC) node[ocirc] {} node[left] {$\CLK*$};
+\draw (T1pr.G) node[ocirc] {} node[above] {$\CLK\vphantom{\CLK*}$};
+\draw (T0nr.G) node[ocirc] {} node[below] {$\CLK\vphantom{\CLK*}$};
+
+\path (xPbl/yI) node[above] {\small 主锁存器（负锁存器）};
+\path (xPbr/yI) node[above] {\small 从锁存器（正锁存器）};
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,149 @@
+\section{静态锁存器和寄存器}
+
+\subsection{双稳态原理}
+
+现在的问题是，如何通过电路构建一个锁存器和寄存器？本节先聚焦于静态方式，静态方式的核心是\uwave{双稳态原理}。\xref{fig:双稳态原理}展示了一个双稳态电路的基本结构，两个串联的反相器首尾相接。
+\begin{Figure}[双稳态原理]
+    \includegraphics{build/Chapter07A_04.fig.pdf}
+\end{Figure}
+
+双稳态原理利用了反馈的原理，由于环路增益很大，该电路只存在两个稳态
+\begin{itemize}
+    \item 稳态A，两个反相器的输入分别为$0$和$1$，即$V_{in1}=0$而$V_{in2}=V_{DD}$。
+    \item 稳态B，两个反相器的输入分别为$1$和$0$，即$V_{in1}=V_{DD}$而$V_{in2}=0$。
+\end{itemize}
+当然严格来说，还有一个稳态，即$V_{in1}=V_{in2}=V_{DD}/2$，在\xref{fig:CMOS反相器的电压传输特性曲线}中我们曾展示过CMOS反相器的VTC曲线，当输入为$V_{DD}/2$输出也为$V_{DD}/2$，故这种稳态在理论上是可行的。但实际上，受到噪声等影响，若$V_{in1}$比$V_{DD}/2$稍小或稍大一些，经过环路的反馈，这种偏离会迅速被放大，最终分别落入稳态A和稳态B。故$V_{in1}=V_{in2}=V_{DD}/2$也被称为亚稳态C。
+
+双稳态电路的状态切换有两种方法
+\begin{enumerate}
+    \item \textbf{直接切断反馈环路}，双稳态电路的稳定是依托于反馈环路而存在的，一旦反馈环路被断开，一个新的值就很容易被写入，常用的方法是在反馈环路上应用一个多路开关 。
+    \item \textbf{触发强度超过反馈}，双稳态电路通过反馈，使其最终只能处于在两个稳态之一，外界噪声造成的干扰会在反馈作用下自行恢复，但前提是，外界噪声并不那么强的情况。假若在双稳态电路中直接输入一个足够强的触发信号，以至于其直接越过了亚稳态点，那么反馈作用的结果将导向另一种稳态。这种方法的主要缺点是，必须要仔细确定相关器件尺寸，确保触发电路比反馈环路要更强，否则触发信号可能无法扭转反馈的保持作用。
+\end{enumerate}
+这两种状态切换的方法，我们后面都会用到，它们分别对应了不同的寄存器和锁存器的结构。
+
+\subsection{锁存器的结构}
+锁存器最基本的构造是采用多路开关实现，如\xref{fig:锁存器}所示，具体而言
+\begin{itemize}
+    \item 多路开关的$1$输入端，连接了数据输入$D$。
+    \item 多路开关的$0$输入端，连接了多路开关的输出，构成反馈环路。
+    \item 多路开关的选择端，接入了时钟信号，接入$\CLK$为正锁存器，接入$\CLK*$为负锁存器。
+    \item 对于正选择器，当$\CLK=1$时使用输入$1$即透明，当$\CLK=0$时使用输入$0$即保持。
+    \item 对于负选择器，当$\CLK=0$时使用输入$1$即透明，当$\CLK=1$时使用输入$0$即保持。
+\end{itemize}
+
+\begin{Figure}[锁存器]
+    \begin{FigureSub}[正锁存器;正锁存器开关]
+        \includegraphics[scale=0.8]{build/Chapter07A_05.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.5cm}
+    \begin{FigureSub}[负锁存器;负锁存器开关]
+        \includegraphics[scale=0.8]{build/Chapter07A_06.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+锁存器的晶体管级电路如\xref{fig:锁存器的电路}所示，这里的关键是，多路开关如何用晶体管电路实现？我们这里参照了\xref{fig:传输门多路开关}中的设计，即多路开关的两个输入端$0,1$，对应两个接入相反控制信号的传输门$T_0,T_1$，输出端还有一个反相器$I_2$提高带负载能力。然而，正如前面讨论的那样，依照\xref{fig:锁存器的电路}得到的多路开关，其输出实际上是输入的反。为此，我们在两个输入端前$T_0,T_1$分别再添加了$I_0,I_1$的反相器。这样一来，反相器$I_0$和$I_2$就构成了\xref{fig:双稳态原理}中的双稳态回路
+\begin{itemize}
+    \item 当$T_0$导通（$T_1$截止），$I_0,I_2$回路导通，$D$和$Q$间断开，保持状态。
+    \item 当$T_1$导通（$T_0$截止），$I_0,I_2$回路断开，$D$通过$I_1,I_2$两级反向直通$Q$，透明状态。
+\end{itemize}
+
+\begin{Figure}[锁存器的电路]
+    \begin{FigureSub}[正锁存器;正锁存器电路]
+        \includegraphics[scale=0.8]{build/Chapter07A_07.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.1cm}
+    \begin{FigureSub}[负锁存器;负锁存器电路]
+        \includegraphics[scale=0.8]{build/Chapter07A_08.fig.pdf}
+    \end{FigureSub}
+\end{Figure}\goodbreak
+
+由此可见，\xref{fig:锁存器的电路}中应用的双稳态切换方法是\xref{subsec:双稳态原理}中提到的“直接切断反馈环路”。
+
+\subsection{寄存器的结构}
+寄存器并不需要什么新的东西，其只需要通过两级锁存器串联而成即可，如\xref{fig:寄存器}所示。
+\begin{Figure}[寄存器]
+    \includegraphics[scale=0.8]{build/Chapter07A_13.fig.pdf}
+\end{Figure}
+\xref{fig:寄存器}展示的，是一个正寄存器（后面我们总是讨论正寄存器）
+\begin{itemize}
+    \item 正寄存器（上升沿触发），由负锁存器串联一个正锁存器构成。
+    \item 负寄存器（下降沿触发），由正锁存器串联一个负锁存器构成。
+\end{itemize}
+\xref{fig:寄存器的电路}对应的晶体管级电路如\xref{fig:寄存器的电路}所示，它并不复杂，实质就是\xref{fig:负锁存器电路}和\xref{fig:正锁存器电路}的串联
+\begin{Figure}[寄存器的电路]
+    \includegraphics[scale=0.8]{build/Chapter07A_14.fig.pdf}
+\end{Figure}
+这里寄存器的架构称为“主从架构”，它是如何通过电平敏感的锁存器实现边沿敏感的呢？
+\begin{itemize}
+    \item 当$\CLK=0$时，主锁存器透明，从锁存器保持，此时$D$的信号直通$Q_M$。
+    \item 当$\CLK=1$时，主锁存器保持，从锁存器透明，此时$D$在上升沿前最后时刻的信号将被锁存在$Q_M$中，而此时$Q_M$直通$Q$，这就实现了寄存器在时钟上升沿采样的功能。
+\end{itemize}
+
+\subsection{寄存器的时序参数}
+现在我们在\xref{fig:寄存器的电路}的背景下，分析\xref{subsec:寄存器}中寄存器的三个时序参数$t_{su}, t_{hold}, t_{cq}$的组成。\goodbreak
+
+\subsubsection{建立时间}
+建立时间$t_{su}$是上升沿前信号需要稳定的时间，这相当于是问，在时钟上升沿前输入$D$必须稳定多长时间才能使$Q_M$采样地方值是可靠的，对于传输门多路开关寄存器，输入信号$D$需要通过$I_1,T_1,I_2,I_0$才能贯通整个反馈环路（此时环路仍是断开的），我们需要在上升沿前预留这段时间，以确保上升沿到来，环路接通时，环路中$I_2,I_0$均处于正确协调的状态，因此
+\begin{Equation}
+    t_{su}=3t_{pd\_inv}+t_{pd\_tx}
+\end{Equation}
+建立时间$t_{su}$包含三个反相器延时和一个传输门延时。
+
+\subsubsection{传输时间}
+传输时间$t_{cq}$是上升沿后信号到达输出的时间，对于传输门多路开关寄存器，信号从主锁存器输出$Q_M$至从锁存器输出$Q$，传输时间$t_{cq}$需要经历$I_1', T_1'， I_2'$三个门的延时，但我们要充分考虑到，在上升沿到来前，建立时间$t_{su}$计算了$I_1,T_1,I_2,I_0$四个门的延时，而$Q_M$是$I_2$的输出，因此，信号最晚在上升沿到来前一个反相器延时$t_{pd\_inv}$的时候就已经能到达$Q_M$，换言之，信号在上升沿到来时至少能从$Q_M$再通过一个反相器$I_1'$了，故$t_{cq}$只计$T_1',I_2'$的延时
+\begin{Equation}
+    t_{cq}=t_{pd\_inv}+t_{pd\_tx}
+\end{Equation}
+传输时间$t_{cq}$包含一个反相器延时和一个传输门延时。
+
+\subsubsection{保持时间}
+保持时间$t_{hold}$是上升沿后信号需要稳定的时间，对于传输门多路开关寄存器，该值为零
+\begin{Equation}
+    t_{hold}=0
+\end{Equation}
+这是因为，在上升沿前$I_2,I_0$已经是可靠的，上升沿到来$T_0$一导通双稳态就形成，不需要维持。或者可以这么看，上升沿到来后$T_1$就将$D$从电路中断开了，维持无论如何都没有意义。
+
+\subsection{使用传输管减少时钟负载}
+时钟负载是一个问题，\xref{fig:寄存器的电路}所示的电路，结构清晰，原理可靠，但仅仅一个寄存器就需要使用八个时钟输入，这将增加时钟信号的负载。本节和下一小节中，将给出一些简化寄存器结构的方法，减少时钟负载，同时，减少晶体管数目。当然，这一切也都是有其他方面的代价的。
+
+将\xref{fig:锁存器的电路}和\xref{fig:寄存器的电路}中，所有传输门更换为传输管，就可以立即将时钟负载从8个减小到4个，同时，我们取消了锁存器$D$输入端处的反相器，当然，我们会发现这将导致锁存器的输出变为反相，但这对于寄存器并无大碍，两级锁存器的反相使寄存器输出仍然正确，如\xref{fig:使用传输管减少时钟负载}所示。
+
+\begin{Figure}[使用传输管减少时钟负载]
+    \begin{FigureSub}[正锁存器;正锁存器传输管]
+        \includegraphics[scale=0.8]{build/Chapter07A_09.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.1cm}
+    \begin{FigureSub}[负锁存器;负锁存器传输管]
+        \includegraphics[scale=0.8]{build/Chapter07A_10.fig.pdf}
+    \end{FigureSub}\\
+    \vspace{0.5cm}
+    \begin{FigureSub}[寄存器;寄存器传输管]
+        \includegraphics[scale=0.8]{build/Chapter07A_15.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+值得注意的是，锁存器$D$输入端的反相器的取消会有一个副作用，即我们需要考虑到，锁存器的输入信号$D$并不总是全摆幅的，输入端的反相器其实可以起到隔离和电平恢复的作用。
+
+\subsection{使用强制驱动减少时钟负载}
+时钟负载的另外一个解决思路，来自\xref{subsec:双稳态原理}中提到的双稳态电路的两种方式，先前使用的都是“直接切断”的方法，而我们可以考虑改用“强制驱动”的方法。如\xref{fig:使用强制驱动减少时钟负载}中，我们仍然使用传输门，但是，我们移除了反馈回路上的传输门，从而减半了时钟负载。此时，当$T_1$导通时，反馈回路仍然是导通的，反馈回路中，反相器$I_0$的输出和$D$将同时驱动$I_2$，只要输入$D$的强度够大，就可以超越$I_0$的影响，强制扭转状态。这里也移除了$D$处的反相器。
+
+强制驱动的设计，主要有两个问题
+\begin{enumerate}
+    \item 第一个问题是，这种方式会增大设计的复杂性，设计上需仔细规划尺寸。传输门$T_1$及其源驱动器的必须比反馈环路的反相器$I_0$更强，才能强制切换交叉耦合反相器的状态。
+    \item 第二个问题是，这种方式可能发生从级到主级的反向传导。主级保持，从级导通，从级信号经过$I_2',I_0'$后有可能反向通过导通的$T_1'$到达$I_2$的输出端$\xbar{Q_M}$，干扰主级状态，不过好在这并不是很难解决的问题，只需要将$I_0'$设计的很弱（至少弱于$I_2$）就可以了。
+\end{enumerate}
+总之，作为减少时钟负载的代价，改用强制驱动付出了有比电路，改用传输管付出了摆幅。
+
+\begin{Figure}[使用强制驱动减少时钟负载]
+    \begin{FigureSub}[正锁存器;正锁存器强制驱动]
+        \includegraphics[scale=0.8]{build/Chapter07A_11.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.1cm}
+    \begin{FigureSub}[负锁存器;负锁存器强制驱动]
+        \includegraphics[scale=0.8]{build/Chapter07A_12.fig.pdf}
+    \end{FigureSub}\\
+    \vspace{0.5cm}
+    \begin{FigureSub}[寄存器;寄存器强制驱动]
+        \includegraphics[scale=0.8]{build/Chapter07A_16.fig.pdf}
+    \end{FigureSub}
+\end{Figure}

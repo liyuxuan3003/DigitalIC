@@ -1,0 +1,84 @@
+\documentclass{xStandalone}
+
+\begin{document}
+\begin{tikzpicture}
+
+\xValDefine{xL}[-6]
+\xValDefine{xR}[+6]
+\xValOffset{xBorL}{xL}[-2.5]
+\xValOffset{xBorR}{xR}[+0.25]
+\xValProportion{xC}{xL}{xR}[0.5]
+\xValProportion{xDa}{xL}{xR}[1/4]
+\xValProportion{xDb}{xL}{xR}[2/4]
+\xValProportion{xDc}{xL}{xR}[3/4]
+\xValProportion{xCL}{xL}{xDa}
+\xValProportion{xSec}{xDb}{xDc}[0.3]
+\xValProportion{xInv}{xDc}{xR}[0.25]
+\xValMiddle{xN}{xDc}{xR}
+
+\xValDefine{yB}[-2.5]
+\xValDefine{yA}[+2.5]
+\xValMiddle{yC}{yA}{yB}
+\xValProportion{yAx}{yA}{yB}[1/3]
+\xValProportion{yBx}{yA}{yB}[2/3]
+\xValMiddle{yM}{yAx}{yA}
+\xValOffset{yCLK}{yB}[-2.5]
+\xValOffset{yBorB}{yCLK}[-0.75]
+\xValOffset{yBorA}{yA}[+2.00]
+
+\xGeneratePoints{xL,xR,xBorL,xBorR,xC,xDa,xDb,xDc,xCL,xSec,xInv,xN}{yB,yA,yC,yCLK,yAx,yBx,yBorB,yBorA,yM}
+
+\draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
+
+\path (xL/yA) node[pmos] (P1) {$P_1$};
+\path (xDa/yA) node[pmos] (P2) {$P_2$};
+\path (xDb/yA) node[pmos] (P3) {$P_3$};
+\path (xDc/yA) node[pmos] (P4) {$P_4$};
+
+\path (xL/yB)  node[nmos] (N1) {$N_1$};
+\path (xL/yBx) node[nmos] (N2) {$N_2$};
+\path (xL/yAx) node[nmos] (N3) {$N_3$};
+
+\path (xDc/yB)  node[nmos] (N4) {$N_4$};
+\path (xDc/yBx) node[nmos] (N5) {$N_5$};
+\path (xDc/yAx) node[nmos] (N6) {$N_6$};
+
+\path (P1.S) node[vdd] {$V_{DD}$};
+\path (P2.S) node[vdd] {$V_{DD}$};
+\path (P3.S) node[vdd] {$V_{DD}$};
+\path (P4.S) node[vdd] {$V_{DD}$};
+
+\path (N1.S) node[ground] {};
+\path (N4.S) node[ground] {};
+
+\draw (P1.D) -- (N3.D);
+\draw (N3.S) -- (N2.D);
+\draw (N2.S) -- (N1.D);
+
+\draw (P4.D) -- (N6.D);
+\draw (N6.S) -- (N5.D);
+\draw (N5.S) -- (N4.D);
+
+\draw (P4.G) -- (xSec |- P4.G) -- (xSec |- N5.G) -- (N5.G);
+
+\draw (xL/yM) to[short,*-*] (xSec/yM);
+\draw (P2.D) -- (P2.D |- yM) node[circ] {};
+\draw (P3.D) -- (P3.D |- yM) node[circ] {}; 
+
+\draw (xDc/yM) -- (xInv/yM) to[inline not] (xR/yM) -- (xR/yC) to[inline not] (xInv/yC) -- (xInv/yM) node[circ] {} node[above] {$Q$};
+
+\draw (xCL/yM) to[C=$C$,*-] (xCL/yBx) node[ground] {};
+
+\path (P1.G) node[ocirc] {} node[left] {CLK};
+\path (P2.G) node[ocirc] {} node[left] {$D$};
+\path (P3.G) node[ocirc] {} node[left] {$\xbar{\te{CLKD}}$};
+\path (N3.G) node[ocirc] {} node[left] {CLK};
+\path (N2.G) node[ocirc] {} node[left] {$D$};
+\path (N1.G) node[ocirc] {} node[left] {$\xbar{\te{CLKD}}$};
+\path (N6.G) node[ocirc] {} node[left] {CLK};
+\path (N4.G) node[ocirc] {} node[left] {$\xbar{\te{CLKD}}$};
+
+\draw (N1.G |- yCLK) node[left] {CLK} node[ocirc] {} -- (xL/yCLK) to[inline not] (xDa/yCLK) to[inline not] (xDb/yCLK) to[inline not] (xDc/yCLK) node[ocirc] {} node[right] {$\xbar{\te{CLKD}}$};
+
+\end{tikzpicture}
+\end{document}
