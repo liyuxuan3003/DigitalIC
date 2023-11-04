@@ -52,3 +52,77 @@
     t_{overlap,\te{1--1}}<t_{hold}
 \end{Equation}
 时钟重叠对动态寄存器的影响是很大的，下面介绍的改型都是为了更好的应对时钟重叠。
+
+\subsection{C$^2$MOS寄存器}
+\uwave{时钟控制CMOS寄存器}（Clocked CMOS Logic, C$^2$MOS）是一个设计非常巧妙的主从架构并对时钟重叠不敏感的寄存器。如\xref{fig:C2MOS寄存器}所示，C$^2$MOS的结构类似于两个经过改造的反相器。\goodbreak
+
+C$^2$MOS的正常工作原理可以分析如下
+\begin{itemize}
+    \item 当$\CLK,\CLK*$为0--1时，主锁存器即为反相器，从锁存器被断开，如\xref{fig:0--1}所示。在这一阶段，中间节点$X$处的电容被充电或放电（也可能保持不变），达到$X=\bar{D}$。
+    \item 当$\CLK,\CLK*$为1--0时，主锁存器被断开，从锁存器即为反相器，如\xref{fig:1--0}所示。在这一阶段，中间节点$X$在上升沿到来时和输入$D$断开，保存了上升沿前$D$的最后状态的反向，而从级反相器将$X$节点的状态反相读出至输出$Q$的电容上，达成$Q=D$。
+\end{itemize}
+
+\begin{Figure}[C$^2$MOS寄存器;C2MOS寄存器]
+    \includegraphics[scale=0.8]{build/Chapter07B_03.fig.pdf}
+\end{Figure}
+
+C$^2$MOS的主要目的是解决时钟重叠问题，\xref{fig:C2MOS寄存器的特性分析}分析了C$^2$MOS在正常情况和时钟重叠时下的工作状况，以灰色标注断开的晶体管，参照\xref{fig:时钟重叠}，依照1--0，0--0，0--1，1--1排列。
+
+\begin{Figure}[C$^2$MOS寄存器的特性分析;C2MOS寄存器的特性分析]
+    \begin{FigureSub}[1--0]
+        \includegraphics[scale=0.5]{build/Chapter07B_07.fig.pdf}
+    \end{FigureSub}\hspace{0.5cm}
+    \begin{FigureSub}[0--0]
+        \includegraphics[scale=0.5]{build/Chapter07B_04.fig.pdf}
+    \end{FigureSub}\\ \vspace{0.5cm}
+    \begin{FigureSub}[0--1]
+        \includegraphics[scale=0.5]{build/Chapter07B_06.fig.pdf}
+    \end{FigureSub}\hspace{0.5cm}
+    \begin{FigureSub}[1--1]
+        \includegraphics[scale=0.5]{build/Chapter07B_05.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+在\xref{fig:C2MOS寄存器的特性分析}中，我们注意到
+\begin{itemize}
+    \item 在0--0重叠期间（发生在下降沿），此时，主级和从级的NMOS被断开了。若输入$D$在该阶段变化，中间节点$X$只可能发生$0\to 1$的异常翻转，但是$X=1$试图下拉输出节点$Q$由于从级NMOS被断开而不可能实现，避免了时钟重叠期间$D$和$Q$直通的问题。
+    \item 在1--1重叠期间（发生在上升沿），此时，主级和从级的PMOS被断开了。若输入$D$在该阶段变化，中间节点$X$只可能发生$1\to 0$的异常翻转，但是$X=0$试图上拉输出节点$Q$由于从级PMOS被断开而不可能实现，但1--1重叠和0--0重叠有一点不同，由于1--1重叠后是1--0，即，主级保持，从级透明，因此1--1重叠期间$X$的异常翻转虽然不会在1--1重叠期间传递到输出，但会在随后的1--0期间传递到输出，这也不是我们所希望的。因此，C$^2$MOS仍然需要添加$t_{hold}$约束$D$在上升沿后的1--1重叠期间保持稳定。
+\end{itemize}
+
+综上，C$^2$MOS的特殊结构实现了对时钟重叠不敏感，但仍会受到时钟重叠的影响。所以，我们可以换一个思路，时钟重叠的根本原因在于，现有寄存器结构同时需要$\CLK$和$\CLK*$，那么，如果能设计出一种只需要单相时钟$\CLK$的寄存器，不就根本没有时钟重叠的问题了吗！
+
+仅使用单相时钟，就是下一小节将介绍的TSPCR的思路！
+
+\subsection{TSPCR}
+\uwave{真单相钟控寄存器}（True Single-Phase Clocked Register, TSPCR）是一个仅使用单相位时钟的寄存器，\xref{fig:正真单相锁存器}和\xref{fig:负真单相锁存器}展示了正和负的真单相锁存器，其结构也是两个反相器\footnote{尽管TSPCR和C$^2$MOS都是两个反相器，但，C$^2$MOS两个反相器构成的是寄存器，TSPCR两个反相器构成的是锁存器。}。
+
+\begin{Figure}[真单相锁存器]
+    \begin{FigureSub}[正真单相锁存器]
+        \includegraphics[scale=0.8]{build/Chapter07B_08.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[负真单相锁存器]
+        \includegraphics[scale=0.8]{build/Chapter07B_09.fig.pdf}
+    \end{FigureSub}
+\end{Figure}\goodbreak
+
+TSPC锁存器的工作原理可以分析如下
+\begin{itemize}
+    \item 对于\xref{fig:正真单相锁存器}所示的正锁存器，$\CLK$连接在NMOS上，当$\CLK=1$时，其相当于是两个串联的反相器，透明。当$\CLK=0$时，两个反相器均断开，输出$Q$悬空，保持。
+    \item 对于\xref{fig:负真单相锁存器}所示的正锁存器，$\CLK$连接在PMOS上，当$\CLK=0$时，其相当于是两个串联的反相器，透明。当$\CLK=1$时，两个反相器均断开，输出$Q$悬空，保持。
+\end{itemize}
+TSPC结构上的一个细节是，为什么正锁存器的输出要在$\CLK$管$N_1,N_1'$上而负锁存器的输出要在$\CLK$管$P_1,P_1'$之下？这是因为$\CLK$管在这里实际相当于是一个传输管，而传输管有阈值损失的问题，NMOS管可以传递强的低电平，PMOS管可以传递强的高电平。因此，这样的位置安排可以保证$\CLK$管作为传输管，只传递其不会发生阈值损失的电平，保证性能。
+
+TSPC锁存器的一个简化版本是\xref{fig:分叉输出锁存器}，称为分叉输出锁存器。其只保留了第一个反相器上的钟控管，优点是减少了一个晶体管并减半了时钟负载，缺点就是上面提到的钟控管作为传输管的问题，\xref{fig:正分叉输出锁存器}和\xref{fig:负分叉输出相锁存器}的内部节点$A$分别只能被上拉和下拉至$V_{DD}-|V_{Tn}|$和$|V_{Tp}|$。
+
+\begin{Figure}[分叉输出锁存器]
+    \begin{FigureSub}[正分叉输出锁存器]
+        \includegraphics[scale=0.8]{build/Chapter07B_10.fig.pdf}
+    \end{FigureSub}
+    \hspace{0.25cm}
+    \begin{FigureSub}[负分叉输出相锁存器]
+        \includegraphics[scale=0.8]{build/Chapter07B_11.fig.pdf}
+    \end{FigureSub}
+\end{Figure}
+
+顺着TSPC锁存器的思路，我们也能很容易的设计出TSPC寄存器。

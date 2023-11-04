@@ -13,21 +13,21 @@
 \xValProportion{xPR}{xC}{xR}[0.25]
 \xValProportion{xQR}{xC}{xR}[0.75]
 
-\xValDefine{yB}[-3]
-\xValDefine{yA}[+3]
+\xValDefine{yB}[-2.5]
+\xValDefine{yA}[+2.5]
 \xValMiddle{yC}{yA}{yB}
 \xValProportion{yAx}{yA}{yB}[1/3]
 \xValProportion{yBx}{yA}{yB}[2/3]
-\xValOffset{yBorB}{yB}[-2.00]
+\xValOffset{yBorB}{yB}[-1.75]
 \xValOffset{yBorA}{yA}[+2.00]
 
 \xGeneratePoints{xL,xR,xBorL,xBorR,xC,xPL,xQL,xPR,xQR}{yB,yA,yC,yBorB,yBorA,yAx,yBx}
 
 \draw[ultra thin] (xBorL/yBorB) rectangle (xBorR/yBorA);
 
-\path (xQL/yAx) node[pmos] (P1) {$P_1$};
+\path (xQL/yAx) node[pmos,gray,color=gray] (P1) {$P_1$};
 \path (xQL/yA) node[pmos] (P2) {$P_2$};
-\path (xQR/yAx) node[pmos] (P1') {$P_1'$};
+\path (xQR/yAx) node[pmos,gray,color=gray] (P1') {$P_1'$};
 \path (xQR/yA) node[pmos] (P2') {$P_2'$};
 
 \path (xQL/yBx) node[nmos] (N1) {$N_1$};

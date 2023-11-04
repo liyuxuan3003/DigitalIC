@@ -3,7 +3,7 @@
 \begin{document}
 \begin{tikzpicture}
 
-\xValDefine{xL}[-4.4]
+\xValDefine{xL}[-4.8]
 \xValDefine{xR}[+4.5]
 \xValOffset{xBorL}{xL}[-1.1]
 \xValOffset{xBorR}{xR}[+1]
@@ -19,7 +19,7 @@
 \xValMiddle{yC}{yA}{yB}
 \xValOffset{yCLK}{yA}[2.0]
 \xValOffset{yBorB}{yB}[-1.75]
-\xValOffset{yBorA}{yCLK}[+0.25]
+\xValOffset{yBorA}{yCLK}[+0.5]
 
 \xGeneratePoints{xL,xR,xBorL,xBorR,xC,xT,xDa,xDb,xDc,xN}{yB,yA,yC,yCLK,yBorB,yBorA}
 
@@ -36,7 +36,7 @@
 \path (P.S) node[vdd] {$V_{DD}$};
 \path (N.S) node[ground] {};
 
-\draw (xT|-A1.in 2) node[circ] {} -- (A1.in 2);
+\draw (xT|-A1.in 2) node[above left] {$X$} node[circ] {} -- (A1.in 2);
 \draw (A1.out) -- (I1.in);
 \draw (I1.out) -- (I2.in);
 \draw (I2.out) -- (xR/yC) node[ocirc] {} node[above] {CLKG};

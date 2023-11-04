@@ -67,7 +67,7 @@
 
 \draw (xDc/yM) -- (xInv/yM) to[inline not] (xR/yM) -- (xR/yC) to[inline not] (xInv/yC) -- (xInv/yM) node[circ] {} node[above] {$Q$};
 
-\draw (xCL/yM) to[C=$C$,*-] (xCL/yBx) node[ground] {};
+\draw (xCL/yM) node[above left] {$X$} to[C=$C$,*-] (xCL/yBx) node[ground] {};
 
 \path (P1.G) node[ocirc] {} node[left] {CLK};
 \path (P2.G) node[ocirc] {} node[left] {$D$};
