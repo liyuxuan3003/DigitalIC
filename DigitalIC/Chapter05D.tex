@@ -14,14 +14,14 @@
     \item 如\xref{fig:充电}\hspace{0.2em}所示，输入$V_{in}$在零时刻由高电平跃变为低电平，NMOS截止，PMOS速度饱和导通，输出$V_{out}$与VDD接通，应变为高电平，但电容使充电需要一定的时间。
     \item 如\xref{fig:放电}所示，输入$V_{in}$在零时刻由低电平跃变为高电平，PMOS截止，NMOS速度饱和导通，输出$V_{out}$与GND接通，应变为高电平，但电容使放电需要一定的时间。
 \end{itemize}
-在速度饱和状态下，PMOS和NMOS分别可以等效为电阻$R_{eqp}$和$R_{eqn}$，两者在充电和放电过程中就分别与电容$C_L$构成了RC电路，而这个RC电路就是造成传输延时的关键。我们将充电或放电至$V_{DD}/2$的时间分别记为$t_\textit{pHL}$和$t_\textit{pLH}$。电路基础中我们曾学过，对于RC电路，时间常数$\tau=RC$，时间常数代表的是弛豫过程进行到$1/e$的时间，而这里传播延时$t_p$的定义为进行到一半的时间，因此就有$t_p=\ln 2\tau=\ln 2RC$。由此就可以写下以下的表达式。
+在速度饱和状态下，PMOS和NMOS分别可以等效为电阻$R_{eqp}$和$R_{eqn}$，两者在充电和放电过程中就分别与电容$C_L$构成了RC电路，而这个RC电路就是造成传输延时的关键。我们将充电或放电至$V_{DD}/2$的时间分别记为$t_\textit{pHL}$和$t_\textit{pLH}$。电路基础中我们曾学过，对于RC电路，时间常数$\tau=RC$，时间常数代表的是弛豫过程进行到$1/\e$的时间，而这里传播延时$t_p$的定义为进行到一半的时间，因此就有$t_p=\ln 2\tau=\ln 2RC$。由此就可以写下以下的表达式。
 
 \begin{BoxFormula}[CMOS反相器的传播延时]
-    当输入由高至低跳变，输出节点经PMOS充电至$V_{DD}/2$的时间$t_\textit{pLH}$
+    当输入由低至高跳变，输出节点经PMOS充电至$V_{DD}/2$的时间$t_\textit{pLH}$
     \begin{Equation}
         t_\textit{pLH}=\ln 2 R_{eqp}C_L
     \end{Equation}
-    当输入由低至高跳变，输出节点经NMOS放电至$V_{DD}/2$的时间$t_\textit{pHL}$
+    当输入由高至低跳变，输出节点经NMOS放电至$V_{DD}/2$的时间$t_\textit{pHL}$
     \begin{Equation}
         t_\textit{pHL}=\ln 2 R_{eqn}C_L
     \end{Equation}
@@ -46,7 +46,7 @@
     R_{eqp0}=31\si{k\ohm}\qquad
     R_{eqn0}=13\si{k\ohm}
 \end{Equation}
-在$(W/L)$不为零时，要将上述值除以$(W/L)$
+在$(W/L)$不为$1$时，要将上述值除以$(W/L)$
 \begin{Equation}
     R_{eqp}=R_{eqp0}/(W/L)_p\qquad
     R_{eqn}=R_{eqn0}/(W/L)_n

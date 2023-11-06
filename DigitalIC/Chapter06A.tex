@@ -178,11 +178,11 @@ PMOS用于上拉，NMOS用于下拉，我们总是这么做，但到底为什么
     \xcell<c>{$A,B=10\to 11$\\[3mm] $F=1\to 0$}&
     \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_22.fig.pdf}}&
     \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_23.fig.pdf}}&
-    $2R_pC_L$&$R_nC_{int}$\\ \hlinelig
+    $2R_nC_L$&$R_nC_{int}$\\ \hlinelig
     \xcell<c>{$A,B=00\to 11$\\[3mm] $F=1\to 0$}&
     \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_24.fig.pdf}}&
     \xcell<I>[1ex][-4ex]{\includegraphics[height=6cm]{build/Chapter06A_25.fig.pdf}}&
-    $2R_pC_L$&$R_nC_{int}$ or $0$\\
+    $2R_nC_L$&$R_nC_{int}$ or $0$\\
 \end{Tablex}
 
 我们知道，对于与非门，输入为$00,01,10$时输出$1$，输入为$11$时输出$0$，因此\goodbreak
@@ -271,7 +271,7 @@ PMOS用于上拉，NMOS用于下拉，我们总是这么做，但到底为什么
     \item 符号$t_{p0}$代表反相器本征延时，即反相器无外部负载电容时，由自载电容导致的延时。
     \item 符号$p$代表复合门和反相器本征延时$t_{p0}$之比，取决于复合门的拓扑结构与版图样式。
     \item 符号$f$称为\uwave{电气努力}（Electrical Effort），代表该逻辑门的外部负载电容与其输入电容的比值。电气努力$f$的定义与原先等效扇出$f$是一致的，只不过换了一个名称罢了。
-    \item 符号$g$称为\uwave{逻辑努力}（Logical Effor），代表了该逻辑门的输入电容与反相器的输入电容的比值。逻辑努力$g$的定义其实与前面提到的尺寸规划有关，为了使复合门具有类似反相器的延时，需要增大晶体管的尺寸以减小电阻，但是这同时增大了晶体管的电容。
+    \item 符号$g$称为\uwave{逻辑努力}（Logical Effort），代表了该逻辑门的输入电容与反相器的输入电容的比值。逻辑努力$g$的定义其实与前面提到的尺寸规划有关，为了使复合门具有类似反相器的延时，需要增大晶体管的尺寸以减小电阻，但是这同时增大了晶体管的电容。
 \end{itemize}
 在\xref{tab:不同逻辑门的本征延时比}中，我们列出了一些常见逻辑门的本征延时比$p$的值。
 \begin{Tablex}[不同逻辑门的本征延时比]{cYYYY}
@@ -323,7 +323,7 @@ PMOS用于上拉，NMOS用于下拉，我们总是这么做，但到底为什么
 \begin{Equation}
     G=\Prod[j=1][N]g_j
 \end{Equation}
-定义路径的电器努力$F$，为路径上最后一级负载电容与第一级输入电容间的关系
+定义路径的电气努力$F$，为路径上最后一级负载电容与第一级输入电容间的关系
 \begin{Equation}
     F=\frac{C_L}{C_{g1}}
 \end{Equation}
@@ -337,7 +337,7 @@ PMOS用于上拉，NMOS用于下拉，我们总是这么做，但到底为什么
 \begin{Equation}
     B=\Prod[j=1][N]b_i
 \end{Equation}
-这样一来，路径电器努力$F$就可以用各级逻辑门的电气努力$f_j$和分支努力$b_j$表示
+这样一来，路径电气努力$F$就可以用各级逻辑门的电气努力$f_j$和分支努力$b_j$表示
 \begin{Equation}
     F=\Prod[j=1][N]f_j/b_j
 \end{Equation}
