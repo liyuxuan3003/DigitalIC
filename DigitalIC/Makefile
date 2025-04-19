@@ -24,15 +24,15 @@ ${OUTPUT}: ${TEXS} ${FIGS_PDF} ${OCTS_PDF} ${WLSS_PDF} ${STYS} ${CLSS}
 	latexmk ${FLAGS} ${PROJECT}.tex
 	touch $@
 
-${BUILD_DIR}/%.fig.pdf:%.fig.tex ${STYS} ${CLSS}
+${BUILD_DIR}/%.fig.pdf: %.fig.tex ${STYS} ${CLSS}
 	latexmk ${FLAGS} $<
 	touch $@
 
-${BUILD_DIR}/%.fig.pdf:%.fig.m
+${BUILD_DIR}/%.fig.pdf: %.fig.m
 	octave-cli $<
 
-${BUILD_DIR}/%.fig.pdf:%.fig.wls
-	wolframscript.exe -script $<
+${BUILD_DIR}/%.fig.pdf: %.fig.wls
+	wolframscript -script $<
 
 ${BUILD_DIR}:
 	mkdir -p ${BUILD_DIR}
